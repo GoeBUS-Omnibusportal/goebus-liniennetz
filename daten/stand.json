@@ -1,0 +1,35 @@
+{
+ "erzeugt": "2026-10-31T17:07:42Z",
+ "verbuende": {
+  "vsn": {
+   "datei": "vsn_linien.json",
+   "linien": 188,
+   "osm_verlauf": 128
+  },
+  "nvv": {
+   "datei": "nvv_linien.json",
+   "linien": 433,
+   "osm_verlauf": 154
+  },
+  "vrb": {
+   "datei": "vrb_linien.json",
+   "linien": 315,
+   "osm_verlauf": 225
+  },
+  "rosa": {
+   "datei": "svhi_rvhi_linien.json",
+   "linien": 90,
+   "osm_verlauf": 52
+  },
+  "rvhi": {
+   "datei": "rvhi_linien.json",
+   "linien": 90,
+   "osm_verlauf": 52
+  },
+  "oeffis": {
+   "datei": "vhp_linien.json",
+   "linien": 70,
+   "osm_verlauf": 30
+  }
+ }
+}

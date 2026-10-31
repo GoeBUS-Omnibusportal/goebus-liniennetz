@@ -1,0 +1,64 @@
+[
+    {
+        "slug": "vsn",
+        "kurz": "VSN",
+        "kreise": [
+            "03159",
+            "03155",
+            "03255"
+        ],
+        "datei": "vsn_linien.json"
+    },
+    {
+        "slug": "nvv",
+        "kurz": "NVV",
+        "kreise": [
+            "06611",
+            "06633",
+            "06636",
+            "06634",
+            "06635",
+            "06632"
+        ],
+        "datei": "nvv_linien.json"
+    },
+    {
+        "slug": "vrb",
+        "kurz": "VRB",
+        "kreise": [
+            "03101",
+            "03102",
+            "03103",
+            "03151",
+            "03153",
+            "03154",
+            "03157",
+            "03158"
+        ],
+        "datei": "vrb_linien.json"
+    },
+    {
+        "slug": "rosa",
+        "kurz": "ROSA",
+        "kreise": [
+            "03254"
+        ],
+        "datei": "svhi_rvhi_linien.json"
+    },
+    {
+        "slug": "rvhi",
+        "kurz": "RVHI",
+        "kreise": [
+            "03254"
+        ],
+        "datei": "rvhi_linien.json"
+    },
+    {
+        "slug": "oeffis",
+        "kurz": "Öffis",
+        "kreise": [
+            "03252"
+        ],
+        "datei": "vhp_linien.json"
+    }
+]

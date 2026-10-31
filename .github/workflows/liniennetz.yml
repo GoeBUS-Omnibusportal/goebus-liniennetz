@@ -1,0 +1,39 @@
+# GöBUS – Liniennetze wöchentlich aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen
+# Läuft montags früh automatisch und kann unter „Actions“ jederzeit von Hand gestartet werden („Run workflow“).
+name: Liniennetz aktualisieren
+
+on:
+  schedule:
+    - cron: '23 3 * * 1'   # montags 03:23 Uhr (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  liniennetz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Dateien holen
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fahrplandaten und OpenStreetMap verarbeiten
+        run: python liniennetz.py --ausgabe daten
+
+      - name: Ergebnis speichern
+        run: |
+          git config user.name "GöBUS Liniennetz"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add daten
+          if git diff --cached --quiet; then
+            echo "Keine Änderungen."
+          else
+            git commit -m "Liniennetz $(date +%F)"
+            git push
+          fi

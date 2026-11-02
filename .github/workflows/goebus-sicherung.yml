@@ -1,0 +1,47 @@
+# GöBUS – verschlüsselte Sicherung der Datenbank an einem zweiten Ort (GitHub)
+# Holt jeden Tag die neueste Sicherung – verschlüsselt mit eurem öffentlichen Schlüssel; lesbar nur mit dem privaten Schlüssel,
+# der beim Administrator liegt (nicht auf dem Server, nicht bei GitHub). Aufbewahrt als Artefakt des Laufs (30 Tage).
+# Einrichten: im selben Repository wie goebus-delfi.yml – dieselbe Variable GOEBUS_ADRESSE und dasselbe Secret GOEBUS_SCHLUESSEL.
+#   Variable GOEBUS_ADRESSE = https://www.goebus.de/_admin/
+name: GöBUS Sicherung
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 2 * * *'
+concurrency:
+  group: goebus-sicherung
+  cancel-in-progress: false
+permissions: {}
+jobs:
+  sicherung:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Verschlüsselte Sicherung holen
+        env:
+          GOEBUS_ADRESSE: ${{ vars.GOEBUS_ADRESSE }}
+          GOEBUS_SCHLUESSEL: ${{ secrets.GOEBUS_SCHLUESSEL }}
+        run: |
+          curl -fsS --retry 3 --retry-delay 30 -H "X-Sync-Token: $GOEBUS_SCHLUESSEL" "${GOEBUS_ADRESSE%/}/index.php?api=sicherung&aktion=neueste" -D kopf.txt -o sicherung.gbk
+          head -c 16 sicherung.gbk | grep -q '^GOEBUS-BACKUP-1$'
+          NAME=$(grep -i '^x-goebus-name:' kopf.txt | head -1 | cut -d' ' -f2 | tr -cd 'A-Za-z0-9._-')
+          test -n "$NAME"
+          mv sicherung.gbk "$NAME"
+          echo "NAME=$NAME" >> "$GITHUB_ENV"
+          echo "SHA=$(sha256sum "$NAME" | cut -d' ' -f1)" >> "$GITHUB_ENV"
+      - name: Aufbewahren
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}
+          path: ${{ env.NAME }}
+          retention-days: 30
+          compression-level: 0
+          if-no-files-found: error
+      - name: An GöBUS melden
+        env:
+          GOEBUS_ADRESSE: ${{ vars.GOEBUS_ADRESSE }}
+          GOEBUS_SCHLUESSEL: ${{ secrets.GOEBUS_SCHLUESSEL }}
+        run: |
+          curl -fsS -X POST -H "X-Sync-Token: $GOEBUS_SCHLUESSEL" -H "Content-Type: application/json" \
+            -d "{\"name\":\"$NAME\",\"sha256\":\"$SHA\",\"lauf\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
+            "${GOEBUS_ADRESSE%/}/index.php?api=sicherung&aktion=bestaetigt"

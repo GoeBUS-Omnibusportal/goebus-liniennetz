@@ -1,35 +1,75 @@
 {
- "erzeugt": "2026-11-02T04:23:22Z",
+ "erzeugt": "2026-11-02T20:11:16Z",
+ "version": "2.0",
+ "linienwege": false,
  "verbuende": {
   "vsn": {
    "datei": "vsn_linien.json",
-   "linien": 188,
-   "osm_verlauf": 128
+   "linien": 191,
+   "osm_verlauf": 137,
+   "fahrplan_verlauf": 0,
+   "verlauf_vorwoche": 0,
+   "aus_vorwoche": 2,
+   "osm": "ok"
   },
   "nvv": {
    "datei": "nvv_linien.json",
-   "linien": 433,
-   "osm_verlauf": 154
+   "linien": 438,
+   "osm_verlauf": 159,
+   "fahrplan_verlauf": 0,
+   "verlauf_vorwoche": 0,
+   "aus_vorwoche": 1,
+   "osm": "ok"
   },
   "vrb": {
    "datei": "vrb_linien.json",
-   "linien": 315,
-   "osm_verlauf": 225
+   "linien": 326,
+   "osm_verlauf": 234,
+   "fahrplan_verlauf": 0,
+   "verlauf_vorwoche": 9,
+   "aus_vorwoche": 1,
+   "osm": "ok"
   },
   "rosa": {
    "datei": "svhi_rvhi_linien.json",
-   "linien": 90,
-   "osm_verlauf": 52
+   "linien": 91,
+   "osm_verlauf": 54,
+   "fahrplan_verlauf": 0,
+   "verlauf_vorwoche": 0,
+   "aus_vorwoche": 0,
+   "osm": "ok"
   },
   "rvhi": {
    "datei": "rvhi_linien.json",
-   "linien": 90,
-   "osm_verlauf": 52
+   "linien": 91,
+   "osm_verlauf": 54,
+   "fahrplan_verlauf": 0,
+   "verlauf_vorwoche": 0,
+   "aus_vorwoche": 0,
+   "osm": "ok"
   },
   "oeffis": {
    "datei": "vhp_linien.json",
-   "linien": 70,
-   "osm_verlauf": 30
+   "linien": 73,
+   "osm_verlauf": 33,
+   "fahrplan_verlauf": 0,
+   "verlauf_vorwoche": 0,
+   "aus_vorwoche": 0,
+   "osm": "ok"
   }
- }
+ },
+ "overpass": [
+  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
+  "Fehler: https://overpass.private.coffee/api/interpreter (The read operation timed out)",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
+  "Fehler: https://overpass.private.coffee/api/interpreter (HTTP Error 504: Gateway Timeout)",
+  "ok: https://overpass-api.de/api/interpreter"
+ ]
 }

@@ -51,7 +51,11 @@
         "kreise": [
             "03254"
         ],
-        "datei": "rvhi_linien.json"
+        "datei": "rvhi_linien.json",
+        "betreiber": [
+            "Regionalverkehr Hildesheim",
+            "RVHI"
+        ]
     },
     {
         "slug": "oeffis",

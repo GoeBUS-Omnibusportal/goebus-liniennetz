@@ -1,11 +1,18 @@
-# GöBUS – Liniennetze wöchentlich aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen
-# Läuft montags früh automatisch und kann unter „Actions“ jederzeit von Hand gestartet werden („Run workflow“).
+# GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.0, Update 24)
+# Läuft montags und donnerstags früh, nach jedem Hochladen von liniennetz.py oder verbuende.json und jederzeit von Hand („Run workflow“).
 name: Liniennetz aktualisieren
 
 on:
   schedule:
-    - cron: '23 3 * * 1'   # montags 03:23 Uhr (UTC)
+    - cron: '23 3 * * 1,4'   # montags und donnerstags 03:23 Uhr (UTC)
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['liniennetz.py', 'verbuende.json', 'landkreise.topo.json', '.github/workflows/liniennetz.yml']
+
+concurrency:
+  group: liniennetz
+  cancel-in-progress: false
 
 permissions:
   contents: write

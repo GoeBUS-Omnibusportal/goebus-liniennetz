@@ -1,4 +1,4 @@
-# GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.0, Update 24)
+# GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.2, Fassung 28)
 # Läuft montags und donnerstags früh, nach jedem Hochladen von liniennetz.py oder verbuende.json und jederzeit von Hand („Run workflow“).
 name: Liniennetz aktualisieren
 
@@ -31,6 +31,10 @@ jobs:
           python-version: '3.12'
 
       - name: Fahrplandaten und OpenStreetMap verarbeiten
+        # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE
+        # (Settings → Secrets and variables → Actions → Variables); ohne Variable läuft alles wie bisher.
+        env:
+          GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
         run: python liniennetz.py --ausgabe daten
 
       - name: Ergebnis speichern

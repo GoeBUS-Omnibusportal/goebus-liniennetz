@@ -21,8 +21,13 @@ jobs:
         env:
           GOEBUS_ADRESSE: ${{ vars.GOEBUS_ADRESSE }}
           GOEBUS_SCHLUESSEL: ${{ secrets.GOEBUS_SCHLUESSEL }}
+          GOEBUS_YML_STAND: '28'
         run: |
-          curl -fsS --retry 3 --retry-delay 30 -H "X-Sync-Token: $GOEBUS_SCHLUESSEL" "${GOEBUS_ADRESSE%/}/index.php?api=sicherung&aktion=neueste" -D kopf.txt -o sicherung.gbk
+          # Fassung 28: Fehlt die Variable GOEBUS_ADRESSE in diesem Repository, brach curl mit Rückgabewert 3 ab („URL fehlerhaft“).
+          # Jetzt gilt dann die Adresse von oben, und ein fehlendes Secret wird klar gemeldet.
+          ADR="${GOEBUS_ADRESSE:-https://www.goebus.de/_admin/}"; ADR="${ADR%/}"; echo "ADR=$ADR" >> "$GITHUB_ENV"
+          if [ -z "$GOEBUS_SCHLUESSEL" ]; then echo "::error::Secret GOEBUS_SCHLUESSEL fehlt in diesem Repository (Settings → Secrets and variables → Actions)."; exit 1; fi
+          curl -fsS --retry 3 --retry-delay 30 -H "X-Sync-Token: $GOEBUS_SCHLUESSEL" "$ADR/index.php?api=sicherung&aktion=neueste" -D kopf.txt -o sicherung.gbk || { echo "::error::GöBUS hat keine Sicherung geliefert (Adresse $ADR, Schlüssel prüfen; Rückgabewert von curl siehe oben)."; exit 1; }
           head -c 16 sicherung.gbk | grep -q '^GOEBUS-BACKUP-1$'
           NAME=$(grep -i '^x-goebus-name:' kopf.txt | head -1 | cut -d' ' -f2 | tr -cd 'A-Za-z0-9._-')
           test -n "$NAME"
@@ -44,4 +49,4 @@ jobs:
         run: |
           curl -fsS -X POST -H "X-Sync-Token: $GOEBUS_SCHLUESSEL" -H "Content-Type: application/json" \
             -d "{\"name\":\"$NAME\",\"sha256\":\"$SHA\",\"lauf\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
-            "${GOEBUS_ADRESSE%/}/index.php?api=sicherung&aktion=bestaetigt"
+            "$ADR/index.php?api=sicherung&aktion=bestaetigt"

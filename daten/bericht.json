@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-08T10:57:55Z",
+ "erzeugt": "2026-11-08T13:26:48Z",
  "version": "2.1",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
@@ -1602,29 +1602,7 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "E",
-     "S",
-     "194",
-     "E11",
-     "E12",
-     "E22",
-     "E31",
-     "E32",
-     "E34",
-     "E41",
-     "E42",
-     "E61",
-     "E71",
-     "E73",
-     "E80",
-     "E91",
-     "E92",
-     "RE2",
-     "RB80",
-     "RB82",
-     "RB84"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [
      "837"
@@ -5655,10 +5633,7 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "E",
-     "516"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
@@ -5975,8 +5950,8 @@
   "vrb": {
    "linien": 326,
    "verlauf": {
-    "osm": 123,
-    "osm+haltestellen": 120,
+    "osm": 116,
+    "osm+haltestellen": 127,
     "haltestellen": 83
    },
    "aus_vorwoche": 2,
@@ -6606,7 +6581,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Goslar, Bahnhof",
      "nach": "Goslar, Bahnhof",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 8,
      "gesehen": "2026-11-08"
     },
@@ -7128,7 +7103,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Goslar, ZOB",
      "nach": "Vienenburg, Schule",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 7,
      "gesehen": "2026-11-08"
     },
@@ -7164,7 +7139,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "SZ-Bad, Bahnhof",
      "nach": "Goslar, ZOB",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 8,
      "gesehen": "2026-11-08"
     },
@@ -7353,7 +7328,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Goslar, ZOB",
      "nach": "Bad Harzburg, Burgstraße",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 8,
      "gesehen": "2026-11-08"
     },
@@ -8577,7 +8552,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Othfresen, Schule",
      "nach": "Klein Mahner, Kirche",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 2,
      "gesehen": "2026-11-08"
     },
@@ -8685,7 +8660,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Goslar, ZOB",
      "nach": "Langelsheim, Schulzentrum",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 5,
      "gesehen": "2026-11-08"
     },
@@ -8811,7 +8786,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Schulenberg, Ort",
      "nach": "Goslar, ZOB",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 4,
      "gesehen": "2026-11-08"
     },
@@ -8933,18 +8908,9 @@
      "gesehen": "2026-11-02"
     }
    ],
-   "ersetzt": {
-    "N3": "25"
-   },
    "abgleich": {
-    "verschwunden": [
-     "E",
-     "875",
-     "N67"
-    ],
-    "neu": [
-     "RE50"
-    ],
+    "verschwunden": [],
+    "neu": [],
     "nur_osm": [
      "166",
      "837",
@@ -9054,7 +9020,7 @@
     ]
    },
    "osm": "ok",
-   "verlauf_vorwoche": 0
+   "verlauf_vorwoche": 9
   },
   "rosa": {
    "linien": 87,
@@ -9859,18 +9825,18 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "E3",
-     "E4",
-     "E5",
-     "E8",
-     "RE2",
-     "5/43"
+    "verschwunden": [],
+    "neu": [],
+    "nur_osm": [
+     "52/22",
+     "52/23",
+     "52/25",
+     "52/53",
+     "501/52",
+     "52/501",
+     "201/202",
+     "641/501/52"
     ],
-    "neu": [
-     "RE10"
-    ],
-    "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
     "quellen_fehler": []
@@ -10723,17 +10689,8 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "E3",
-     "E4",
-     "E5",
-     "E8",
-     "RE2",
-     "5/43"
-    ],
-    "neu": [
-     "RE10"
-    ],
+    "verschwunden": [],
+    "neu": [],
     "nur_osm": [
      "43"
     ],
@@ -11463,9 +11420,7 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "792"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
@@ -11522,21 +11477,21 @@
     ]
    },
    "osm": "ok",
-   "verlauf_vorwoche": 33
+   "verlauf_vorwoche": 0
   }
  },
  "overpass": [
-  "Fehler: https://overpass.private.coffee/api/interpreter (HTTP Error 504: Gateway Timeout)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "ok: https://overpass.private.coffee/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter",
   "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
   "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
-  "ok: https://overpass.private.coffee/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
-  "ok: https://overpass.kumi.systems/api/interpreter",
+  "Fehler: https://overpass.private.coffee/api/interpreter (HTTP Error 504: Gateway Timeout)",
   "ok: https://overpass-api.de/api/interpreter"
  ]
 }

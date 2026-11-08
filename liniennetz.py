@@ -31,6 +31,7 @@ import io
 import json
 import math
 import os
+import re
 import sys
 import time
 import urllib.parse
@@ -38,7 +39,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '2.0'
+VERSION = '2.1'
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
@@ -245,7 +246,9 @@ def gtfs_auswerten(pfad, kreise, verbuende):
     for rid, trips in je_linie.items():
         r = linien.get(rid, {})
         ref = (r.get('route_short_name') or '').strip() or (r.get('route_long_name') or '').strip()
-        if not ref:
+        # Version 2.1: „Linie 6“/„Bus 6“ als Nummer → „6“; nur Einzellinien (keine „31, 32“, „501/52“); keine Sonderkennungen ohne Fahrgastbetrieb
+        ref = re.sub(r'^(?:Stadt)?(?:Bus|Buslinie|Linie)\s+', '', ref, flags=re.I).strip()
+        if not ref or keine_linie(ref):
             continue
         # Muster ohne Mehrwert weglassen: Haltestellen vollständig in einem längeren Muster enthalten (auch Gegenrichtung)
         behalten = []
@@ -543,7 +546,45 @@ def verlauf_aus_osm(features, osm, nah=350, mindestens=0.6, variante=0.75):
     return n
 
 
-def gedaechtnis(feats, alt_pfad, heute, tage=56):
+def keine_linie(ref, von='', nach=''):
+    """Version 2.1: Linien, die nicht ins Liniennetz gehören – zusammengesetzte Nummern („31, 32“, „501/52“, „31+32“),
+    Sonderkennungen ohne Fahrgastbetrieb („E“, „E80“, „F“, „S“) und „Bahnhof A → Bahnhof A“."""
+    ref = str(ref or '').strip()
+    if not ref or re.search(r'[,;/+&]|\s(?:und|u\.)\s', ref, re.I):
+        return True
+    if re.match(r'^(?:E|F|S)$', ref, re.I) or re.match(r'^E\d{1,3}$', ref, re.I):
+        return True
+    a, b = str(von or '').strip().lower(), str(nach or '').strip().lower()
+    return bool(a and a == b and re.match(r'^(?:bahnhof\s?[a-z]?|betriebshof.*|depot.*)$', a))
+
+
+def ersetzt_durch(f, feats, nah=300, anteil=0.7):
+    """Version 2.1: Fährt eine aktuelle Linie desselben Betreibers fast denselben Weg (70 % der Punkte näher als 300 m)?
+    Dann ist die alte Nummer ersetzt (z. B. VSN 265 → 260) und wird nicht aus der Vorwoche behalten. Rückgabe: neue Nummer oder ''."""
+    g = f.get('geometry') or {}
+    teile = g.get('coordinates', []) if g.get('type') == 'MultiLineString' else ([g.get('coordinates', [])] if g.get('type') == 'LineString' else [])
+    punkte = stichprobe([tuple(p) for t in teile for p in t], 60)
+    if len(punkte) < 4:
+        return ''
+    op = str(f.get('properties', {}).get('operator', '')).strip().lower()
+    for neu in feats:
+        pn = neu['properties']
+        if op and str(pn.get('operator', '')).strip().lower() not in ('', op):
+            continue
+        gn = neu.get('geometry') or {}
+        tn = gn.get('coordinates', []) if gn.get('type') == 'MultiLineString' else ([gn.get('coordinates', [])] if gn.get('type') == 'LineString' else [])
+        if not tn:
+            continue
+        r = Raster([[tuple(p) for p in t] for t in tn])
+        if sum(1 for p in punkte if r.abstand(p) <= nah) / len(punkte) >= anteil:
+            return str(pn.get('ref', ''))
+    return ''
+
+
+ERSETZT = {}     # slug → {alte Nummer: neue Nummer} (für den Bericht)
+
+
+def gedaechtnis(feats, alt_pfad, heute, tage=28, slug=''):
     """Linien aus der Vorwoche behalten, die diesmal fehlen (z. B. Schulfahrten in den Ferien: Die freien
     Fahrplandaten gelten nur für 7 Tage). Nach `tage` Tagen ohne Fahrt verschwindet eine Linie."""
     if not os.path.exists(alt_pfad):
@@ -559,7 +600,12 @@ def gedaechtnis(feats, alt_pfad, heute, tage=56):
     for f in alt.get('features', []):
         p = f.get('properties', {})
         gesehen = str(p.get('gesehen') or alt.get('erzeugt', '')[:10] or heute)
-        if schl(p) in vorhanden or gesehen < grenze or not f.get('geometry'):
+        if schl(p) in vorhanden or gesehen < grenze or not f.get('geometry') or keine_linie(p.get('ref', ''), p.get('from'), p.get('to')):
+            continue
+        neu = ersetzt_durch(f, [x for x in feats if not x['properties'].get('aus_vorwoche')])
+        if neu:
+            ERSETZT.setdefault(slug, {})[str(p.get('ref', ''))] = neu
+            log(slug, 'Linie', p.get('ref'), 'nicht behalten – ersetzt durch', neu)
             continue
         p['gesehen'] = gesehen
         p['aus_vorwoche'] = True
@@ -731,7 +777,7 @@ def main():
     ap.add_argument('--ohne-osm', action='store_true', help='keine OpenStreetMap-Verläufe abfragen')
     ap.add_argument('--overpass-url', default=OVERPASS_URL)
     ap.add_argument('--verbuende', default=os.path.join(HIER, 'verbuende.json'), help='Verbünde (Vorgabe: verbuende.json neben dem Skript)')
-    ap.add_argument('--behalten-tage', type=int, default=56, help='fehlende Linien so viele Tage aus der Vorwoche behalten (0 = aus)')
+    ap.add_argument('--behalten-tage', type=int, default=28, help='fehlende Linien so viele Tage aus der Vorwoche behalten (0 = aus); ersetzte Linien nie')
     ap.add_argument('--osm-json', help='vorbereitete Overpass-Antworten statt Abfrage, z. B. osm/{slug}.json (für Tests)')
     a = ap.parse_args()
 
@@ -786,7 +832,7 @@ def main():
             f.pop('_formen', None)
             f['properties']['gesehen'] = heute
         ziel = os.path.join(a.ausgabe, v['datei'])
-        alt_n = gedaechtnis(feats, ziel, heute, a.behalten_tage) if a.behalten_tage > 0 else 0
+        alt_n = gedaechtnis(feats, ziel, heute, a.behalten_tage, v['slug']) if a.behalten_tage > 0 else 0
         if not feats:
             log(v['slug'], 'keine Linien – Datei wird nicht geschrieben')
             continue
@@ -798,6 +844,8 @@ def main():
         os.replace(ziel + '.neu', ziel)
         stand['verbuende'][v['slug']] = {'datei': v['datei'], 'linien': len(feats), 'osm_verlauf': osm_n, 'fahrplan_verlauf': fp_n, 'verlauf_vorwoche': vw_n, 'aus_vorwoche': alt_n, 'osm': osm_status}
         bericht['verbuende'][v['slug']] = bericht_verbund(v, feats)
+        if ERSETZT.get(v['slug']):
+            bericht['verbuende'][v['slug']]['ersetzt'] = ERSETZT[v['slug']]
         bericht['verbuende'][v['slug']]['abgleich'] = abgleich_verbund(v, feats, alt_refs, osm_alle, quelle)
         bericht['verbuende'][v['slug']]['pruefung'] = pruefung_verbund(feats)
         bericht['verbuende'][v['slug']]['osm'] = osm_status

@@ -1,8 +1,8 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-08T13:26:48Z · Skript 2.1 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-09T04:17:43Z · Skript 2.1 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
-Overpass: ok: https://overpass-api.de/api/interpreter · ok: https://overpass-api.de/api/interpreter · Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway) · Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout) · Fehler: https://overpass.private.coffee/api/interpreter (HTTP Error 504: Gateway Timeout) · ok: https://overpass-api.de/api/interpreter
+Overpass: ok: https://overpass-api.de/api/interpreter · ok: https://overpass-api.de/api/interpreter · ok: https://overpass-api.de/api/interpreter · Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway) · ok: https://overpass.kumi.systems/api/interpreter · ok: https://overpass-api.de/api/interpreter
 
 ## VSN – 175 Linien
 
@@ -11,7 +11,7 @@ Overpass: ok: https://overpass-api.de/api/interpreter · ok: https://overpass-ap
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 25, 30, 51, 71, 72, 123, 194, 242, 260, 262, 275, 452, 457, 509, 515, 521, 522, 526, 533, 642, 721, ALT, RE2, 9115, 9120, 9130, 9140, 9154, 9173, 9180, 9186, 9220, 9510, 9520, 9530, RB80, RB82, RB84, RB85
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
 - **Neu in den Fahrplandaten:** keine
-- **Nur in OpenStreetMap (network passt zum Verbund):** 837
+- **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
@@ -31,7 +31,7 @@ Overpass: ok: https://overpass-api.de/api/interpreter · ok: https://overpass-ap
 
 ## VRB – 326 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 116 OpenStreetMap, 127 teilweise, 83 nur Haltestellen (9 aus der Vorwoche übernommen) · OpenStreetMap: ok
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 123 OpenStreetMap, 120 teilweise, 83 nur Haltestellen · OpenStreetMap: ok
 - **Weniger als drei Halte:** RE30
 - **Gleiche Nummer, mehrere Betreiber:** 211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 470 (Stade, VSN-Direkt), 803 (PVG Salzwedel, Tarifverb Region Braunschweig), re30 (enno, gooBL)
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 107, 108, 114, 115, 116, 136, 138, 139, 143, 144, 147, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 161, 165, 174, 175, 182, 183, 184, 185, 186, 187, 194, 197, 221, 222, 223, 224, 225, 226, 227, 263, 264, 265, 266, 268, 269, 335, 373, 382, 394, 614, 653, 658, 659, 666, 733, 734, 736, 741, 742

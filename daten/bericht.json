@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-12T04:15:23Z",
+ "erzeugt": "2026-11-12T22:57:04Z",
  "version": "2.1",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
@@ -1604,7 +1604,9 @@
    "abgleich": {
     "verschwunden": [],
     "neu": [],
-    "nur_osm": [],
+    "nur_osm": [
+     "837"
+    ],
     "nur_quelle": [],
     "nur_soll": [],
     "quellen_fehler": []
@@ -9018,7 +9020,7 @@
     ]
    },
    "osm": "ok",
-   "verlauf_vorwoche": 9
+   "verlauf_vorwoche": 241
   },
   "rosa": {
    "linien": 87,
@@ -10688,9 +10690,7 @@
    "abgleich": {
     "verschwunden": [],
     "neu": [],
-    "nur_osm": [
-     "43"
-    ],
+    "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
     "quellen_fehler": []
@@ -11478,16 +11478,16 @@
   }
  },
  "overpass": [
+  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
   "ok: https://overpass.private.coffee/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter",
   "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
+  "ok: https://overpass.private.coffee/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 504: Gateway Timeout)",
   "ok: https://overpass.kumi.systems/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
-  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 502: Bad Gateway)",
-  "Fehler: https://overpass.private.coffee/api/interpreter (The read operation timed out)",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter"
  ]

@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-09T04:17:43Z",
+ "erzeugt": "2026-11-12T04:15:23Z",
  "version": "2.1",
  "linienwege": false,
  "verbuende": {
@@ -24,16 +24,16 @@
   "vrb": {
    "datei": "vrb_linien.json",
    "linien": 326,
-   "osm_verlauf": 241,
+   "osm_verlauf": 232,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
+   "verlauf_vorwoche": 9,
    "aus_vorwoche": 2,
    "osm": "ok"
   },
   "rosa": {
    "datei": "svhi_rvhi_linien.json",
    "linien": 87,
-   "osm_verlauf": 54,
+   "osm_verlauf": 55,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
    "aus_vorwoche": 1,
@@ -59,17 +59,17 @@
   }
  },
  "overpass": [
-  "ok: https://overpass.kumi.systems/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass.private.coffee/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter",
   "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
   "ok: https://overpass.kumi.systems/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "Fehler: https://overpass.private.coffee/api/interpreter (The read operation timed out)",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter"
  ]
 }

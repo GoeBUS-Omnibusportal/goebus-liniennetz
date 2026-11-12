@@ -1,8 +1,8 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-09T04:17:43Z · Skript 2.1 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-12T04:15:23Z · Skript 2.1 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
-Overpass: ok: https://overpass-api.de/api/interpreter · ok: https://overpass-api.de/api/interpreter · ok: https://overpass-api.de/api/interpreter · Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway) · ok: https://overpass.kumi.systems/api/interpreter · ok: https://overpass-api.de/api/interpreter
+Overpass: Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 502: Bad Gateway) · Fehler: https://overpass.private.coffee/api/interpreter (The read operation timed out) · ok: https://overpass-api.de/api/interpreter · ok: https://overpass-api.de/api/interpreter · ok: https://overpass-api.de/api/interpreter · ok: https://overpass-api.de/api/interpreter
 
 ## VSN – 175 Linien
 
@@ -31,7 +31,7 @@ Overpass: ok: https://overpass-api.de/api/interpreter · ok: https://overpass-ap
 
 ## VRB – 326 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 123 OpenStreetMap, 120 teilweise, 83 nur Haltestellen · OpenStreetMap: ok
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 116 OpenStreetMap, 127 teilweise, 83 nur Haltestellen (9 aus der Vorwoche übernommen) · OpenStreetMap: ok
 - **Weniger als drei Halte:** RE30
 - **Gleiche Nummer, mehrere Betreiber:** 211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 470 (Stade, VSN-Direkt), 803 (PVG Salzwedel, Tarifverb Region Braunschweig), re30 (enno, gooBL)
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 107, 108, 114, 115, 116, 136, 138, 139, 143, 144, 147, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 161, 165, 174, 175, 182, 183, 184, 185, 186, 187, 194, 197, 221, 222, 223, 224, 225, 226, 227, 263, 264, 265, 266, 268, 269, 335, 373, 382, 394, 614, 653, 658, 659, 666, 733, 734, 736, 741, 742
@@ -44,9 +44,9 @@ Overpass: ok: https://overpass-api.de/api/interpreter · ok: https://overpass-ap
 
 ## ROSA – 87 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 25 OpenStreetMap, 29 teilweise, 33 nur Haltestellen · OpenStreetMap: ok
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 26 OpenStreetMap, 29 teilweise, 32 nur Haltestellen · OpenStreetMap: ok
 - **Gleiche Nummer, mehrere Betreiber:** 1 (Großraumverkehr Hannover, Hildesheim)
-- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 1, 35, 51, N1, N2, N3, N4, N5, N6, N7, N8, N9, S4, 105, 106, 201, 212, 341, 522, 642, 661, RE2, 2024, 2031, 2032, 2033, 2041, 2341, N881, RB77, RB79, RE10, SalzeBus
+- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 35, 51, N1, N2, N3, N4, N5, N6, N7, N8, N9, S4, 105, 106, 201, 212, 341, 522, 642, 661, RE2, 2024, 2031, 2032, 2033, 2041, 2341, N881, RB77, RB79, RE10, SalzeBus
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
 - **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** 52/22, 52/23, 52/25, 52/53, 501/52, 52/501, 201/202, 641/501/52

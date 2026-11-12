@@ -1,4 +1,4 @@
-# GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.2, Fassung 28)
+# GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.2, Fassung 28); Fahrschulen (Fassung 42)
 # Läuft montags und donnerstags früh, nach jedem Hochladen von liniennetz.py oder verbuende.json und jederzeit von Hand („Run workflow“).
 name: Liniennetz aktualisieren
 
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['liniennetz.py', 'verbuende.json', 'landkreise.topo.json', '.github/workflows/liniennetz.yml']
+    paths: ['liniennetz.py', 'fahrschulen.py', 'verbuende.json', 'landkreise.topo.json', '.github/workflows/liniennetz.yml']
 
 concurrency:
   group: liniennetz
@@ -36,6 +36,14 @@ jobs:
         env:
           GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
         run: python liniennetz.py --ausgabe daten
+
+      - name: Fahrschulen mit Busführerschein suchen
+        # Fassung 42: OpenStreetMap und Websites der Fahrschulen – der Webserver erreicht Overpass nicht; die Website holt daten/fahrschulen.json ab.
+        # Schlägt dieser Schritt fehl, bleibt das Liniennetz davon unberührt.
+        if: ${{ hashFiles('fahrschulen.py') != '' }}
+        continue-on-error: true
+        timeout-minutes: 20
+        run: python fahrschulen.py --ausgabe daten
 
       - name: Ergebnis speichern
         run: |

@@ -4,7 +4,7 @@ GöBUS – Fahrschulen mit Busführerschein (Klasse D) in unserer Region
 ====================================================================
 
 Läuft bei GitHub zusammen mit dem Liniennetz (siehe .github/workflows/liniennetz.yml) – oder auf jedem Rechner mit Python 3.9+.
-Keine Zusatzpakete nötig. Version 1.0 (Fassung 42).
+Keine Zusatzpakete nötig. Version 1.1 (Fassung 44).
 
 Warum hier und nicht auf der Website?
   Der Webserver (STRATO) erreicht die Overpass-Server von OpenStreetMap nicht („OpenStreetMap nicht erreichbar (Netz)“), und je Lauf
@@ -12,11 +12,14 @@ Warum hier und nicht auf der Website?
   (daten/fahrschulen.json, wie die Liniennetze).
 
 Ablauf
-  1. Alle Fahrschulen im Gebiet aus OpenStreetMap (amenity=driving_school, Lizenz ODbL).
+  1. Alle Fahrschulen im Gebiet aus OpenStreetMap (amenity=driving_school, Lizenz ODbL) – seit 1.1 auch Bildungsträger, die OpenStreetMap
+     nicht als Fahrschule führt (Name mit Fahrschule, Fahrerschmiede, DEULA, Verkehrsschule, Berufskraftfahrer …), und die Liste ZUSATZ.
   2. Je Fahrschule mit Website: Startseite und bis zu vier passende Unterseiten (Bus, Klassen, Berufskraftfahrer, Leistungen) lesen –
      nur, wenn robots.txt es erlaubt.
-  3. Busführerschein belegt, wenn die Seiten Klasse D/D1/DE/D1E im Zusammenhang mit „Klasse“ oder „Führerschein“ nennen oder
-     ausdrücklich Bus-Ausbildung anbieten; ersatzweise der OSM-Eintrag license_classes mit D.
+  3. Busführerschein belegt, wenn die Seiten Klasse D/D1/DE/D1E in einer Klassenliste („Klassen …“, „Fahrerlaubnisklassen …“) nennen,
+     ausdrücklich den Bus-Führerschein anbieten oder den Personenbeförderungsschein (P-Schein); ersatzweise der OSM-Eintrag
+     license_classes mit D. Seit 1.1 zählt „Berufskraftfahrer … Personenverkehr“ allein nicht mehr (so beschreibt sich auch ein
+     Fahrlehrer, der nur Klasse B ausbildet).
   4. daten/fahrschulen.json schreiben: alle Fahrschulen mit Angaben, „bus“ (true/false) und dem Beleg (kurzer Textausschnitt).
 
 Aufruf
@@ -34,7 +37,7 @@ import urllib.parse
 import urllib.request
 import urllib.robotparser
 
-VERSION = '1.0'
+VERSION = '1.1'
 UA = 'GoeBUS-Fahrschulen/' + VERSION + ' (+https://www.goebus.de)'
 GEBIET = '50.75,8.70,52.25,10.80'
 OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter']
@@ -43,8 +46,19 @@ UNTERSEITEN = re.compile(r'bus|lkw|berufskraft|bkf|klasse|führerschein|fuehrers
 BELEG = [
     # Klasse groß geschrieben und allein stehend (nicht „m/w/d“, nicht „….de“)
     re.compile(r'(?i:klassen?|führerschein|fuehrerschein|fahrerlaubnis)\b[^.\n]{0,80}?(?<![/\w.-])(D1E|D1|DE|D)(?![\w/-]|\.\w)'),
-    re.compile(r'\b(?:bus|omnibus)(?:führerschein|fuehrerschein|fahrer\w*|ausbildung|fahrschule)\b', re.I),
-    re.compile(r'\b(?:berufskraftfahrer\w*|grundqualifikation)[^.\n]{0,60}(?:personen|bus)', re.I),
+    re.compile(r'(?i:klassen?|führerschein\w*|fuehrerschein\w*|fahrerlaubnis\w*)\b[^.\n]{0,80}?(?<![/\w.-])(D1E|D1|DE|D)(?![\w/-]|\.\w)'),
+    re.compile(r'\b(?:omni)?bus[-\s]?(?:führerschein|fuehrerschein|fahrschule|ausbildung|fahrerausbildung)\b', re.I),
+    re.compile(r'\b(?:omni)?bus-\s*(?:und|&|/|oder)\s*(?:lkw|lastwagen)-?(?:führerschein|fuehrerschein|ausbildung)', re.I),
+    re.compile(r'führerschein\w*\s+(?:für\s+(?:den\s+|einen\s+)?)?(?:omni)?bus(?:se)?\b', re.I),
+    re.compile(r'ausbildung\s+zu[mr]\s+(?:omni)?busfahrer', re.I),
+    re.compile(r'personenbeförderungsschein|p-schein|fahrerlaubnis\s+zur\s+fahrgastbeförderung|fahrgastbeförderungsschein|taxischein', re.I),
+]
+# Bildungsträger, die OpenStreetMap nicht als Fahrschule führt (Name)
+ANBIETER_NAME = r'fahrschul|fahrerschmiede|deula|verkehrsschule|kraftverkehrsschule|fahrer-?akademie|verkehrsakademie|berufskraftfahr|bkf|fahrlehr|omnibusschule|busschule'
+# Weitere Anbieter ohne passenden OSM-Eintrag: (Website, Name, Ort)
+ZUSATZ = [
+    ('https://fahrerschmiede-hildesheim.de/', 'Fahrerschmiede Hildesheim', 'Hildesheim'),
+    ('https://deula-hildesheim.de/fahrschule/', 'DEULA Hildesheim – Fahrschule', 'Hildesheim'),
 ]
 KEINE_FAHRSCHULE = re.compile(r'jugendverkehrsschule|verkehrsgarten|verkehrswacht|übungsplatz', re.I)
 
@@ -104,12 +118,14 @@ def beleg_aus(t):
 
 
 def klassen_aus(t):
-    if not re.search(r'klasse', t, re.I):
-        return ''
+    # 1.1: nur aus Klassenlisten („Klassen …“, „Fahrerlaubnisklassen …“, „Führerschein …“), nicht aus Anschriften wie „D-37073“
     gef = []
-    for k in ('D1E', 'D1', 'DE', 'D', 'C1E', 'C1', 'CE', 'C'):
-        if re.search(r'(?<![/\w.-])' + k + r'(?![\w/-]|\.\w)', t) and k not in gef:
-            gef.append(k)
+    for ab in re.finditer(r'(?i:klassen?|führerschein\w*|fuehrerschein\w*|fahrerlaubnis\w*)\b[^.\n]{0,120}', t):
+        for k in ('D1E', 'D1', 'DE', 'D', 'C1E', 'C1', 'CE', 'C'):
+            if re.search(r'(?<![/\w.-])' + k + r'(?![\w/-]|\.\w)', ab.group(0)) and k not in gef:
+                gef.append(k)
+    if not any(k.startswith('D') for k in gef) and re.search(BELEG[1].pattern + '|' + BELEG[2].pattern + '|' + BELEG[3].pattern, t, re.I):
+        gef.insert(0, 'D')   # „Bus-Führerschein“ ohne Klassenliste
     return ', '.join(gef)
 
 
@@ -147,13 +163,15 @@ def pruefen(s):
     s['beleg'] = beleg_aus(t) or s['beleg']
     s['klassen'] = klassen_aus(t)
     s['bus'] = s['bus'] or bool(s['beleg'])
+    s['pschein'] = bool(BELEG[-1].search(t))
     s['azav'] = bool(re.search(r'\bAZAV\b|bildungsgutschein', t, re.I))
     s['grund'] = ''
     return s
 
 
 def overpass(gebiet):
-    q = '[out:json][timeout:90];nwr["amenity"="driving_school"](%s);out center tags 2000;' % gebiet
+    q = ('[out:json][timeout:120];(nwr["amenity"="driving_school"](%s);nwr["name"~"%s",i](%s););out center tags 3000;'
+         % (gebiet, ANBIETER_NAME, gebiet))
     daten = urllib.parse.urlencode({'data': q}).encode()
     for versuch in range(2):
         for u in OVERPASS:
@@ -179,10 +197,15 @@ def main():
         log('OpenStreetMap nicht erreichbar – bisherige Datei bleibt')
         return 0
     schulen = []
+    gesehen = set()
     for e in j.get('elements', []):
         t = e.get('tags', {})
         name = (t.get('name') or '').strip()
-        if not name or KEINE_FAHRSCHULE.search(name):
+        if not name or KEINE_FAHRSCHULE.search(name) or (e['type'], e['id']) in gesehen:
+            continue
+        gesehen.add((e['type'], e['id']))
+        # Namenstreffer nur für Einrichtungen (keine Straßen, Haltestellen, Parkplätze)
+        if t.get('amenity') != 'driving_school' and (t.get('highway') or t.get('public_transport') or t.get('railway') or t.get('amenity') in ('parking', 'bus_station')):
             continue
         lat = e.get('lat', (e.get('center') or {}).get('lat'))
         lon = e.get('lon', (e.get('center') or {}).get('lon'))
@@ -194,7 +217,13 @@ def main():
                         'lage': '%.5f,%.5f' % (lat, lon) if lat is not None else '',
                         'klassen': '', 'bus': bool(re.search(r'(^|;)\s*D', lic)), 'beleg': ('OpenStreetMap: Klassen ' + lic.replace(';', ', ')) if re.search(r'(^|;)\s*D', lic) else '',
                         'azav': False, 'grund': ''})
-    log('%d Fahrschulen in OpenStreetMap, %d mit Website' % (len(schulen), sum(1 for s in schulen if s['web'])))
+    bekannt = {urllib.parse.urlsplit(s['web'] if '://' in s['web'] else 'https://' + s['web']).netloc.lower().removeprefix('www.') for s in schulen if s['web']}
+    for web, name, ort in ZUSATZ:
+        if urllib.parse.urlsplit(web).netloc.lower().removeprefix('www.') in bekannt:
+            continue
+        schulen.append({'id': 'w' + re.sub(r'\W+', '-', urllib.parse.urlsplit(web).netloc), 'name': name, 'web': web, 'tel': '', 'mail': '', 'ort': ort, 'plz': '', 'strasse': '',
+                        'lage': '', 'klassen': '', 'bus': False, 'beleg': '', 'azav': False, 'grund': ''})
+    log('%d Fahrschulen in OpenStreetMap und Zusatzliste, %d mit Website' % (len(schulen), sum(1 for s in schulen if s['web'])))
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
         list(ex.map(pruefen, [s for s in schulen if s['web']]))
     for s in schulen:

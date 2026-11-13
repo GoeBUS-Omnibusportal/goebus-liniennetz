@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-12T22:57:04Z",
+ "erzeugt": "2026-11-13T06:59:56Z",
  "version": "2.1",
  "linienwege": false,
  "verbuende": {
@@ -24,27 +24,27 @@
   "vrb": {
    "datei": "vrb_linien.json",
    "linien": 326,
-   "osm_verlauf": 0,
+   "osm_verlauf": 232,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 241,
+   "verlauf_vorwoche": 9,
    "aus_vorwoche": 2,
    "osm": "ok"
   },
   "rosa": {
    "datei": "svhi_rvhi_linien.json",
    "linien": 87,
-   "osm_verlauf": 55,
+   "osm_verlauf": 54,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
+   "verlauf_vorwoche": 1,
    "aus_vorwoche": 1,
    "osm": "ok"
   },
   "rvhi": {
    "datei": "rvhi_linien.json",
    "linien": 87,
-   "osm_verlauf": 54,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
+   "verlauf_vorwoche": 54,
    "aus_vorwoche": 1,
    "osm": "ok"
   },
@@ -59,17 +59,17 @@
   }
  },
  "overpass": [
-  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
-  "ok: https://overpass.private.coffee/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "ok: https://overpass-api.de/api/interpreter",
+  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "ok: https://overpass.kumi.systems/api/interpreter",
   "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
   "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
   "ok: https://overpass.private.coffee/api/interpreter",
   "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 504: Gateway Timeout)",
-  "ok: https://overpass.kumi.systems/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter"
+  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "ok: https://overpass.private.coffee/api/interpreter"
  ]
 }

@@ -1,11 +1,11 @@
 {
- "version": "1.0",
- "stand": "2026-11-12T23:32:19Z",
+ "version": "1.1",
+ "stand": "2026-11-13T07:42:24Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "https://overpass-api.de/api/interpreter",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
- "anzahl": 516,
- "mit_bus": 55,
+ "anzahl": 527,
+ "mit_bus": 46,
  "schulen": [
   {
    "id": "n1571201710",
@@ -17,11 +17,12 @@
    "plz": "",
    "strasse": "",
    "lage": "52.21563,9.55634",
-   "klassen": "D, CE, C",
+   "klassen": "C, CE, D",
    "bus": true,
    "beleg": "Ausbildungsfahrten mit Kraftomnibussen (Klasse D) · Rangier- und Praxisübungen mit Kra",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11218242253",
@@ -33,11 +34,12 @@
    "plz": "",
    "strasse": "",
    "lage": "52.23975,9.10646",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "D, D1E, D1, DE, C1E, C1, CE, C",
    "bus": true,
    "beleg": "er in der Personenbeförderung, die eine Fahrerlaubnis der Klassen D1, D1E, D, DE oder eine gleichwertige Kla",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6165340197",
@@ -65,11 +67,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.98442,9.26134",
-   "klassen": "",
+   "klassen": "D",
    "bus": true,
-   "beleg": "Automatikwagen. Du planst jetzt schon, Busfahrer oder LKW-Fahrer zu werden? Dann mach D",
+   "beleg": "er dann eine Fahrschule suchen, die die Bus-/LKW-Ausbildung auf Schaltfahrzeugen anbietet oder eine",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w557292916",
@@ -97,11 +100,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.71271,8.76931",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "D, C",
    "bus": true,
-   "beleg": "D1, D1E, D und DE Nächste Station: Busführerschein. Doch ob im Öffentlichen Nahverkehr o",
+   "beleg": "der Klasse C. BUS-FÜHRERSCHEIN D1, D1E, D und DE Nächste Station:",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12168251766",
@@ -113,11 +117,12 @@
    "plz": "",
    "strasse": "",
    "lage": "52.08589,8.73793",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C, C1E, C1, CE, D1E, D1, DE, D",
    "bus": true,
    "beleg": "asse den Führerschein der Klasse C. Der Führerschein in der Klasse CE schließt die Klassen BE, C1E, T, D1E (bei Vorbesitz D1) und DE (bei Vorbesit",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": true
   },
   {
    "id": "n6565956919",
@@ -129,11 +134,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.92822,9.63587",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "D1, C1, DE, D, C",
    "bus": true,
    "beleg": "r Inhaber zum Führen von Fahrzeugen der Klasse D1 berechtigt ist. Fahrzeugkombinationen",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12811986202",
@@ -149,7 +155,8 @@
    "bus": true,
    "beleg": "des Fahrlehrergesetz (FahlG) für die FE Klassen BE, A, CE, DE, mit der Listen Nr.; 03/2018, 107/2019",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5571982601",
@@ -161,11 +168,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.87173,8.94615",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, D1, C1E, D1E, C, D, CE, DE",
    "bus": true,
    "beleg": "von uns ausgebildet.) Klasse C1 Klasse D1 Klasse C1E Klasse D1E Klasse",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13140761922",
@@ -177,11 +185,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.95952,10.00368",
-   "klassen": "D1, D, C1E, C1, CE, C",
+   "klassen": "C, CE, C1, D1, D, C1E",
    "bus": true,
    "beleg": "rzeuge - ausgenommen Kraftfahrzeuge der Klassen D1 und D - mit einer zulässigen Gesamtmass",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12692533949",
@@ -193,11 +202,12 @@
    "plz": "",
    "strasse": "",
    "lage": "52.23945,10.58180",
-   "klassen": "C1E, C1, CE, C",
+   "klassen": "C, CE, C1, C1E",
    "bus": true,
    "beleg": "OpenStreetMap: Klassen A, A1, B, B1, C, C1, D, D1, BE, CE, C1E, DE, D1E",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5620449488",
@@ -209,11 +219,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.66502,9.37267",
-   "klassen": "D1, D, C1E, C1, CE, C",
+   "klassen": "C1E, C1, CE, C, D1, D",
    "bus": true,
    "beleg": "rzeuge – ausgenommen Kraftfahrzeuge der Klassen AM, A1, A2, A, D1 und D – mit einer zulässigen Gesamtmass",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9775912252",
@@ -232,22 +243,6 @@
    "grund": "Website nicht erreichbar (<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unabl)"
   },
   {
-   "id": "n12526873433",
-   "name": "Sieke",
-   "web": "https://www.fahrschule-sieke.de/",
-   "tel": "",
-   "mail": "",
-   "ort": "",
-   "plz": "",
-   "strasse": "Lange Straße 2",
-   "lage": "51.47452,9.01019",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
-   "bus": true,
-   "beleg": "aftfahrer Weiterbildungen für Lkw- und Busfahrer sowie Angebote zur beschleunigten Grund",
-   "azav": false,
-   "grund": ""
-  },
-  {
    "id": "w95360801",
    "name": "Fahrschule Kirch",
    "web": "https://kirch24.de",
@@ -257,11 +252,12 @@
    "plz": "36211",
    "strasse": "Borngasse 16",
    "lage": "51.04923,9.66657",
-   "klassen": "D1E, D1, DE, D, C1E, C1, C",
+   "klassen": "C1, C, D1E, D1, DE, C1E, D",
    "bus": true,
    "beleg": "nklasse C notwendig. Eingeschlossene Klassen: BE, C1E und T sowie D1E, sofern der Inhaber zum Führen von Fahr",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9774785230",
@@ -273,11 +269,12 @@
    "plz": "31749",
    "strasse": "Marktplatz 6",
    "lage": "52.23192,9.23580",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "D, D1E, D1, DE, C1E, C1, CE, C",
    "bus": true,
    "beleg": "er in der Personenbeförderung, die eine Fahrerlaubnis der Klassen D1, D1E, D, DE oder eine gleichwertige Kla",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11039917138",
@@ -289,11 +286,12 @@
    "plz": "33014",
    "strasse": "Lange Straße 56",
    "lage": "51.73609,9.01641",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, C, D1, D",
    "bus": true,
    "beleg": "alter 21/18 Jahre Voraussetzungen Führerschein der Klasse D1, 18 gilt nur bei Auszubildenden zum Ber",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6376862346",
@@ -305,27 +303,12 @@
    "plz": "33014",
    "strasse": "Dringenberger Straße 61",
    "lage": "51.72704,9.01803",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1E, C1, CE, C, D1E, D1, DE, D",
    "bus": true,
    "beleg": "Bus – Führerscheinklassen D1, D1E, D und DE Führerscheink",
    "azav": true,
-   "grund": ""
-  },
-  {
-   "id": "n10695145077",
-   "name": "Fahrschule Bothe",
-   "web": "https://fahrschule-bothe.de",
-   "tel": "+49 5322 7807363",
-   "mail": "",
-   "ort": "Bad Harzburg",
-   "plz": "38667",
-   "strasse": "Herzog-Julius-Straße 33",
-   "lage": "51.88418,10.56114",
-   "klassen": "CE, C",
-   "bus": true,
-   "beleg": "nsportfahrten über 3,5 Tonnen) und alle Busfahrer (bei mehr als acht Fahrgastplätzen). Au",
-   "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4690480796",
@@ -337,11 +320,12 @@
    "plz": "32108",
    "strasse": "Daimlerstraße 8",
    "lage": "52.05567,8.75230",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "D, C, C1",
    "bus": true,
    "beleg": "Theorieunterricht in 7 Tagen Automatik Führerschein LKW Führerschein Klasse C Busführerschein Klasse D LKW & Bus mit Bildungsgutschein Stapler",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14000185549",
@@ -353,11 +337,12 @@
    "plz": "31167",
    "strasse": "Judenstraße 5",
    "lage": "52.00928,10.12887",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1E, C1, CE, C, D1E, D1, DE, D",
    "bus": true,
    "beleg": "/ B96 / BE Klasse C1 / C1E / C / CE Klasse D1 / D1E / D / DE Klasse L / T MOFA Pr",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14099049321",
@@ -369,11 +354,12 @@
    "plz": "33034",
    "strasse": "Warburger Straße 13",
    "lage": "51.71430,9.17956",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, C, D1, D",
    "bus": true,
    "beleg": "alter 21/18 Jahre Voraussetzungen Führerschein der Klasse D1, 18 gilt nur bei Auszubildenden zum Ber",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14115947476",
@@ -385,11 +371,12 @@
    "plz": "33034",
    "strasse": "Nieheimer Straße 11",
    "lage": "51.71636,9.17951",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1E, C1, CE, C, D1E, D1, DE, D",
    "bus": true,
    "beleg": "Bus – Führerscheinklassen D1, D1E, D und DE Führerscheink",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3274138918",
@@ -401,11 +388,12 @@
    "plz": "38124",
    "strasse": "Jenastieg 18",
    "lage": "52.23016,10.53548",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C, CE, C1, C1E, D, DE, D1, D1E",
    "bus": true,
    "beleg": "CE Klasse C1 Klasse C1E Omnibus Führerschein Klasse D Klasse DE Klasse D1 Klasse D1E",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3274138919",
@@ -417,11 +405,12 @@
    "plz": "38120",
    "strasse": "Donaustraße 18",
    "lage": "52.24162,10.48905",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C, CE, C1, C1E, D, DE, D1, D1E",
    "bus": true,
    "beleg": "CE Klasse C1 Klasse C1E Omnibus Führerschein Klasse D Klasse DE Klasse D1 Klasse D1E",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13713971414",
@@ -433,27 +422,12 @@
    "plz": "32756",
    "strasse": "Sprottauer Straße 1",
    "lage": "51.94124,8.85653",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, C1E, C, CE, D1, D1E, D, DE",
    "bus": true,
    "beleg": "LKW – Klasse CE Bus Bus – Klasse D1 Bus – Klasse D1E Bus – Klasse D",
    "azav": true,
-   "grund": ""
-  },
-  {
-   "id": "n9667021548",
-   "name": "Fahrschule Sieke",
-   "web": "https://www.fahrschule-sieke.de/",
-   "tel": "+49 5642 948 641",
-   "mail": "wim@fahrschule-sieke.de",
-   "ort": "Diemelstadt",
-   "plz": "34474",
-   "strasse": "Hauptstraße 2",
-   "lage": "51.51153,8.99679",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
-   "bus": true,
-   "beleg": "aftfahrer Weiterbildungen für Lkw- und Busfahrer sowie Angebote zur beschleunigten Grund",
-   "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9178236873",
@@ -465,11 +439,12 @@
    "plz": "34295",
    "strasse": "Klappgasse 2a",
    "lage": "51.22108,9.38583",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, C1E, D1E, D, C, CE, D1, DE",
    "bus": true,
    "beleg": "Einschluss - Sonstiges Klasse C1E berechtigt zum Führen von Fahrzeugen der Klassen BE, sowie D1E, sofern der Inhaber zum Führen von Fahr",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n8665724998",
@@ -481,11 +456,12 @@
    "plz": "34560",
    "strasse": "Schladenweg 5",
    "lage": "51.13282,9.28042",
-   "klassen": "D1, DE, D, C1E, C1, CE, C",
+   "klassen": "CE, C, C1, D1, D, DE, C1E",
    "bus": true,
    "beleg": "rzeuge , ausgenommen Kraftfahrzeuge der Klassen AM, A1, A 2, A, D1 und D mit einer zulässigen Gesamtmasse",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n8284930623",
@@ -501,23 +477,8 @@
    "bus": true,
    "beleg": "für: Berufskraftfahrer LKW mit Führerschein LKW C / CE (m/w/d) Berufskraftfahrer Bus mit Führerschein BUS D / DE (m/w/d) PKW Führerschein Modulschu",
    "azav": true,
-   "grund": ""
-  },
-  {
-   "id": "n8845867375",
-   "name": "B&S Fahrschul GmbH Gotha",
-   "web": "http://www.fahrschule-bs.de",
-   "tel": "+49 3621 409935",
-   "mail": "info@fahrschule-bs.de",
-   "ort": "Gotha",
-   "plz": "99867",
-   "strasse": "Mühlhäuser Straße 9",
-   "lage": "50.96646,10.71823",
-   "klassen": "",
-   "bus": true,
-   "beleg": "5 Module in 35 Stunden Beschleunigte Grundqualifikation im Güter- und Personenverkehr mit IHK-Abschluss Gabelstap",
-   "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3913123655",
@@ -529,11 +490,12 @@
    "plz": "37073",
    "strasse": "Waageplatz 4",
    "lage": "51.53672,9.93249",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, D1, D, C1E, C, CE, DE",
    "bus": true,
    "beleg": "Klasse C1 Nicht unter die Klassen D oder D1 fallende Kraftwagen, deren zulä",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3935520195",
@@ -545,27 +507,46 @@
    "plz": "37075",
    "strasse": "Weender Landstraße 77",
    "lage": "51.54758,9.93070",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, C1E, C, CE, D1, D1E, DE, D",
    "bus": true,
    "beleg": "en Führerscheinklasse D1 Führerscheinklasse D1: Berechtigung",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
-   "id": "n4770378172",
-   "name": "P. Quentin",
-   "web": "https://www.fahrschule-quentin.de/",
-   "tel": "+49 551 67238",
+   "id": "wdeula-hildesheim-de",
+   "name": "DEULA Hildesheim – Fahrschule",
+   "web": "https://deula-hildesheim.de/fahrschule/",
+   "tel": "",
    "mail": "",
-   "ort": "Göttingen",
-   "plz": "37081",
-   "strasse": "Königsallee 8a",
-   "lage": "51.53639,9.91857",
-   "klassen": "",
+   "ort": "Hildesheim",
+   "plz": "",
+   "strasse": "",
+   "lage": "",
+   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
    "bus": true,
-   "beleg": "er Bundeswehrzeit eröffnete er 1992 als Berufskraftfahrer Güter- und Personenverkehr seine eigene Fahrschule in Götti",
+   "beleg": "Unser Angebot umfasst die Fahrerlaubnisklassen A, A1, A2, AM, B, BE, C, CE, C1, C1E, D, DE, D1 und D1E. Für den Einsatz in der",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
+  },
+  {
+   "id": "wfahrerschmiede-hildesheim-de",
+   "name": "Fahrerschmiede Hildesheim",
+   "web": "https://fahrerschmiede-hildesheim.de/",
+   "tel": "",
+   "mail": "",
+   "ort": "Hildesheim",
+   "plz": "",
+   "strasse": "",
+   "lage": "",
+   "klassen": "D, C1, C1E, C, CE",
+   "bus": true,
+   "beleg": "LKW- und Bus-Führerschein über 100% Förderung! Wir sind zertifiz",
+   "azav": true,
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9106994525",
@@ -577,11 +558,12 @@
    "plz": "34369",
    "strasse": "Wilhelm-Hugues-Straße 6",
    "lage": "51.54719,9.40542",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "D, C, C1E, C1, D1E, D1, DE",
    "bus": true,
    "beleg": "den Erwerb eines Führerscheins in allen Klassen anbieten: A, B, C, D, L, M oder T – alles ist möglich. Wir l",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11645785168",
@@ -593,11 +575,12 @@
    "plz": "34123",
    "strasse": "Pfarrstraße 4",
    "lage": "51.30301,9.53182",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, C1E, D1E, D, C, CE, D1, DE",
    "bus": true,
    "beleg": "Einschluss - Sonstiges Klasse C1E berechtigt zum Führen von Fahrzeugen der Klassen BE, sowie D1E, sofern der Inhaber zum Führen von Fahr",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n1514444748",
@@ -609,11 +592,12 @@
    "plz": "34125",
    "strasse": "An der Fuldabrücke 2",
    "lage": "51.31548,9.50551",
-   "klassen": "D1, D, C1E, C1, CE, C",
+   "klassen": "C1E, C1, CE, C, D1, D",
    "bus": true,
    "beleg": "C und CE Erfahre mehr BUS Klasse D und D1 Erfahre mehr Hier fin",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4565036056",
@@ -625,11 +609,12 @@
    "plz": "32657",
    "strasse": "Salzufler Straße 84",
    "lage": "52.08555,8.86894",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1E, CE, D1, D, C1, C",
    "bus": true,
    "beleg": "rzeuge – ausgenommen Kraftfahrzeuge der Klassen AM, A1, A2, A, D1 und D - mit einer zulässigen Gesamtmass",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5538008590",
@@ -641,11 +626,12 @@
    "plz": "32657",
    "strasse": "Paulinenstraße 36",
    "lage": "52.02340,8.89502",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1E, CE, D1, D, C1, C",
    "bus": true,
    "beleg": "rzeuge – ausgenommen Kraftfahrzeuge der Klassen AM, A1, A2, A, D1 und D - mit einer zulässigen Gesamtmass",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5611303244",
@@ -657,11 +643,12 @@
    "plz": "32657",
    "strasse": "Lagesche Straße 32",
    "lage": "52.02313,8.89111",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, C1E, C, CE, D1, D1E, D, DE",
    "bus": true,
    "beleg": "LKW – Klasse CE Bus Bus – Klasse D1 Bus – Klasse D1E Bus – Klasse D",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n313339651",
@@ -673,11 +660,12 @@
    "plz": "32676",
    "strasse": "Vordere Straße 17",
    "lage": "51.95882,9.24727",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1E, C1, CE, C, D1E, D1, DE, D",
    "bus": true,
    "beleg": "egt werden soll (35 Stunden) Gültiger Führerschein (nur wenn Schlüsselzahl \"95\" bei Fahrerlaubnisklassen D1, D1E, D oder DE eingetragen ist) Wenn",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2072110393",
@@ -689,43 +677,12 @@
    "plz": "35037",
    "strasse": "Schwanallee 30",
    "lage": "50.80214,8.75958",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C, C1, CE, C1E, D, D1, DE, D1E",
    "bus": true,
    "beleg": "Klasse D - Bus",
    "azav": false,
-   "grund": ""
-  },
-  {
-   "id": "w284274819",
-   "name": "Fahrschule Sieke",
-   "web": "https://www.fahrschule-sieke.de/",
-   "tel": "",
-   "mail": "",
-   "ort": "Marsberg",
-   "plz": "34431",
-   "strasse": "Kasseler Straße 51",
-   "lage": "51.49571,8.91069",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
-   "bus": true,
-   "beleg": "aftfahrer Weiterbildungen für Lkw- und Busfahrer sowie Angebote zur beschleunigten Grund",
-   "azav": false,
-   "grund": ""
-  },
-  {
-   "id": "n8050001511",
-   "name": "Sieke",
-   "web": "https://www.fahrschule-sieke.de/",
-   "tel": "",
-   "mail": "",
-   "ort": "Marsberg",
-   "plz": "34431",
-   "strasse": "Sauerlandstraße 57",
-   "lage": "51.41805,8.77421",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
-   "bus": true,
-   "beleg": "aftfahrer Weiterbildungen für Lkw- und Busfahrer sowie Angebote zur beschleunigten Grund",
-   "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11179344159",
@@ -737,11 +694,12 @@
    "plz": "99734",
    "strasse": "Arnoldstraße",
    "lage": "51.49627,10.79303",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, D1, C, DE, D",
    "bus": true,
    "beleg": "r Inhaber zum Führen von Fahrzeugen der Klasse D1 berechtigt ist. C Kraftfahr",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6415655448",
@@ -753,27 +711,12 @@
    "plz": "33098",
    "strasse": "Am Rippinger Weg 20",
    "lage": "51.71168,8.77804",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "D, C, C1, D1E, D1, DE, C1E",
    "bus": true,
    "beleg": "Führerscheinklassen ab 19.01.2013. Die Klassen C und D sowie T bilden wir nicht aus. AM",
    "azav": false,
-   "grund": ""
-  },
-  {
-   "id": "w248673590",
-   "name": "Fahrerakademie",
-   "web": "http://www.fahrerakademie.de/",
-   "tel": "",
-   "mail": "",
-   "ort": "Paderborn",
-   "plz": "33106",
-   "strasse": "Borchener Straße 338b",
-   "lage": "51.68303,8.71805",
-   "klassen": "",
-   "bus": true,
-   "beleg": "lt seit dem 10. September 2008 für alle Busfahrer/innen und seit dem 10. September 2009 f",
-   "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10293894453",
@@ -785,27 +728,12 @@
    "plz": "34359",
    "strasse": "Steinweg 3",
    "lage": "51.49518,9.60241",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1, C, D1, D, D1E, DE, C1E, CE",
    "bus": true,
    "beleg": "lassenspezifischer Ausbildungsstoff für Klasse D1 und D 20.1 Sicherheitskontrollen",
    "azav": false,
-   "grund": ""
-  },
-  {
-   "id": "w1391917945",
-   "name": "Quentin",
-   "web": "https://www.fahrschule-quentin.de/",
-   "tel": "",
-   "mail": "",
-   "ort": "Rosdorf",
-   "plz": "37124",
-   "strasse": "An der Ziegelei 6",
-   "lage": "51.51610,9.91288",
-   "klassen": "",
-   "bus": true,
-   "beleg": "er Bundeswehrzeit eröffnete er 1992 als Berufskraftfahrer Güter- und Personenverkehr seine eigene Fahrschule in Götti",
-   "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n7784991209",
@@ -817,43 +745,12 @@
    "plz": "34613",
    "strasse": "Am Nordbahnhof 2c",
    "lage": "50.92284,9.23181",
-   "klassen": "D1E, D1, D, C1E, C1, CE, C",
+   "klassen": "CE, C1, C1E, D1E, D1, C, D",
    "bus": true,
    "beleg": "Mit der Berechtigung von Führerscheinklasse D1 darf auch die Klasse D1E gefahren werde",
    "azav": false,
-   "grund": ""
-  },
-  {
-   "id": "n4755438973",
-   "name": "Fahrschule Kabus",
-   "web": "http://fahrschule-peter-kabus.de/",
-   "tel": "+49 561 887560",
-   "mail": "info@fahrschule-peter-kabus.de",
-   "ort": "Vellmar",
-   "plz": "34246",
-   "strasse": "5",
-   "lage": "51.36228,9.46777",
-   "klassen": "",
-   "bus": true,
-   "beleg": "er-Ausbildung LKW-Fahrer-Ausbildung Busfahrer-Ausbildung 5 Module BKF Bildungsgut",
-   "azav": true,
-   "grund": ""
-  },
-  {
-   "id": "n6583891583",
-   "name": "Fahrschule Sellner",
-   "web": "https://fahrschule-sellner.de/",
-   "tel": "",
-   "mail": "",
-   "ort": "Vellmar",
-   "plz": "34246",
-   "strasse": "Obervellmarsche Straße 21",
-   "lage": "51.35550,9.47679",
-   "klassen": "C1E, C1, CE, C",
-   "bus": true,
-   "beleg": "Mindestalter 18 Jahre nach erfolgter Grundqualifikation, für Personen während oder nach Abschluss einer Beruf",
-   "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14008347475",
@@ -865,11 +762,12 @@
    "plz": "34414",
    "strasse": "Bahnhofstraße 31",
    "lage": "51.49239,9.15647",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1E, C1, CE, C, D1E, D1, DE, D",
    "bus": true,
    "beleg": "Bus – Führerscheinklassen D1, D1E, D und DE Führerscheink",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14142340201",
@@ -881,11 +779,12 @@
    "plz": "38300",
    "strasse": "Kannengießerstraße 2",
    "lage": "52.16162,10.53948",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "C1E, C1, CE, C, D1E, D1, DE, D",
    "bus": true,
    "beleg": "Fahrerlaubnis Klasse C1 eingeschlossene Fahrerlaubnis-Klasse: BE sowie D1E, wenn der Inhaber die Klasse D1, DE, D",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13304548608",
@@ -965,7 +864,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4343864889",
@@ -997,7 +897,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12919297019",
@@ -1045,7 +946,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11124018680",
@@ -1109,7 +1011,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4827833665",
@@ -1201,6 +1104,86 @@
    "plz": "",
    "strasse": "",
    "lage": "52.15092,9.95040",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": ""
+  },
+  {
+   "id": "n4111123290",
+   "name": "Fahrschule",
+   "web": "",
+   "tel": "",
+   "mail": "",
+   "ort": "",
+   "plz": "",
+   "strasse": "",
+   "lage": "52.06854,9.11935",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": ""
+  },
+  {
+   "id": "n4135412661",
+   "name": "Fahrschule",
+   "web": "",
+   "tel": "",
+   "mail": "",
+   "ort": "",
+   "plz": "",
+   "strasse": "",
+   "lage": "52.06851,9.12215",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": ""
+  },
+  {
+   "id": "n4135414642",
+   "name": "Fahrschule",
+   "web": "",
+   "tel": "",
+   "mail": "",
+   "ort": "",
+   "plz": "",
+   "strasse": "",
+   "lage": "52.06876,9.11875",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": ""
+  },
+  {
+   "id": "n4144559889",
+   "name": "Fahrschule",
+   "web": "",
+   "tel": "",
+   "mail": "",
+   "ort": "",
+   "plz": "",
+   "strasse": "",
+   "lage": "52.06853,9.12213",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": ""
+  },
+  {
+   "id": "n4144560089",
+   "name": "Fahrschule",
+   "web": "",
+   "tel": "",
+   "mail": "",
+   "ort": "",
+   "plz": "",
+   "strasse": "",
+   "lage": "52.06876,9.11871",
    "klassen": "",
    "bus": false,
    "beleg": "",
@@ -1301,7 +1284,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4704014003",
@@ -1333,7 +1317,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13904438348",
@@ -1477,7 +1462,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2316842120",
@@ -1637,7 +1623,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4754870663",
@@ -1685,7 +1672,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6169379613",
@@ -1701,7 +1689,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2494981523",
@@ -1749,7 +1738,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5357111923",
@@ -1829,7 +1819,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6996939579",
@@ -1845,7 +1836,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4612764463",
@@ -1873,6 +1865,22 @@
    "plz": "",
    "strasse": "Schachter Straße 2",
    "lage": "51.41001,9.40061",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": ""
+  },
+  {
+   "id": "n2834320319",
+   "name": "Fahrschule Kempfer",
+   "web": "",
+   "tel": "",
+   "mail": "",
+   "ort": "",
+   "plz": "",
+   "strasse": "",
+   "lage": "52.15079,9.95084",
    "klassen": "",
    "bus": false,
    "beleg": "",
@@ -1925,7 +1933,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5401719421",
@@ -1941,7 +1950,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n434142350",
@@ -2001,11 +2011,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.77404,9.37614",
-   "klassen": "DE",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12165421863",
@@ -2309,7 +2320,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5583228121",
@@ -2421,7 +2433,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13901606910",
@@ -2453,7 +2466,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4227546911",
@@ -2465,11 +2479,12 @@
    "plz": "",
    "strasse": "",
    "lage": "50.82163,8.91917",
-   "klassen": "C1E, C1, CE, C",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n706637570",
@@ -2549,7 +2564,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6174784927",
@@ -2565,7 +2581,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9517436862",
@@ -2593,11 +2610,12 @@
    "plz": "",
    "strasse": "",
    "lage": "52.19198,8.96245",
-   "klassen": "D1E, D1, DE, D",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11109612802",
@@ -2645,7 +2663,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w1018275131",
@@ -2785,11 +2804,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.12444,9.54320",
-   "klassen": "D1, D, C1E, C1, CE, C",
+   "klassen": "C, C1",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11348362227",
@@ -3029,7 +3049,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w202731078",
@@ -3125,7 +3146,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n1833758485",
@@ -3153,11 +3175,12 @@
    "plz": "",
    "strasse": "",
    "lage": "51.55136,9.91538",
-   "klassen": "D1E, D1, DE, D, C1E, C1, CE, C",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5293316138",
@@ -3317,7 +3340,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13230563146",
@@ -3461,7 +3485,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13895842588",
@@ -3526,6 +3551,23 @@
    "beleg": "",
    "azav": false,
    "grund": "Website nicht erreichbar (<urlopen error [Errno -2] Name or service not known>)"
+  },
+  {
+   "id": "n12526873433",
+   "name": "Sieke",
+   "web": "https://www.fahrschule-sieke.de/",
+   "tel": "",
+   "mail": "",
+   "ort": "",
+   "plz": "",
+   "strasse": "Lange Straße 2",
+   "lage": "51.47452,9.01019",
+   "klassen": "C1E, C1",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14023675833",
@@ -3749,7 +3791,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3281929461",
@@ -3781,7 +3824,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9316251927",
@@ -3797,7 +3841,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w111635658",
@@ -3829,7 +3874,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n7494735623",
@@ -3877,7 +3923,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9774743113",
@@ -3893,7 +3940,8 @@
    "bus": false,
    "beleg": "",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2101578724",
@@ -3957,7 +4005,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n911173750",
@@ -3990,6 +4039,23 @@
    "beleg": "",
    "azav": false,
    "grund": ""
+  },
+  {
+   "id": "n10695145077",
+   "name": "Fahrschule Bothe",
+   "web": "https://fahrschule-bothe.de",
+   "tel": "+49 5322 7807363",
+   "mail": "",
+   "ort": "Bad Harzburg",
+   "plz": "38667",
+   "strasse": "Herzog-Julius-Straße 33",
+   "lage": "51.88418,10.56114",
+   "klassen": "CE, C",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w261297571",
@@ -4053,7 +4119,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w235039384",
@@ -4085,7 +4152,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6139115473",
@@ -4101,7 +4169,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2974244240",
@@ -4133,7 +4202,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2208216897",
@@ -4181,7 +4251,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w34125018",
@@ -4245,7 +4316,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9275824810",
@@ -4277,7 +4349,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4378838363",
@@ -4293,7 +4366,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10539001214",
@@ -4353,11 +4427,12 @@
    "plz": "37242",
    "strasse": "Marktplatz 2",
    "lage": "51.27292,9.97486",
-   "klassen": "DE",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12999585050",
@@ -4417,11 +4492,12 @@
    "plz": "33181",
    "strasse": "Paderborner Straße 24",
    "lage": "51.56996,8.72723",
-   "klassen": "C",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w249788253",
@@ -4485,7 +4561,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10156461281",
@@ -4549,7 +4626,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14370835050",
@@ -4565,7 +4643,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n353875191",
@@ -4613,7 +4692,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14000250343",
@@ -4629,7 +4709,8 @@
    "bus": false,
    "beleg": "",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2726659536",
@@ -4725,7 +4806,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5663611852",
@@ -4741,7 +4823,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n14100979159",
@@ -4757,7 +4840,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w173776062",
@@ -4801,11 +4885,12 @@
    "plz": "38126",
    "strasse": "Retemeyerstraße 1e",
    "lage": "52.23273,10.55875",
-   "klassen": "C1E, C1, CE, C",
+   "klassen": "C, CE, C1, C1E",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3332974076",
@@ -4901,7 +4986,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3251855529",
@@ -4933,7 +5019,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2579689382",
@@ -4965,7 +5052,25 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
+  },
+  {
+   "id": "n9667021548",
+   "name": "Fahrschule Sieke",
+   "web": "https://www.fahrschule-sieke.de/",
+   "tel": "+49 5642 948 641",
+   "mail": "wim@fahrschule-sieke.de",
+   "ort": "Diemelstadt",
+   "plz": "34474",
+   "strasse": "Hauptstraße 2",
+   "lage": "51.51153,8.99679",
+   "klassen": "C1E, C1",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11247854672",
@@ -5013,7 +5118,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6001720446",
@@ -5029,7 +5135,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9921615423",
@@ -5045,7 +5152,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n8615832021",
@@ -5061,7 +5169,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n608963920",
@@ -5125,7 +5234,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10699952290",
@@ -5285,7 +5395,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10103735962",
@@ -5365,7 +5476,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5043771084",
@@ -5381,7 +5493,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2001386450",
@@ -5441,11 +5554,12 @@
    "plz": "31180",
    "strasse": "Rathausstraße 50",
    "lage": "52.19700,9.89766",
-   "klassen": "DE",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9768355598",
@@ -5461,7 +5575,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w345061883",
@@ -5496,6 +5611,23 @@
    "grund": ""
   },
   {
+   "id": "n8845867375",
+   "name": "B&S Fahrschul GmbH Gotha",
+   "web": "http://www.fahrschule-bs.de",
+   "tel": "+49 3621 409935",
+   "mail": "info@fahrschule-bs.de",
+   "ort": "Gotha",
+   "plz": "99867",
+   "strasse": "Mühlhäuser Straße 9",
+   "lage": "50.96646,10.71823",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
    "id": "n7877530782",
    "name": "Fahrschule René Ritter",
    "web": "https://fahrschule-reneritter.de/",
@@ -5509,7 +5641,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9791166262",
@@ -5525,7 +5658,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n8729379142",
@@ -5557,7 +5691,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n8753912245",
@@ -5585,11 +5720,12 @@
    "plz": "31028",
    "strasse": "Hauptstraße 4",
    "lage": "52.08426,9.77675",
-   "klassen": "D, C",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w677843300",
@@ -5621,7 +5757,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n410501777",
@@ -5653,7 +5790,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4280110097",
@@ -5669,7 +5807,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4003278412",
@@ -5685,7 +5824,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3439798847",
@@ -5733,7 +5873,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4347586572",
@@ -5749,7 +5890,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3999347680",
@@ -5761,11 +5903,12 @@
    "plz": "37075",
    "strasse": "Weender Landstraße 51",
    "lage": "51.54394,9.93178",
-   "klassen": "C1E, C1, CE, C",
+   "klassen": "C, CE, C1, C1E",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3936191268",
@@ -5784,6 +5927,23 @@
    "grund": "Website nicht erreichbar (HTTP Error 404: Not Found)"
   },
   {
+   "id": "n4770378172",
+   "name": "P. Quentin",
+   "web": "https://www.fahrschule-quentin.de/",
+   "tel": "+49 551 67238",
+   "mail": "",
+   "ort": "Göttingen",
+   "plz": "37081",
+   "strasse": "Königsallee 8a",
+   "lage": "51.53639,9.91857",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
    "id": "n1026603200",
    "name": "S. Metje",
    "web": "http://www.fahrschule-metje.de/",
@@ -5797,7 +5957,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3908789948",
@@ -5813,7 +5974,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4350245002",
@@ -5825,11 +5987,12 @@
    "plz": "37073",
    "strasse": "Berliner Straße 10",
    "lage": "51.53739,9.92989",
-   "klassen": "D1E, D, C1E, C",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13185719647",
@@ -5909,7 +6072,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n7896199039",
@@ -5925,7 +6089,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12733416506",
@@ -5941,7 +6106,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w909545999",
@@ -5957,7 +6123,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w853826825",
@@ -6133,7 +6300,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11188775822",
@@ -6149,7 +6317,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3268263323",
@@ -6165,7 +6334,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4965478806",
@@ -6213,7 +6383,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4270219854",
@@ -6229,7 +6400,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w406769500",
@@ -6241,11 +6413,12 @@
    "plz": "34131",
    "strasse": "Landgraf-Karl-Straße 14",
    "lage": "51.31213,9.44198",
-   "klassen": "DE, C1E, C1, CE, C",
+   "klassen": "C1, C1E, CE, C",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2614592150",
@@ -6277,7 +6450,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3729541533",
@@ -6341,7 +6515,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10305078795",
@@ -6373,7 +6548,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13770793051",
@@ -6389,7 +6565,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w197654553",
@@ -6453,7 +6630,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n11177933695",
@@ -6485,7 +6663,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6435392615",
@@ -6565,7 +6744,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n863887726",
@@ -6597,7 +6777,8 @@
    "bus": false,
    "beleg": "",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9071219090",
@@ -6661,7 +6842,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n1601136671",
@@ -6725,7 +6907,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w251723608",
@@ -6773,7 +6956,8 @@
    "bus": false,
    "beleg": "",
    "azav": true,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5231367832",
@@ -6821,7 +7005,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n1790742562",
@@ -6853,7 +7038,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6356372848",
@@ -6885,7 +7071,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5395613822",
@@ -6901,7 +7088,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10947775198",
@@ -6917,7 +7105,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w284274418",
@@ -6934,6 +7123,40 @@
    "beleg": "",
    "azav": false,
    "grund": ""
+  },
+  {
+   "id": "w284274819",
+   "name": "Fahrschule Sieke",
+   "web": "https://www.fahrschule-sieke.de/",
+   "tel": "",
+   "mail": "",
+   "ort": "Marsberg",
+   "plz": "34431",
+   "strasse": "Kasseler Straße 51",
+   "lage": "51.49571,8.91069",
+   "klassen": "C1E, C1",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
+   "id": "n8050001511",
+   "name": "Sieke",
+   "web": "https://www.fahrschule-sieke.de/",
+   "tel": "",
+   "mail": "",
+   "ort": "Marsberg",
+   "plz": "34431",
+   "strasse": "Sauerlandstraße 57",
+   "lage": "51.41805,8.77421",
+   "klassen": "C1E, C1",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n1639152087",
@@ -6981,7 +7204,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9831519463",
@@ -6997,7 +7221,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w189868476",
@@ -7029,7 +7254,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w411932624",
@@ -7077,7 +7303,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6918250860",
@@ -7093,7 +7320,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w337345819",
@@ -7141,7 +7369,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w848923713",
@@ -7157,7 +7386,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13460613437",
@@ -7169,11 +7399,12 @@
    "plz": "36280",
    "strasse": "Niederrheinische Straße",
    "lage": "50.85766,9.46673",
-   "klassen": "C1E, C1, CE, C",
+   "klassen": "C1, C1E, C, CE",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w363260032",
@@ -7189,7 +7420,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5346732406",
@@ -7237,7 +7469,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13992953633",
@@ -7269,7 +7502,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n618972486",
@@ -7285,7 +7519,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4119792516",
@@ -7301,7 +7536,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4993448479",
@@ -7320,6 +7556,23 @@
    "grund": ""
   },
   {
+   "id": "w248673590",
+   "name": "Fahrerakademie",
+   "web": "http://www.fahrerakademie.de/",
+   "tel": "",
+   "mail": "",
+   "ort": "Paderborn",
+   "plz": "33106",
+   "strasse": "Borchener Straße 338b",
+   "lage": "51.68303,8.71805",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
    "id": "n571276872",
    "name": "Fahrschule Bathe",
    "web": "https://fahrschule-bathe.de/",
@@ -7333,7 +7586,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5183504031",
@@ -7365,7 +7619,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3208970538",
@@ -7381,7 +7636,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2177204187",
@@ -7393,11 +7649,12 @@
    "plz": "33104",
    "strasse": "Bielefelder Straße 13",
    "lage": "51.74818,8.71474",
-   "klassen": "D, C1E, C1, C",
+   "klassen": "C1, C, C1E",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4964406420",
@@ -7413,7 +7670,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9198742112",
@@ -7441,11 +7699,12 @@
    "plz": "33102",
    "strasse": "Dr.-Rörig-Damm 54",
    "lage": "51.73731,8.75745",
-   "klassen": "D, C1E, C1, C",
+   "klassen": "C1, C, C1E",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n7366391223",
@@ -7457,11 +7716,12 @@
    "plz": "33104",
    "strasse": "Bielefelder Straße 25",
    "lage": "51.74948,8.71525",
-   "klassen": "DE",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2304258763",
@@ -7477,7 +7737,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12505710493",
@@ -7493,7 +7754,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2560704302",
@@ -7509,7 +7771,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10157546783",
@@ -7525,7 +7788,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n1513490097",
@@ -7541,7 +7805,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n928266415",
@@ -7557,7 +7822,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n5757293660",
@@ -7569,11 +7835,12 @@
    "plz": "33102",
    "strasse": "Bahnhofstraße 23",
    "lage": "51.71402,8.74267",
-   "klassen": "D, C1E, C1, C",
+   "klassen": "C1, C, C1E",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n9823109934",
@@ -7585,11 +7852,12 @@
    "plz": "33102",
    "strasse": "Ingolstädter Weg 6a",
    "lage": "51.74472,8.75637",
-   "klassen": "DE",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n7744133315",
@@ -7605,7 +7873,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n282829425",
@@ -7669,6 +7938,23 @@
    "bus": false,
    "beleg": "",
    "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
+   "id": "w370728645",
+   "name": "Fahrschule Phoenix",
+   "web": "",
+   "tel": "",
+   "mail": "",
+   "ort": "Remlingen-Semmenstedt",
+   "plz": "38319",
+   "strasse": "Alte Leipziger Straße 38",
+   "lage": "52.11134,10.67505",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
    "grund": ""
   },
   {
@@ -7685,7 +7971,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4919857432",
@@ -7702,6 +7989,23 @@
    "beleg": "",
    "azav": false,
    "grund": ""
+  },
+  {
+   "id": "w1391917945",
+   "name": "Quentin",
+   "web": "https://www.fahrschule-quentin.de/",
+   "tel": "",
+   "mail": "",
+   "ort": "Rosdorf",
+   "plz": "37124",
+   "strasse": "An der Ziegelei 6",
+   "lage": "51.51610,9.91288",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n12987904759",
@@ -7749,7 +8053,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2749197775",
@@ -7861,7 +8166,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w254026351",
@@ -7877,7 +8183,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n13460675380",
@@ -7937,11 +8244,12 @@
    "plz": "31079",
    "strasse": "Hauptstraße 27",
    "lage": "52.05468,9.90275",
-   "klassen": "DE",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n300054641",
@@ -7957,7 +8265,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3454670117",
@@ -8005,7 +8314,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n874378757",
@@ -8088,6 +8398,40 @@
    "grund": ""
   },
   {
+   "id": "n4755438973",
+   "name": "Fahrschule Kabus",
+   "web": "http://fahrschule-peter-kabus.de/",
+   "tel": "+49 561 887560",
+   "mail": "info@fahrschule-peter-kabus.de",
+   "ort": "Vellmar",
+   "plz": "34246",
+   "strasse": "5",
+   "lage": "51.36228,9.46777",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": true,
+   "grund": "",
+   "pschein": false
+  },
+  {
+   "id": "n6583891583",
+   "name": "Fahrschule Sellner",
+   "web": "https://fahrschule-sellner.de/",
+   "tel": "",
+   "mail": "",
+   "ort": "Vellmar",
+   "plz": "34246",
+   "strasse": "Obervellmarsche Straße 21",
+   "lage": "51.35550,9.47679",
+   "klassen": "C1E, C1, CE, C",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
    "id": "n11262875134",
    "name": "Thommys Fahrschule",
    "web": "",
@@ -8117,7 +8461,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n10874129498",
@@ -8184,6 +8529,40 @@
    "grund": ""
   },
   {
+   "id": "n9960258761",
+   "name": "DEULA Witzenhausen",
+   "web": "https://www.deula.de/standorte/deula-witzenhausen/seminarhotel/zimmer",
+   "tel": "+49 5542 6003-11",
+   "mail": "",
+   "ort": "Witzenhausen",
+   "plz": "37213",
+   "strasse": "Am Sande 20",
+   "lage": "51.34679,9.86841",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
+   "id": "w546431879",
+   "name": "DEULA Witzenhausen, Bildungszentrum für angewandte Technik",
+   "web": "https://www.deula.de/index.php?id=36",
+   "tel": "+49 5542 6003-0",
+   "mail": "",
+   "ort": "Witzenhausen",
+   "plz": "37213",
+   "strasse": "Am Sande 20",
+   "lage": "51.34644,9.86867",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
    "id": "w948853327",
    "name": "Fahrschule Die-Scheinfirma",
    "web": "https://www.diescheinfirma.de/",
@@ -8193,11 +8572,12 @@
    "plz": "37213",
    "strasse": "In der Aue 10",
    "lage": "51.33831,9.86616",
-   "klassen": "C",
+   "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "w126453655",
@@ -8261,7 +8641,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": ""
+   "grund": "",
+   "pschein": false
   }
  ]
 }

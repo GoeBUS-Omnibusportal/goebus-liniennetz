@@ -42,7 +42,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '2.4'
+VERSION = '2.6'
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
@@ -52,6 +52,7 @@ UA = 'GoeBUS-Liniennetz/' + VERSION + ' (+https://www.goebus.de)'
 HALTE_REGION = []  # Version 2.3: (lon, lat, Name, Suchname) aller Haltestellen der Region – für Linien aus der offiziellen Linienliste
 EIN = {'5/43'}     # Version 2.3: zusammengesetzte Nummern, die trotzdem aufgenommen werden (ROSA 5/43; weitere aus den Regeln „ein“)
 LISTEN = {}        # Version 2.3: slug → {Nummer (Schlüssel): (Nummer, Linienweg, Hinweis)} aus der Website
+TAGESFAHRTEN = {}  # Version 2.5: {'stichtag': 'JJJJ-MM-TT', 'zeiten': {stop_id: [Minuten]}, 'je': {stop_id: Counter(Nummer)}, 'name': {stop_id: Name}}
 HALTESTELLEN = {}  # Version 2.4: Name → {'p': [(lon, lat) der Steige], 'l': {(Nummer, Verbund)}} – für daten/haltestellen.json
 HALTE_ALLE = []   # (lon, lat, Name) aller Haltestellen der ausgewählten Fahrten – für „von → nach“, wenn der Linienweg fehlt
 ROUTE_TYPEN = {0: 'tram', 1: 'subway', 2: 'train', 3: 'bus', 4: 'ferry', 5: 'tram', 6: 'aerialway', 7: 'funicular', 11: 'trolleybus', 12: 'monorail'}
@@ -151,6 +152,81 @@ def herunterladen(url, ziel):
     log('Fertig:', round(os.path.getsize(ziel) / 1048576), 'MB')
 
 
+def stichtag(heute=None):
+    """nächster Mittwoch (mindestens zwei Tage voraus) – ein gewöhnlicher Werktag ohne Wochenend- und Montagsbesonderheiten"""
+    import datetime as _dt
+    if not heute and re.match(r'^\d{4}-\d\d-\d\d$', os.environ.get('GOEBUS_STICHTAG', '')):    # Prüfumgebung
+        return _dt.date.fromisoformat(os.environ['GOEBUS_STICHTAG'])
+    d = heute or _dt.date.today()
+    d += _dt.timedelta(days=2)
+    while d.weekday() != 2:
+        d += _dt.timedelta(days=1)
+    return d
+
+
+def dienste_am(z, tag):
+    """service_id, die am Tag fahren (calendar.txt mit Wochentag und Zeitraum, calendar_dates.txt mit Ausnahmen)"""
+    ds = tag.strftime('%Y%m%d')
+    wt = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')[tag.weekday()]
+    aktiv = set()
+    namen = z.namelist()
+    if 'calendar.txt' in namen:
+        for c in gtfs_zeilen(z, 'calendar.txt'):
+            if c.get(wt) == '1' and c.get('start_date', '0') <= ds <= c.get('end_date', '99999999'):
+                aktiv.add(c['service_id'])
+    if 'calendar_dates.txt' in namen:
+        for sid, dt, art in gtfs_spalten(z, 'calendar_dates.txt', ('service_id', 'date', 'exception_type')):
+            if dt == ds:
+                (aktiv.add if art == '1' else aktiv.discard)(sid)
+    return aktiv
+
+
+def tagesfahrten(z, fahrten, dienst, linien, region):
+    """Abfahrtszeiten je Haltestelle am Stichtag (nur Busse, Straßenbahnen; ohne Ankunft an der Endhaltestelle)"""
+    tag = stichtag()
+    aktiv = dienste_am(z, tag)
+    def nummer(rid):
+        r = linien.get(rid, {})
+        try:
+            rt = int(r.get('route_type', 3))
+        except ValueError:
+            rt = 3
+        if rt == 2 or 100 <= rt < 200 or 1500 <= rt < 1600:
+            return None
+        ref = (r.get('route_short_name') or '').strip() or (r.get('route_long_name') or '').strip()
+        return re.sub(r'^(?:Stadt)?(?:Bus|Buslinie|Linie)\s+', '', ref, flags=re.I).strip() or None
+    nr_von = {}
+    heute = {}
+    for t, (rid, _, _, _) in fahrten.items():
+        if dienst.get(t) in aktiv:
+            if rid not in nr_von:
+                nr_von[rid] = nummer(rid)
+            if nr_von[rid]:
+                heute[t] = nr_von[rid]
+    log('Abfahrten am %s: %d Fahrten in der Region' % (tag.strftime('%d.%m.%Y'), len(heute)))
+    zeiten, je, ende = defaultdict(list), defaultdict(Counter), {}
+    for t, sid, ab, nr in gtfs_spalten(z, 'stop_times.txt', ('trip_id', 'stop_id', 'departure_time', 'stop_sequence')):
+        ref = heute.get(t)
+        if ref is None or sid not in region:
+            continue
+        try:
+            h, m = ab.split(':')[:2]
+            mi, seq = int(h) * 60 + int(m), int(nr)
+        except ValueError:
+            continue
+        zeiten[sid].append(mi)
+        je[sid][ref] += 1
+        if t not in ende or seq > ende[t][0]:
+            ende[t] = (seq, sid, mi)
+    for t, (_, sid, mi) in ende.items():   # Ankunft an der Endhaltestelle ist keine Abfahrt
+        try:
+            zeiten[sid].remove(mi)
+            je[sid][heute[t]] -= 1
+        except (ValueError, KeyError):
+            pass
+    TAGESFAHRTEN.update({'stichtag': tag.isoformat(), 'zeiten': zeiten, 'je': je})
+
+
 def gtfs_auswerten(pfad, kreise, verbuende):
     alle_kreise = sorted({k for v in verbuende for k in v['kreise'] if k in kreise})
     bx = (min(kreise[k]['bbox'][0] for k in alle_kreise), min(kreise[k]['bbox'][1] for k in alle_kreise),
@@ -173,6 +249,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
             k = cache[schl]
             if k:
                 region[s['stop_id']] = k
+                TAGESFAHRTEN.setdefault('name', {})[s['stop_id']] = s.get('stop_name', '')
                 if LISTEN:
                     HALTE_REGION.append((lon, lat, s.get('stop_name', ''), halt_norm(s.get('stop_name', ''))))
     log(len(region), 'Haltestellen in der Region')
@@ -190,9 +267,11 @@ def gtfs_auswerten(pfad, kreise, verbuende):
     log(len(treffer), 'Fahrten berühren die Region')
 
     fahrten = {}
+    dienst = {}    # 2.5: trip_id → service_id (Fahrten je Werktag)
     for t in gtfs_zeilen(z, 'trips.txt'):
         if t['trip_id'] in treffer:
             fahrten[t['trip_id']] = (t['route_id'], t.get('direction_id') or '0', t.get('trip_headsign') or '', t.get('shape_id') or '')
+            dienst[t['trip_id']] = t.get('service_id', '')
     linien = {r['route_id']: r for r in gtfs_zeilen(z, 'routes.txt')}
     betreiber = {a.get('agency_id', ''): a.get('agency_name', '') for a in gtfs_zeilen(z, 'agency.txt')}
 
@@ -227,6 +306,13 @@ def gtfs_auswerten(pfad, kreise, verbuende):
                 pass
 
     HALTE_ALLE.extend(halte.values())
+
+    # 2.5 (Fassung 52): Abfahrten je Haltestelle an einem gewöhnlichen Werktag (nächster Mittwoch) – Anzahl, erste und letzte
+    try:
+        tagesfahrten(z, fahrten, dienst, linien, region)
+    except Exception as e:    # freiwillig – die Liniennetze hängen nicht davon ab
+        log('Abfahrten je Haltestelle nicht ermittelt:', e)
+    del dienst
 
     # Linienwege aus den Fahrplandaten (shapes.txt) – nur für die ausgewählten Fahrten
     formen = {}
@@ -300,6 +386,10 @@ def gtfs_auswerten(pfad, kreise, verbuende):
             anteil = im_verbund / summe if summe else 0
             eigener_betreiber = im_verbund >= 1 and any(b.lower() in op.lower() for b in v.get('betreiber', []) if b)
             gelistet = im_verbund >= 1 and ref_norm(ref) in LISTEN.get(v['slug'], {})     # 2.3: in der offiziellen Linienliste
+            # 2.6: … aber nur, wenn ihr Linienweg zur Linie passt (VSN „1“ Northeim – Hillerse ≠ „1“ Dingelstädt – Duderstadt aus Thüringen)
+            if gelistet and anteil < 0.25 and not weg_passt(LISTEN[v['slug']][ref_norm(ref)][1], seqs):
+                gelistet = False
+                log(v['slug'], 'Linie', ref, '(%s) nicht übernommen – gleiche Nummer, anderer Linienweg' % op)
             if (anteil >= 0.25 and im_verbund >= 2) or eigener_betreiber or gelistet:
                 von, nach = halte[haupt[0]][2], halte[haupt[-1]][2]
                 muster_l = [[(x, y) for x, y, _ in q] for q in seqs]
@@ -721,7 +811,7 @@ def ersetzt_durch(f, feats, nah=300, anteil=0.7):
 ERSETZT = {}     # slug → {alte Nummer: neue Nummer} (für den Bericht)
 
 
-def gedaechtnis(feats, alt_pfad, heute, tage=28, slug=''):
+def gedaechtnis(feats, alt_pfad, heute, tage=28, slug='', fremd=None):
     """Linien aus der Vorwoche behalten, die diesmal fehlen (z. B. Schulfahrten in den Ferien: Die freien
     Fahrplandaten gelten nur für 7 Tage). Nach `tage` Tagen ohne Fahrt verschwindet eine Linie."""
     if not os.path.exists(alt_pfad):
@@ -738,6 +828,9 @@ def gedaechtnis(feats, alt_pfad, heute, tage=28, slug=''):
         p = f.get('properties', {})
         gesehen = str(p.get('gesehen') or alt.get('erzeugt', '')[:10] or heute)
         if schl(p) in vorhanden or gesehen < grenze or not f.get('geometry') or keine_linie(p.get('ref', ''), p.get('from'), p.get('to'), p.get('name', ''), p.get('route', '')):
+            continue
+        if fremd and fremd(f):    # 2.6: früher fälschlich übernommen (gleiche Nummer, anderer Linienweg) – nicht behalten
+            log(slug, 'Linie', p.get('ref'), '(%s) aus der Vorwoche nicht behalten – gleiche Nummer, anderer Linienweg' % p.get('operator', ''))
             continue
         neu = ersetzt_durch(f, [x for x in feats if not x['properties'].get('aus_vorwoche')])
         if neu:
@@ -908,6 +1001,41 @@ def halt_norm(s):
     s = re.sub(r'\b(?:bf|bhf)\b\.?', 'bahnhof', s)
     s = re.sub(r'\bstr\b\.?', 'strasse', s)
     return ' '.join(re.findall(r'[a-z0-9]+', s))
+
+
+WEG_ALLGEMEIN = {'bahnhof', 'bahnhofs', 'strasse', 'markt', 'rathaus', 'schule', 'schulen', 'mitte', 'kirche', 'platz', 'allee', 'ring',
+                 'zentrum', 'busbahnhof', 'nord', 'sued', 'west', 'ober', 'unter', 'gross', 'klein', 'neue', 'neuer', 'alte', 'alter',
+                 'linie', 'ueber'}
+
+
+def koordinaten(g):
+    """2.6: alle Punkte (lon, lat) einer GeoJSON-Geometrie."""
+    if not g:
+        return []
+    if g.get('type') == 'GeometryCollection':
+        return [c for x in g.get('geometries') or [] for c in koordinaten(x)]
+    def flach(a):
+        if a and isinstance(a[0], (int, float)):
+            return [(a[0], a[1])]
+        return [c for x in (a or []) for c in flach(x)]
+    return flach(g.get('coordinates') or [])
+
+
+def weg_woerter(t):
+    """2.6: Ortsnamen aus einem Linienweg – Wörter ab 4 Buchstaben ohne allgemeine wie „Bahnhof“, „Markt“, „Rathaus“."""
+    return {w for w in halt_norm(t).split() if len(w) >= 4 and w.isalpha() and w not in WEG_ALLGEMEIN}
+
+
+def weg_passt(weg, seqs):
+    """2.6: Passt der amtliche Linienweg zu den Haltestellen der Linie? Ohne Ortsnamen im Linienweg: ja."""
+    w = weg_woerter(weg)
+    if not w:
+        return True
+    namen = set()
+    for q in seqs:
+        for _, _, n in q:
+            namen |= set(halt_norm(n).split())
+    return bool(w & namen)
 
 
 def _m(a, b):
@@ -1261,7 +1389,18 @@ def main():
             f.pop('_formen', None)
             f['properties']['gesehen'] = heute
         ziel = os.path.join(a.ausgabe, v['datei'])
-        alt_n = gedaechtnis(feats, ziel, heute, a.behalten_tage, v['slug']) if a.behalten_tage > 0 else 0
+        def fremd(f, v=v):    # 2.6: gelistete Nummer, Verlauf überwiegend außerhalb und Linienweg passt nicht zu Start/Ziel
+            p = f.get('properties', {})
+            eintrag = LISTEN.get(v['slug'], {}).get(ref_norm(p.get('ref', '')))
+            if not eintrag or any(b.lower() in str(p.get('operator', '')).lower() for b in v.get('betreiber', []) if b):
+                return False
+            pts = [c for c in koordinaten(f.get('geometry'))]
+            pts = pts[::max(1, len(pts) // 60)]
+            if not pts:
+                return False
+            drin = sum(1 for x, y in pts if kreis_von(x, y, kreise, [k for k in v['kreise'] if k in kreise]) is not None) / len(pts)
+            return drin < 0.25 and not weg_passt(eintrag[1], [[(0, 0, p.get('from', '')), (0, 0, p.get('to', '')), (0, 0, p.get('name', ''))]])
+        alt_n = gedaechtnis(feats, ziel, heute, a.behalten_tage, v['slug'], fremd) if a.behalten_tage > 0 else 0
         # Version 2.2: Regeln der Website (ersetzte Linien, z. B. VSN 265 → 260) und fehlende Linienwege ergänzen
         reg_n = regeln_anwenden(feats, regeln, v['slug'], ziel, archiv) if regeln else 0
         weg_n = wege_ergaenzen(feats, HALTE_ALLE, osm_idx)
@@ -1301,12 +1440,23 @@ def main():
     if HALTESTELLEN:    # Fassung 49: ein Fehler hier darf die Liniennetze nicht kosten
         try:
             hl = []
+            # 2.5: Abfahrten am Stichtag je Name (alle Steige zusammen): Anzahl, erste, letzte, je Linie
+            zt, jl = defaultdict(list), defaultdict(Counter)
+            for sid, n in (TAGESFAHRTEN.get('name') or {}).items():
+                if n in HALTESTELLEN and sid in (TAGESFAHRTEN.get('zeiten') or {}):
+                    zt[n].extend(TAGESFAHRTEN['zeiten'][sid])
+                    jl[n].update(TAGESFAHRTEN['je'][sid])
+            uhr = lambda m: '%02d:%02d' % ((m // 60) % 24, m % 60)
             for n, h in sorted(HALTESTELLEN.items()):
                 xs, ys = [p[0] for p in h['p']], [p[1] for p in h['p']]
-                hl.append({'name': n, 'lon': round(sum(xs) / len(xs), 5), 'lat': round(sum(ys) / len(ys), 5),
-                           'linien': [[r, k] for r, k in sorted(h['l'], key=lambda x: (x[1], len(x[0]), x[0]))]})
+                e = {'name': n, 'lon': round(sum(xs) / len(xs), 5), 'lat': round(sum(ys) / len(ys), 5),
+                     'linien': [[r, k] for r, k in sorted(h['l'], key=lambda x: (x[1], len(x[0]), x[0]))]}
+                if zt.get(n):
+                    e['tag'] = [len(zt[n]), uhr(min(zt[n])), uhr(max(zt[n])), {r: c for r, c in sorted(jl[n].items(), key=lambda x: (len(x[0]), x[0])) if c > 0}]
+                hl.append(e)
             with open(os.path.join(a.ausgabe, 'haltestellen.json'), 'w', encoding='utf-8') as fh:
-                json.dump({'erzeugt': stand['erzeugt'], 'version': VERSION, 'attribution': 'Fahrplandaten: DELFI e.V. über GTFS.DE (CC BY 4.0)', 'haltestellen': hl}, fh, ensure_ascii=False, separators=(',', ':'))
+                json.dump({'erzeugt': stand['erzeugt'], 'version': VERSION, 'attribution': 'Fahrplandaten: DELFI e.V. über GTFS.DE (CC BY 4.0)',
+                           'stichtag': TAGESFAHRTEN.get('stichtag', ''), 'netze': {v['kurz']: v['slug'] for v in verbuende}, 'haltestellen': hl}, fh, ensure_ascii=False, separators=(',', ':'))
             stand['haltestellen'] = len(hl)
             log(len(hl), 'Haltestellen → haltestellen.json')
         except Exception as e:

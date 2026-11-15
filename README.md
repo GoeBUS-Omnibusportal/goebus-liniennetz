@@ -29,6 +29,14 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 53 (Skript 2.6): gleiche Nummer, anderer Linienweg
+
+Eine Linie aus der offiziellen Liste eines Verbunds wird nur noch übernommen, wenn der dort eingetragene Linienweg zur Linie passt: Wenigstens ein Ortsname daraus muss an einer ihrer Haltestellen vorkommen. Beispiel: Die VSN-Liste führt „1“ Hillerse – Höckelheim – Verdistraße (Northeim); die Linie 1 Dingelstädt – Duderstadt aus Thüringen hat dieselbe Nummer, aber nur 6 von 48 Halten im Landkreis Göttingen – sie fällt jetzt heraus, auch aus dem Gedächtnis der Vorwoche. Das Protokoll nennt solche Fälle („nicht übernommen – gleiche Nummer, anderer Linienweg“).
+
+## Neu in Fassung 52 (Skript 2.5): Abfahrten je Haltestelle
+
+`haltestellen.json` enthält je Haltestelle (alle Steige zusammen) die Abfahrten am nächsten Mittwoch: `tag` = [Anzahl, erste, letzte, {Linie: Anzahl}]. Dazu kommen `stichtag` und `netze` (Kurzname → Kennung). Gezählt werden nur Busse und Straßenbahnen, ohne die Ankunft an der Endhaltestelle, nach `calendar.txt` und `calendar_dates.txt`. Das kostet einen weiteren Durchgang durch `stop_times.txt`, nach dem bisherigen Protokoll gut eine Minute.
+
 ## Neu in Fassung 48 (Skript 2.4): schnell und ohne Overpass
 
 - **OpenStreetMap aus Geofabrik-Auszügen:** Die öffentlichen Overpass-Server waren von GitHub aus oft nicht erreichbar („Network is unreachable“, 502, 504). Jeder Fehlversuch kostete mehrere Minuten, ein Lauf brach nach 90 Minuten ab. Jetzt lädt der Ablauf die Bundesländer-Dateien der Geofabrik (Niedersachsen, Hessen, Thüringen, Regierungsbezirk Detmold) und filtert mit `osmium` nur Buslinien und Fahrschulen heraus. Erwartet werden wenige Minuten statt einer Stunde; einen echten Lauf damit gab es aber noch nicht.

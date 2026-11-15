@@ -1,11 +1,11 @@
 {
  "version": "1.1",
- "stand": "2026-11-15T14:04:34Z",
+ "stand": "2026-11-15T17:40:52Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "Geofabrik-Auszug",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
  "anzahl": 513,
- "mit_bus": 46,
+ "mit_bus": 45,
  "schulen": [
   {
    "id": "n1571201710",
@@ -306,23 +306,6 @@
    "klassen": "C1E, C1, CE, C, D1E, D1, DE, D",
    "bus": true,
    "beleg": "Bus – Führerscheinklassen D1, D1E, D und DE Führerscheink",
-   "azav": true,
-   "grund": "",
-   "pschein": false
-  },
-  {
-   "id": "n4690480796",
-   "name": "IST Holding GmbH",
-   "web": "https://ist-holding.com/",
-   "tel": "+49 5222 58013-0",
-   "mail": "",
-   "ort": "Bad Salzuflen",
-   "plz": "32108",
-   "strasse": "Daimlerstraße 8",
-   "lage": "52.05567,8.75230",
-   "klassen": "D, C, C1",
-   "bus": true,
-   "beleg": "Theorieunterricht in 7 Tagen Automatik Führerschein LKW Führerschein Klasse C Busführerschein Klasse D LKW & Bus mit Bildungsgutschein Stapler",
    "azav": true,
    "grund": "",
    "pschein": false
@@ -4274,6 +4257,22 @@
    "pschein": false
   },
   {
+   "id": "n4690480796",
+   "name": "IST Holding GmbH",
+   "web": "https://ist-holding.com/",
+   "tel": "+49 5222 58013-0",
+   "mail": "",
+   "ort": "Bad Salzuflen",
+   "plz": "32108",
+   "strasse": "Daimlerstraße 8",
+   "lage": "52.05567,8.75230",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "Website nicht erreichbar (HTTP Error 502: Bad Gateway)"
+  },
+  {
    "id": "n10539001214",
    "name": "Fahrschule Seifert",
    "web": "",
@@ -4678,7 +4677,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] ssl/tls alert handshake fail)"
+   "grund": "Website nicht erreichbar (<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failur)"
   },
   {
    "id": "n3472000585",

@@ -1,17 +1,17 @@
 {
- "erzeugt": "2026-11-15T13:59:45Z",
+ "erzeugt": "2026-11-15T17:36:08Z",
  "version": "2.4",
  "linienwege": false,
  "verbuende": {
   "vsn": {
    "datei": "vsn_linien.json",
    "linien": 164,
-   "liste_wege": 109,
-   "liste_neu": 1,
+   "liste_wege": 110,
+   "liste_neu": 0,
    "osm_verlauf": 133,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
-   "aus_vorwoche": 4,
+   "aus_vorwoche": 5,
    "osm": "ok (Auszug)"
   },
   "nvv": {
@@ -38,9 +38,9 @@
   },
   "rosa": {
    "datei": "svhi_rvhi_linien.json",
-   "linien": 82,
-   "liste_wege": 0,
-   "liste_neu": 0,
+   "linien": 83,
+   "liste_wege": 63,
+   "liste_neu": 1,
    "osm_verlauf": 54,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
@@ -49,9 +49,9 @@
   },
   "rvhi": {
    "datei": "rvhi_linien.json",
-   "linien": 82,
-   "liste_wege": 0,
-   "liste_neu": 0,
+   "linien": 83,
+   "liste_wege": 41,
+   "liste_neu": 1,
    "osm_verlauf": 54,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
@@ -61,29 +61,29 @@
   "oeffis": {
    "datei": "vhp_linien.json",
    "linien": 76,
-   "liste_wege": 64,
-   "liste_neu": 4,
+   "liste_wege": 68,
+   "liste_neu": 0,
    "osm_verlauf": 34,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
-   "aus_vorwoche": 1,
+   "aus_vorwoche": 5,
    "osm": "ok (Auszug)"
   }
  },
  "regeln": true,
  "dauer": {
-  "fahrplandaten_laden": 121,
-  "fahrplandaten_auswerten": 101,
-  "osm_auszug_lesen": 5,
+  "fahrplandaten_laden": 10,
+  "fahrplandaten_auswerten": 131,
+  "osm_auszug_lesen": 6,
   "verbuende": {
-   "vsn": 22,
-   "nvv": 29,
-   "vrb": 38,
-   "rosa": 17,
+   "vsn": 25,
+   "nvv": 33,
+   "vrb": 44,
+   "rosa": 18,
    "rvhi": 18,
-   "oeffis": 15
+   "oeffis": 16
   },
-  "gesamt": 367
+  "gesamt": 301
  },
  "osm_quelle": "geofabrik",
  "overpass": [

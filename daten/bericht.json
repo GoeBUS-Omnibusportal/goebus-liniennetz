@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-15T13:59:45Z",
+ "erzeugt": "2026-11-15T17:36:08Z",
  "version": "2.4",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
@@ -10,7 +10,7 @@
     "osm": 51,
     "osm+haltestellen": 85
    },
-   "aus_vorwoche": 4,
+   "aus_vorwoche": 5,
    "betreiber": {
     "VSN-Direkt": 65,
     "Regionalbus Braunschweig": 45,
@@ -1499,15 +1499,14 @@
      "nach": "Bad Gandersheim",
      "verlauf": "haltestellen",
      "muster": 1,
-     "gesehen": ""
+     "gesehen": "2026-11-15"
     }
    ],
    "abgleich": {
-    "verschwunden": [],
-    "neu": [
-     "800",
-     "836"
+    "verschwunden": [
+     "800"
     ],
+    "neu": [],
     "nur_osm": [
      "837"
     ],
@@ -5539,9 +5538,7 @@
    ],
    "abgleich": {
     "verschwunden": [],
-    "neu": [
-     "195"
-    ],
+    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
@@ -8871,17 +8868,18 @@
    "verlauf_vorwoche": 7
   },
   "rosa": {
-   "linien": 82,
+   "linien": 83,
    "verlauf": {
     "osm": 25,
     "osm+haltestellen": 29,
-    "haltestellen": 28
+    "haltestellen": 29
    },
    "aus_vorwoche": 0,
    "betreiber": {
     "Hildesheim": 79,
     "Großraumverkehr Hannover": 2,
-    "Flixbus": 1
+    "Flixbus": 1,
+    "(ohne Angabe)": 1
    },
    "liste": [
     {
@@ -9621,11 +9619,22 @@
      "verlauf": "haltestellen",
      "muster": 3,
      "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "43",
+     "betreiber": "",
+     "von": "Diekholzen",
+     "nach": "Hildesheim",
+     "verlauf": "haltestellen",
+     "muster": 1,
+     "gesehen": ""
     }
    ],
    "abgleich": {
     "verschwunden": [],
-    "neu": [],
+    "neu": [
+     "43"
+    ],
     "nur_osm": [
      "52/22",
      "52/23",
@@ -9641,11 +9650,16 @@
     "quellen_fehler": []
    },
    "pruefung": {
-    "ohne_betreiber": [],
-    "wenige_halte": [],
+    "ohne_betreiber": [
+     "43"
+    ],
+    "wenige_halte": [
+     "43"
+    ],
     "mehrere_betreiber": [],
     "ohne_verlauf": [
      "35",
+     "43",
      "51",
      "N1",
      "N2",
@@ -9679,17 +9693,18 @@
    "verlauf_vorwoche": 0
   },
   "rvhi": {
-   "linien": 82,
+   "linien": 83,
    "verlauf": {
     "osm": 25,
     "osm+haltestellen": 29,
-    "haltestellen": 28
+    "haltestellen": 29
    },
    "aus_vorwoche": 0,
    "betreiber": {
     "Hildesheim": 79,
     "Großraumverkehr Hannover": 2,
-    "Flixbus": 1
+    "Flixbus": 1,
+    "(ohne Angabe)": 1
    },
    "liste": [
     {
@@ -10429,24 +10444,38 @@
      "verlauf": "haltestellen",
      "muster": 3,
      "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "43",
+     "betreiber": "",
+     "von": "Diekholzen",
+     "nach": "Hildesheim",
+     "verlauf": "haltestellen",
+     "muster": 1,
+     "gesehen": ""
     }
    ],
    "abgleich": {
     "verschwunden": [],
-    "neu": [],
-    "nur_osm": [
+    "neu": [
      "43"
     ],
+    "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
     "quellen_fehler": []
    },
    "pruefung": {
-    "ohne_betreiber": [],
-    "wenige_halte": [],
+    "ohne_betreiber": [
+     "43"
+    ],
+    "wenige_halte": [
+     "43"
+    ],
     "mehrere_betreiber": [],
     "ohne_verlauf": [
      "35",
+     "43",
      "51",
      "N1",
      "N2",
@@ -10486,7 +10515,7 @@
     "osm+haltestellen": 19,
     "osm": 15
    },
-   "aus_vorwoche": 1,
+   "aus_vorwoche": 5,
    "betreiber": {
     "LK Hameln-Pyrmont": 53,
     "Ostwestfalen-Lippe": 10,
@@ -11137,22 +11166,13 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "792",
-     "betreiber": "Ostwestfalen-Lippe",
-     "von": "Bad Pyrmont, Europaplatz",
-     "nach": "Detmold, Bahnhof",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-02"
-    },
-    {
      "ref": "39",
      "betreiber": "",
      "von": "Wördeholz / Dehrenberg / Grupenhagen / Laatzen",
      "nach": "Aerzen",
      "verlauf": "haltestellen",
      "muster": 1,
-     "gesehen": ""
+     "gesehen": "2026-11-15"
     },
     {
      "ref": "59",
@@ -11161,7 +11181,7 @@
      "nach": "Salzhemmendorf",
      "verlauf": "haltestellen",
      "muster": 1,
-     "gesehen": ""
+     "gesehen": "2026-11-15"
     },
     {
      "ref": "79",
@@ -11170,7 +11190,7 @@
      "nach": "Salzhemmendorf",
      "verlauf": "haltestellen",
      "muster": 1,
-     "gesehen": ""
+     "gesehen": "2026-11-15"
     },
     {
      "ref": "525",
@@ -11179,18 +11199,26 @@
      "nach": "Heyen",
      "verlauf": "haltestellen",
      "muster": 1,
-     "gesehen": ""
+     "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "792",
+     "betreiber": "Ostwestfalen-Lippe",
+     "von": "Bad Pyrmont, Europaplatz",
+     "nach": "Detmold, Bahnhof",
+     "verlauf": "haltestellen",
+     "muster": 2,
+     "gesehen": "2026-11-02"
     }
    ],
    "abgleich": {
-    "verschwunden": [],
-    "neu": [
+    "verschwunden": [
      "39",
      "59",
      "79",
-     "521",
      "525"
     ],
+    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],

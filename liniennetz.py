@@ -42,7 +42,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '2.6'
+VERSION = '2.7'
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
@@ -53,6 +53,7 @@ HALTE_REGION = []  # Version 2.3: (lon, lat, Name, Suchname) aller Haltestellen 
 EIN = {'5/43'}     # Version 2.3: zusammengesetzte Nummern, die trotzdem aufgenommen werden (ROSA 5/43; weitere aus den Regeln „ein“)
 LISTEN = {}        # Version 2.3: slug → {Nummer (Schlüssel): (Nummer, Linienweg, Hinweis)} aus der Website
 TAGESFAHRTEN = {}  # Version 2.5: {'stichtag': 'JJJJ-MM-TT', 'zeiten': {stop_id: [Minuten]}, 'je': {stop_id: Counter(Nummer)}, 'name': {stop_id: Name}}
+FOLGEN = {}        # Version 2.7: Verbund (Kurzname) → Nummer → [Haltestellennamen in Fahrtrichtung des häufigsten Musters]
 HALTESTELLEN = {}  # Version 2.4: Name → {'p': [(lon, lat) der Steige], 'l': {(Nummer, Verbund)}} – für daten/haltestellen.json
 HALTE_ALLE = []   # (lon, lat, Name) aller Haltestellen der ausgewählten Fahrten – für „von → nach“, wenn der Linienweg fehlt
 ROUTE_TYPEN = {0: 'tram', 1: 'subway', 2: 'train', 3: 'bus', 4: 'ferry', 5: 'tram', 6: 'aerialway', 7: 'funicular', 11: 'trolleybus', 12: 'monorail'}
@@ -152,6 +153,16 @@ def herunterladen(url, ziel):
     log('Fertig:', round(os.path.getsize(ziel) / 1048576), 'MB')
 
 
+def linie_zeiten(ms, uhr):
+    """2.7: erste und letzte Abfahrt einer Linie an einer Haltestelle und ihr üblicher Takt (Minuten, Median der Abstände
+    zwischen 6 und 19 Uhr; 0, wenn dort weniger als drei Abfahrten liegen)."""
+    ms = sorted(ms)
+    tags = [m for m in ms if 360 <= m < 1140]
+    luecken = sorted(b - a for a, b in zip(tags, tags[1:]) if b > a)
+    takt = luecken[len(luecken) // 2] if len(tags) >= 3 and luecken else 0
+    return [uhr(ms[0]), uhr(ms[-1]), takt]
+
+
 def stichtag(heute=None):
     """nächster Mittwoch (mindestens zwei Tage voraus) – ein gewöhnlicher Werktag ohne Wochenend- und Montagsbesonderheiten"""
     import datetime as _dt
@@ -204,7 +215,7 @@ def tagesfahrten(z, fahrten, dienst, linien, region):
             if nr_von[rid]:
                 heute[t] = nr_von[rid]
     log('Abfahrten am %s: %d Fahrten in der Region' % (tag.strftime('%d.%m.%Y'), len(heute)))
-    zeiten, je, ende = defaultdict(list), defaultdict(Counter), {}
+    zeiten, je, ende, jl = defaultdict(list), defaultdict(Counter), {}, defaultdict(lambda: defaultdict(list))
     for t, sid, ab, nr in gtfs_spalten(z, 'stop_times.txt', ('trip_id', 'stop_id', 'departure_time', 'stop_sequence')):
         ref = heute.get(t)
         if ref is None or sid not in region:
@@ -216,15 +227,17 @@ def tagesfahrten(z, fahrten, dienst, linien, region):
             continue
         zeiten[sid].append(mi)
         je[sid][ref] += 1
+        jl[sid][ref].append(mi)    # 2.7: Zeiten je Linie (Takt, erste/letzte Fahrt)
         if t not in ende or seq > ende[t][0]:
             ende[t] = (seq, sid, mi)
     for t, (_, sid, mi) in ende.items():   # Ankunft an der Endhaltestelle ist keine Abfahrt
         try:
             zeiten[sid].remove(mi)
             je[sid][heute[t]] -= 1
+            jl[sid][heute[t]].remove(mi)
         except (ValueError, KeyError):
             pass
-    TAGESFAHRTEN.update({'stichtag': tag.isoformat(), 'zeiten': zeiten, 'je': je})
+    TAGESFAHRTEN.update({'stichtag': tag.isoformat(), 'zeiten': zeiten, 'je': je, 'linien': jl})
 
 
 def gtfs_auswerten(pfad, kreise, verbuende):
@@ -250,6 +263,8 @@ def gtfs_auswerten(pfad, kreise, verbuende):
             if k:
                 region[s['stop_id']] = k
                 TAGESFAHRTEN.setdefault('name', {})[s['stop_id']] = s.get('stop_name', '')
+                if (s.get('platform_code') or '').strip():    # 2.7: Steig (für den Steigplan der Haltestellenseite)
+                    TAGESFAHRTEN.setdefault('steig', {})[s['stop_id']] = s['platform_code'].strip()[:12]
                 if LISTEN:
                     HALTE_REGION.append((lon, lat, s.get('stop_name', ''), halt_norm(s.get('stop_name', ''))))
     log(len(region), 'Haltestellen in der Region')
@@ -405,6 +420,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
                     'geometry': geom,
                     '_halte': list(dict.fromkeys((x, y) for q in seqs for x, y, _ in q)),
                     '_namen': list(dict.fromkeys((n, round(x, 5), round(y, 5)) for q in seqs for x, y, n in q)),   # 2.4: Haltestellenseiten
+                    '_folge': list(dict.fromkeys(n for _, _, n in seqs[0])),                                     # 2.7: Haltestellenfolge (häufigstes Muster)
                     '_muster': muster_l,
                     '_formen': fo,
                 })
@@ -478,7 +494,9 @@ def zusammenfassen(feats):
         p.update({'from': laengste['properties']['from'], 'to': laengste['properties']['to'], 'name': laengste['properties']['name'],
                   'gtfs:route_id': ';'.join(dict.fromkeys(g['properties']['gtfs:route_id'] for g in gruppe)), 'muster': len(behalten), 'verlauf': verlauf})
         out.append({'type': 'Feature', 'properties': p, 'geometry': geom,
-                    '_halte': list(dict.fromkeys(q for m in behalten for q in m)), '_muster': behalten, '_formen': [fo for _, fo in paare]})
+                    '_halte': list(dict.fromkeys(q for m in behalten for q in m)), '_muster': behalten, '_formen': [fo for _, fo in paare],
+                    # 2.7: Haltestellen aller Einträge behalten – bis 2.6 fehlten zusammengeführte Linien in haltestellen.json
+                    '_namen': list(dict.fromkeys(x for g in gruppe for x in (g.get('_namen') or []))), '_folge': laengste.get('_folge') or []})
     return out
 
 
@@ -1382,7 +1400,12 @@ def main():
                 if len(h['p']) < 12 and (x, y) not in h['p']:
                     h['p'].append((x, y))
                 h['l'].add((f['properties']['ref'], v['kurz']))
+        for f in feats:    # 2.7: Haltestellenfolge je Linie (für die Linienseiten der Website)
+            fl = f.get('_folge') or []
+            if len(fl) >= 2 and len(fl) > len(FOLGEN.setdefault(v['kurz'], {}).get(f['properties']['ref'], [])):
+                FOLGEN[v['kurz']][f['properties']['ref']] = fl
         for f in feats:
+            f.pop('_folge', None)
             f.pop('_namen', None)
             f.pop('_halte', None)
             f.pop('_muster', None)
@@ -1442,23 +1465,38 @@ def main():
             hl = []
             # 2.5: Abfahrten am Stichtag je Name (alle Steige zusammen): Anzahl, erste, letzte, je Linie
             zt, jl = defaultdict(list), defaultdict(Counter)
+            lz, st = defaultdict(lambda: defaultdict(list)), defaultdict(lambda: defaultdict(set))    # 2.7: Zeiten je Linie, Linien je Steig
             for sid, n in (TAGESFAHRTEN.get('name') or {}).items():
                 if n in HALTESTELLEN and sid in (TAGESFAHRTEN.get('zeiten') or {}):
                     zt[n].extend(TAGESFAHRTEN['zeiten'][sid])
                     jl[n].update(TAGESFAHRTEN['je'][sid])
+                    for r, ms in (TAGESFAHRTEN.get('linien') or {}).get(sid, {}).items():
+                        lz[n][r].extend(ms)
+                    code = (TAGESFAHRTEN.get('steig') or {}).get(sid)
+                    if code:
+                        st[n][code].update(r for r, c in TAGESFAHRTEN['je'][sid].items() if c > 0)
             uhr = lambda m: '%02d:%02d' % ((m // 60) % 24, m % 60)
             for n, h in sorted(HALTESTELLEN.items()):
                 xs, ys = [p[0] for p in h['p']], [p[1] for p in h['p']]
                 e = {'name': n, 'lon': round(sum(xs) / len(xs), 5), 'lat': round(sum(ys) / len(ys), 5),
                      'linien': [[r, k] for r, k in sorted(h['l'], key=lambda x: (x[1], len(x[0]), x[0]))]}
                 if zt.get(n):
-                    e['tag'] = [len(zt[n]), uhr(min(zt[n])), uhr(max(zt[n])), {r: c for r, c in sorted(jl[n].items(), key=lambda x: (len(x[0]), x[0])) if c > 0}]
+                    e['tag'] = [len(zt[n]), uhr(min(zt[n])), uhr(max(zt[n])), {r: c for r, c in sorted(jl[n].items(), key=lambda x: (len(x[0]), x[0])) if c > 0},
+                                {r: linie_zeiten(ms, uhr) for r, ms in sorted(lz[n].items(), key=lambda x: (len(x[0]), x[0])) if ms},   # 2.7: [erste, letzte, Takt]
+                                sum(1 for m in zt[n] if m % 1440 < 300)]                                                               # 2.7: Abfahrten 0–5 Uhr
+                if len(st.get(n, {})) >= 2:    # 2.7: Steigplan, wenn die Haltestelle mehrere Steige mit Bezeichnung hat
+                    e['steige'] = {c: sorted(rs, key=lambda x: (len(x), x)) for c, rs in sorted(st[n].items(), key=lambda x: (len(x[0]), x[0])) if rs}
                 hl.append(e)
             with open(os.path.join(a.ausgabe, 'haltestellen.json'), 'w', encoding='utf-8') as fh:
                 json.dump({'erzeugt': stand['erzeugt'], 'version': VERSION, 'attribution': 'Fahrplandaten: DELFI e.V. über GTFS.DE (CC BY 4.0)',
                            'stichtag': TAGESFAHRTEN.get('stichtag', ''), 'netze': {v['kurz']: v['slug'] for v in verbuende}, 'haltestellen': hl}, fh, ensure_ascii=False, separators=(',', ':'))
             stand['haltestellen'] = len(hl)
             log(len(hl), 'Haltestellen → haltestellen.json')
+            if FOLGEN:    # 2.7: Haltestellenfolge je Linie
+                with open(os.path.join(a.ausgabe, 'linienfolgen.json'), 'w', encoding='utf-8') as fh:
+                    json.dump({'erzeugt': stand['erzeugt'], 'version': VERSION, 'attribution': 'Fahrplandaten: DELFI e.V. über GTFS.DE (CC BY 4.0)', 'netze': FOLGEN},
+                              fh, ensure_ascii=False, separators=(',', ':'))
+                log(sum(len(x) for x in FOLGEN.values()), 'Linien → linienfolgen.json')
         except Exception as e:
             log('haltestellen.json nicht geschrieben:', e)
     with open(os.path.join(a.ausgabe, 'stand.json'), 'w', encoding='utf-8') as fh:

@@ -29,6 +29,12 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 54 (Skript 2.7): Takt, Nachtverkehr, Steigplan, Haltestellenfolge
+
+- `haltestellen.json`: `tag[4]` = je Linie [erste, letzte Abfahrt, Takt in Minuten] (Takt = Median der Abstände zwischen 6 und 19 Uhr, 0 bei weniger als drei Fahrten), `tag[5]` = Abfahrten zwischen 0 und 5 Uhr, `steige` = Linien je Steig (Spalte `platform_code` der Fahrplandaten; nur bei mindestens zwei Steigen).
+- Neue Datei `linienfolgen.json`: je Verbund und Linie die Haltestellen in Fahrtrichtung der häufigsten Fahrt.
+- Behoben: Linien, die in den Fahrplandaten mehrere Einträge haben (z. B. je Fahrplanperiode), fehlten bis 2.6 in `haltestellen.json`.
+
 ## Neu in Fassung 53 (Skript 2.6): gleiche Nummer, anderer Linienweg
 
 Eine Linie aus der offiziellen Liste eines Verbunds wird nur noch übernommen, wenn der dort eingetragene Linienweg zur Linie passt: Wenigstens ein Ortsname daraus muss an einer ihrer Haltestellen vorkommen. Beispiel: Die VSN-Liste führt „1“ Hillerse – Höckelheim – Verdistraße (Northeim); die Linie 1 Dingelstädt – Duderstadt aus Thüringen hat dieselbe Nummer, aber nur 6 von 48 Halten im Landkreis Göttingen – sie fällt jetzt heraus, auch aus dem Gedächtnis der Vorwoche. Das Protokoll nennt solche Fälle („nicht übernommen – gleiche Nummer, anderer Linienweg“).

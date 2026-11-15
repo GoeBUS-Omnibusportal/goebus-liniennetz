@@ -1,10 +1,10 @@
 {
  "version": "1.1",
- "stand": "2026-11-13T07:42:24Z",
+ "stand": "2026-11-15T10:04:43Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "https://overpass-api.de/api/interpreter",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
- "anzahl": 527,
+ "anzahl": 528,
  "mit_bus": 46,
  "schulen": [
   {
@@ -4637,14 +4637,30 @@
    "mail": "",
    "ort": "Bleicherode",
    "plz": "99752",
-   "strasse": "Löwentorstraße 75",
-   "lage": "51.44043,10.57329",
+   "strasse": "Hauptstraße 75",
+   "lage": "51.44045,10.57325",
    "klassen": "",
    "bus": false,
    "beleg": "",
    "azav": false,
    "grund": "",
    "pschein": false
+  },
+  {
+   "id": "n14378271003",
+   "name": "Fahrschule Levin",
+   "web": "",
+   "tel": "",
+   "mail": "",
+   "ort": "Bleicherode",
+   "plz": "99752",
+   "strasse": "Bahnhofstraße",
+   "lage": "51.44023,10.57376",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": ""
   },
   {
    "id": "n353875191",

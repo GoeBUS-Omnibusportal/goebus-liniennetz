@@ -4,7 +4,8 @@ GöBUS – Fahrplanseiten der Verbünde für die Website zwischenspeichern
 =====================================================================
 
 Läuft bei GitHub zusammen mit dem Liniennetz (siehe .github/workflows/liniennetz.yml) – oder auf jedem Rechner mit Python 3.9+.
-Keine Zusatzpakete nötig. Version 1.0 (Fassung 46).
+Keine Zusatzpakete nötig. Version 1.0 (Fassung 46), 1.1 (Fassung 50): Seiten zusätzlich in fahrplanseiten.json, PDF-Adressen
+vollständig aufgelöst, Adresse der Website aus GOEBUS_REGELN bereinigt.
 
 Warum hier und nicht auf der Website?
   Der Webserver (STRATO) erreicht extern.gipsprojekt.de nicht („Connection timed out“, auch über IPv4). Dort liegen die
@@ -30,7 +31,7 @@ import urllib.parse
 import urllib.request
 import urllib.robotparser
 
-VERSION = '1.0'
+VERSION = '1.1'
 UA = 'GoeBUS-Fahrplanseiten/' + VERSION + ' (+https://www.goebus.de)'
 STANDARD = [
     'https://extern.gipsprojekt.de/hildesheim/rvhi/rvhi2019/isoli/tfp/tfp_linien.htm',
@@ -82,8 +83,15 @@ def laden(url):
     return text
 
 
+def regeln_url(u):
+    """Fassung 50: Variable GOEBUS_ADRESSE versehentlich mit „/_admin/“ (…/_admin//_data/…) → …/_data/…"""
+    u = (u or '').strip()
+    u = re.sub(r'/_admin/+(?=_data/)', '/', u)
+    return re.sub(r'(?<!:)//+', '/', u)
+
+
 def adressen_der_website():
-    u = os.environ.get('GOEBUS_REGELN', '').strip()
+    u = regeln_url(os.environ.get('GOEBUS_REGELN', ''))
     if not u.startswith('http'):
         return []
     try:
@@ -125,20 +133,24 @@ def main():
                 kennung = hashlib.sha1(url.encode('utf-8')).hexdigest()[:20]
                 with open(os.path.join(ziel, kennung + '.html'), 'w', encoding='utf-8') as f:
                     f.write(text)
-                pdfs = len(re.findall(r'''href\s*=\s*["']?[^"'\s>]+\.pdf''', text, re.I))
-                eintrag.update(ok=True, datei='fahrplanseiten/' + kennung + '.html', bytes=len(text.encode('utf-8')), pdf_links=pdfs)
+                links = [urllib.parse.urljoin(url, h) for h in re.findall(r'''href\s*=\s*["']?([^"'\s>]+\.pdf)''', text, re.I)]
+                # Fassung 50: die Seite steht zusätzlich in der Übersicht – die Website braucht dann nur eine Datei
+                eintrag.update(ok=True, datei='fahrplanseiten/' + kennung + '.html', bytes=len(text.encode('utf-8')), pdf_links=len(links),
+                               pdf_beispiel=links[:3], html=text)
                 for v in FOLGEN.findall(text):
                     v = ('https:' + v) if v.startswith('//') else v
                     if v not in gesehen:
                         warte.append(v)
-            print(('✔ ' if eintrag.get('ok') else '✘ ') + url, eintrag.get('pdf_links', eintrag.get('grund', '')))
+            print(('✔ ' if eintrag.get('ok') else '✘ ') + url, eintrag.get('pdf_links', eintrag.get('grund', '')), *(eintrag.get('pdf_beispiel') or [])[:1])
         except Exception as e:
             eintrag.update(ok=False, grund=str(e)[:200])
             print('✘', url, e)
         index['seiten'][url] = eintrag
         time.sleep(1)
     with open(os.path.join(a.ausgabe, 'fahrplanseiten.json'), 'w', encoding='utf-8') as f:
-        json.dump(index, f, ensure_ascii=False, indent=1)
+        json.dump(index, f, ensure_ascii=False, separators=(',', ':'))
+    ok = sum(1 for e in index['seiten'].values() if e.get('ok'))
+    print('%d von %d Seiten gespeichert, %d PDF-Links' % (ok, len(index['seiten']), sum(e.get('pdf_links', 0) for e in index['seiten'].values())))
 
 
 if __name__ == '__main__':

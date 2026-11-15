@@ -760,6 +760,7 @@ def regeln_laden(quelle):
     {"ersetzt": {"vsn": {"265": {"neu": "260", "von": "Northeim", "nach": "Bad Gandersheim"}}, "*": {…}}, "aus": {"vsn": ["…"]}}"""
     if not quelle:
         return {}
+    quelle = re.sub(r'(?<!:)//+', '/', re.sub(r'/_admin/+(?=_data/)', '/', quelle.strip()))   # Fassung 50: GOEBUS_ADRESSE mit „/_admin/“
     try:
         if re.match(r'^https?://', quelle):
             req = urllib.request.Request(quelle, headers={'User-Agent': UA})
@@ -1297,16 +1298,19 @@ def main():
     stand['overpass'] = (['Geofabrik-Auszug (ohne Overpass)'] if auszug else []) + OVERPASS_STATUS[-12:]
     bericht['overpass'] = stand['overpass']
     # 2.4: Haltestellen der Region mit ihren Linien (für die Haltestellenseiten der Website)
-    if HALTESTELLEN:
-        hl = []
-        for n, h in sorted(HALTESTELLEN.items()):
-            xs, ys = [p[0] for p in h['p']], [p[1] for p in h['p']]
-            hl.append({'name': n, 'lon': round(sum(xs) / len(xs), 5), 'lat': round(sum(ys) / len(ys), 5),
-                       'linien': [[r, k] for r, k in sorted(h['l'], key=lambda x: (x[1], len(x[0]), x[0]))]})
-        with open(os.path.join(a.ausgabe, 'haltestellen.json'), 'w', encoding='utf-8') as fh:
-            json.dump({'erzeugt': stand['erzeugt'], 'version': VERSION, 'attribution': 'Fahrplandaten: DELFI e.V. über GTFS.DE (CC BY 4.0)', 'haltestellen': hl}, fh, ensure_ascii=False, separators=(',', ':'))
-        stand['haltestellen'] = len(hl)
-        log(len(hl), 'Haltestellen → haltestellen.json')
+    if HALTESTELLEN:    # Fassung 49: ein Fehler hier darf die Liniennetze nicht kosten
+        try:
+            hl = []
+            for n, h in sorted(HALTESTELLEN.items()):
+                xs, ys = [p[0] for p in h['p']], [p[1] for p in h['p']]
+                hl.append({'name': n, 'lon': round(sum(xs) / len(xs), 5), 'lat': round(sum(ys) / len(ys), 5),
+                           'linien': [[r, k] for r, k in sorted(h['l'], key=lambda x: (x[1], len(x[0]), x[0]))]})
+            with open(os.path.join(a.ausgabe, 'haltestellen.json'), 'w', encoding='utf-8') as fh:
+                json.dump({'erzeugt': stand['erzeugt'], 'version': VERSION, 'attribution': 'Fahrplandaten: DELFI e.V. über GTFS.DE (CC BY 4.0)', 'haltestellen': hl}, fh, ensure_ascii=False, separators=(',', ':'))
+            stand['haltestellen'] = len(hl)
+            log(len(hl), 'Haltestellen → haltestellen.json')
+        except Exception as e:
+            log('haltestellen.json nicht geschrieben:', e)
     with open(os.path.join(a.ausgabe, 'stand.json'), 'w', encoding='utf-8') as fh:
         json.dump(stand, fh, ensure_ascii=False, indent=1)
     with open(os.path.join(a.ausgabe, 'bericht.json'), 'w', encoding='utf-8') as fh:

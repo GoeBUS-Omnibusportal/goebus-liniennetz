@@ -1,12 +1,12 @@
 {
- "erzeugt": "2026-11-15T13:34:26Z",
+ "erzeugt": "2026-11-15T13:59:45Z",
  "version": "2.4",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {
-   "linien": 162,
+   "linien": 164,
    "verlauf": {
-    "haltestellen": 26,
+    "haltestellen": 28,
     "osm": 51,
     "osm+haltestellen": 85
    },
@@ -20,7 +20,9 @@
     "Verkehrsgesellschaft Paderborn/Höxter": 3,
     "Bus GmbH": 2,
     "LK Hameln-Pyrmont": 1,
-    "Ostwestfalen-Lippe": 1
+    "Tarifverb Region Braunschweig": 1,
+    "Ostwestfalen-Lippe": 1,
+    "(ohne Angabe)": 1
    },
    "liste": [
     {
@@ -533,6 +535,15 @@
      "von": "Groß Schneen Schulzentrum, Mast 1 W",
      "nach": "Sattenhausen Kirchgraben, Mast 2 W",
      "verlauf": "osm+haltestellen",
+     "muster": 8,
+     "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "836",
+     "betreiber": "Tarifverb Region Braunschweig",
+     "von": "Rhüden, Kirche",
+     "nach": "Ildehausen, Northeimer Straße",
+     "verlauf": "haltestellen",
      "muster": 8,
      "gesehen": "2026-11-15"
     },
@@ -1277,8 +1288,8 @@
     {
      "ref": "260",
      "betreiber": "VSN-Direkt",
-     "von": "Northeim, Bahnhof E",
-     "nach": "Bad Gandersheim/Domänenhof",
+     "von": "Northeim",
+     "nach": "Bad Gandersheim",
      "verlauf": "haltestellen",
      "muster": 8,
      "gesehen": "2026-11-15"
@@ -1480,24 +1491,23 @@
      "verlauf": "haltestellen",
      "muster": 8,
      "gesehen": "2026-11-02"
+    },
+    {
+     "ref": "800",
+     "betreiber": "",
+     "von": "Seesen",
+     "nach": "Bad Gandersheim",
+     "verlauf": "haltestellen",
+     "muster": 1,
+     "gesehen": ""
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "ALT",
-     "9130",
-     "9140",
-     "9154",
-     "9173",
-     "9180",
-     "9186",
-     "9220",
-     "RB80",
-     "RB82",
-     "RB85",
-     "RB86"
+    "verschwunden": [],
+    "neu": [
+     "800",
+     "836"
     ],
-    "neu": [],
     "nur_osm": [
      "837"
     ],
@@ -1506,8 +1516,12 @@
     "quellen_fehler": []
    },
    "pruefung": {
-    "ohne_betreiber": [],
-    "wenige_halte": [],
+    "ohne_betreiber": [
+     "800"
+    ],
+    "wenige_halte": [
+     "800"
+    ],
     "mehrere_betreiber": [
      "1 (Bus GmbH, VSN-Direkt)",
      "33 (Göttinger Verkehrsbetriebe, NVV - Faisy)",
@@ -1542,6 +1556,8 @@
      "533",
      "642",
      "721",
+     "800",
+     "836",
      "9115",
      "9120",
      "9510",
@@ -1553,15 +1569,15 @@
    "verlauf_vorwoche": 0
   },
   "nvv": {
-   "linien": 436,
+   "linien": 438,
    "verlauf": {
-    "haltestellen": 275,
-    "osm": 54,
+    "haltestellen": 276,
+    "osm": 55,
     "osm+haltestellen": 107
    },
    "aus_vorwoche": 3,
    "betreiber": {
-    "NVV - Faisy": 307,
+    "NVV - Faisy": 308,
     "NVV ESM AST": 56,
     "KVG M": 37,
     "Verkehrsgesellschaft Paderborn/Höxter": 7,
@@ -1569,8 +1585,8 @@
     "Flixbus": 6,
     "RMV": 4,
     "VGM/VRL": 4,
+    "IGDB - RNV MRB direkt": 3,
     "VSN-Direkt": 2,
-    "IGDB - RNV MRB direkt": 2,
     "800523 DB RegioNetz Verkehrs GmbH Kurhessenbahn": 1,
     "Bus GmbH": 1,
     "VGO": 1,
@@ -2098,6 +2114,15 @@
      "nach": "Immenhausen Immenhausen Bahnhof",
      "verlauf": "osm+haltestellen",
      "muster": 8,
+     "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "195",
+     "betreiber": "NVV - Faisy",
+     "von": "Wesertal Gieselwerder Rathaus",
+     "nach": "Hann. Münden Hann. Münden Bahnhof",
+     "verlauf": "osm",
+     "muster": 2,
      "gesehen": "2026-11-15"
     },
     {
@@ -5170,6 +5195,15 @@
      "gesehen": "2026-11-15"
     },
     {
+     "ref": "62",
+     "betreiber": "IGDB - RNV MRB direkt",
+     "von": "Münchhausen Grundschule Nxxx",
+     "nach": "Münchhausen Grundschule Nxxx",
+     "verlauf": "haltestellen",
+     "muster": 1,
+     "gesehen": "2026-11-15"
+    },
+    {
      "ref": "409",
      "betreiber": "NVV - Faisy",
      "von": "Borken Borken Schule",
@@ -5504,12 +5538,10 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "74",
-     "95",
-     "RE30E"
+    "verschwunden": [],
+    "neu": [
+     "195"
     ],
-    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
@@ -5538,6 +5570,7 @@
      "504 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter)",
      "523 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter)",
      "6 (KVG M, NVV - Faisy)",
+     "62 (IGDB - RNV MRB direkt, NVV - Faisy)",
      "7 (KVG M, NVV - Faisy)",
      "ev (800523 DB RegioNetz Verkehrs GmbH Kurhessenbahn, Hessische Landesbahn)"
     ],
@@ -5820,23 +5853,23 @@
    "verlauf_vorwoche": 3
   },
   "vrb": {
-   "linien": 317,
+   "linien": 321,
    "verlauf": {
-    "haltestellen": 74,
-    "osm+haltestellen": 122,
-    "osm": 121
+    "haltestellen": 75,
+    "osm+haltestellen": 124,
+    "osm": 122
    },
    "aus_vorwoche": 2,
    "betreiber": {
     "Tarifverb Region Braunschweig": 290,
     "Harzer Verkehrsbetriebe GmbH": 6,
-    "Flixbus": 4,
+    "VSN-Direkt": 5,
+    "Flixbus": 5,
     "Regionalbus Braunschweig": 4,
     "BördeBus Verkehrsgesellschaft": 3,
     "Großraumverkehr Hannover": 3,
     "Stade": 2,
     "PVG Salzwedel": 2,
-    "VSN-Direkt": 2,
     "Hildesheim": 1
    },
    "liste": [
@@ -5874,6 +5907,15 @@
      "nach": "Königslutter, Bahnhof",
      "verlauf": "osm+haltestellen",
      "muster": 8,
+     "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "455",
+     "betreiber": "VSN-Direkt",
+     "von": "Herzberg, Bahnhof",
+     "nach": "St. Andreasberg, Am Glockenberg A",
+     "verlauf": "osm+haltestellen",
+     "muster": 4,
      "gesehen": "2026-11-15"
     },
     {
@@ -6264,12 +6306,30 @@
      "gesehen": "2026-11-15"
     },
     {
+     "ref": "450",
+     "betreiber": "VSN-Direkt",
+     "von": "Herzberg, Bahnhof",
+     "nach": "Braunlage, Schulzentrum A",
+     "verlauf": "osm",
+     "muster": 2,
+     "gesehen": "2026-11-15"
+    },
+    {
      "ref": "609",
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "SZ-Lebenstedt, Bahnhof",
      "nach": "SZ-Lebenstedt, Bahnhof",
      "verlauf": "osm+haltestellen",
      "muster": 5,
+     "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "182",
+     "betreiber": "Flixbus",
+     "von": "Hamburg central bus station",
+     "nach": "Prague (Central Bus Station Florenc)",
+     "verlauf": "haltestellen",
+     "muster": 1,
      "gesehen": "2026-11-15"
     },
     {
@@ -7440,6 +7500,15 @@
      "nach": "Groß Oesingen, Schule",
      "verlauf": "haltestellen",
      "muster": 2,
+     "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "460",
+     "betreiber": "VSN-Direkt",
+     "von": "Osterode, Hohe Straße",
+     "nach": "Clausthal-Zellerfeld, ZOB",
+     "verlauf": "osm+haltestellen",
+     "muster": 7,
      "gesehen": "2026-11-15"
     },
     {
@@ -8695,17 +8764,7 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "ALT",
-     "RB35",
-     "RB36",
-     "RB40",
-     "RB47",
-     "RE21",
-     "RE30",
-     "RE50",
-     "RE70"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [
      "166",
@@ -8720,10 +8779,14 @@
     "ohne_betreiber": [],
     "wenige_halte": [],
     "mehrere_betreiber": [
+     "182 (Flixbus, Tarifverb Region Braunschweig)",
      "211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
+     "450 (Tarifverb Region Braunschweig, VSN-Direkt)",
+     "455 (Tarifverb Region Braunschweig, VSN-Direkt)",
+     "460 (Stade, VSN-Direkt)",
      "470 (Stade, VSN-Direkt)",
      "803 (PVG Salzwedel, Tarifverb Region Braunschweig)"
     ],
@@ -9561,15 +9624,8 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "S4",
-     "RB77",
-     "RB79",
-     "RE10"
-    ],
-    "neu": [
-     "5/43"
-    ],
+    "verschwunden": [],
+    "neu": [],
     "nur_osm": [
      "52/22",
      "52/23",
@@ -10376,15 +10432,8 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "S4",
-     "RB77",
-     "RB79",
-     "RE10"
-    ],
-    "neu": [
-     "5/43"
-    ],
+    "verschwunden": [],
+    "neu": [],
     "nur_osm": [
      "43"
     ],
@@ -10431,10 +10480,10 @@
    "verlauf_vorwoche": 0
   },
   "oeffis": {
-   "linien": 70,
+   "linien": 76,
    "verlauf": {
-    "haltestellen": 37,
-    "osm+haltestellen": 18,
+    "haltestellen": 42,
+    "osm+haltestellen": 19,
     "osm": 15
    },
    "aus_vorwoche": 1,
@@ -10442,7 +10491,9 @@
     "LK Hameln-Pyrmont": 53,
     "Ostwestfalen-Lippe": 10,
     "LK Schaumburg": 4,
-    "Regionalbus Braunschweig": 2,
+    "(ohne Angabe)": 4,
+    "Regionalbus Braunschweig": 3,
+    "Hildesheim": 1,
     "Großraumverkehr Hannover": 1
    },
    "liste": [
@@ -10762,6 +10813,15 @@
      "gesehen": "2026-11-15"
     },
     {
+     "ref": "64",
+     "betreiber": "Hildesheim",
+     "von": "Alfeld/Gymnasium",
+     "nach": "Ockensen/Ort",
+     "verlauf": "osm+haltestellen",
+     "muster": 8,
+     "gesehen": "2026-11-15"
+    },
+    {
      "ref": "761",
      "betreiber": "Ostwestfalen-Lippe",
      "von": "Bad Pyrmont, Markt",
@@ -10804,6 +10864,15 @@
      "nach": "Börry, Schule",
      "verlauf": "haltestellen",
      "muster": 3,
+     "gesehen": "2026-11-15"
+    },
+    {
+     "ref": "521",
+     "betreiber": "Regionalbus Braunschweig",
+     "von": "Bodenwerder, Im Hagen",
+     "nach": "Holzminden Bahnhof, Mast 4 W 509",
+     "verlauf": "haltestellen",
+     "muster": 7,
      "gesehen": "2026-11-15"
     },
     {
@@ -11075,24 +11144,71 @@
      "verlauf": "haltestellen",
      "muster": 2,
      "gesehen": "2026-11-02"
+    },
+    {
+     "ref": "39",
+     "betreiber": "",
+     "von": "Wördeholz / Dehrenberg / Grupenhagen / Laatzen",
+     "nach": "Aerzen",
+     "verlauf": "haltestellen",
+     "muster": 1,
+     "gesehen": ""
+    },
+    {
+     "ref": "59",
+     "betreiber": "",
+     "von": "Hehlen",
+     "nach": "Salzhemmendorf",
+     "verlauf": "haltestellen",
+     "muster": 1,
+     "gesehen": ""
+    },
+    {
+     "ref": "79",
+     "betreiber": "",
+     "von": "Esbeck / Elze",
+     "nach": "Salzhemmendorf",
+     "verlauf": "haltestellen",
+     "muster": 1,
+     "gesehen": ""
+    },
+    {
+     "ref": "525",
+     "betreiber": "",
+     "von": "Bodenwerder",
+     "nach": "Heyen",
+     "verlauf": "haltestellen",
+     "muster": 1,
+     "gesehen": ""
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "S5",
-     "AST",
-     "RB77"
+    "verschwunden": [],
+    "neu": [
+     "39",
+     "59",
+     "79",
+     "521",
+     "525"
     ],
-    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
     "quellen_fehler": []
    },
    "pruefung": {
-    "ohne_betreiber": [],
-    "wenige_halte": [],
+    "ohne_betreiber": [
+     "39",
+     "525",
+     "59",
+     "79"
+    ],
+    "wenige_halte": [
+     "39",
+     "79"
+    ],
     "mehrere_betreiber": [
+     "64 (Hildesheim, LK Hameln-Pyrmont)",
      "812 (LK Schaumburg, Ostwestfalen-Lippe)"
     ],
     "ohne_verlauf": [
@@ -11105,18 +11221,23 @@
      "27",
      "28",
      "34",
+     "39",
      "43",
      "44",
      "45",
      "51",
      "52",
      "54",
+     "59",
      "64",
      "71",
      "72",
+     "79",
      "94",
+     "521",
      "522",
      "524",
+     "525",
      "726",
      "789",
      "792",

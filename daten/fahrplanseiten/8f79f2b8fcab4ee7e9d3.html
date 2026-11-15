@@ -1,0 +1,914 @@
+	<!DOCTYPE html>
+	<html lang="de">
+		<head>	<meta charset="utf-8">
+	<!-- templates/Mandanten/Verkehr/cms/Webpage_SVHI/HTMLAusgabe.wm 1998594 -->
+	<!--
+		Diese Website wird unterstützt durch die Gemeinsame
+		Internetplattform für Stadtwerke GIPS! Die Branchenlösung für
+		Stadtwerke und kommunale Unternehmen - Wir bringen Stadtwerke ins Internet
+		Weitere Information https://www.gipsprojekt.de
+	-->	<meta name="Robots" content="index,follow">
+	<meta name="revisit-after" content="1 Day">
+												<title>SVHI Stadtverkehr Hildesheim - Linienfahrpl&auml;ne ab 01. Januar 2026</title>
+		<meta property="og:title" content="SVHI Stadtverkehr Hildesheim - Linienfahrpl&auml;ne ab 01. Januar 2026">
+		<meta name="description" content="">
+		<meta property="og:description" content="">		<meta property="og:type" content="website">
+		<meta property="og:site_name" content="SVHI Stadtverkehr Hildesheim">
+		<meta name="keywords" content="">
+		<meta name="author" content="SVHI Stadtverkehr Hildesheim">
+		<link rel="canonical" href="https://www.svhi-hildesheim.de/de/Fahrplan/Linienfahrplaene-ab-01.-Januar-2026/">
+		<meta property="og:url" content="https://www.svhi-hildesheim.de/de/Fahrplan/Linienfahrplaene-ab-01.-Januar-2026/">
+			<!-- mobile viewport optimisation -->
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<link rel="shortcut icon" href="/de/static/Mandanten/Verkehr/cms/Webpage_SVHI/img/favicon.png?nc=1794641778377" type="image/png"/>	<link href="https://fonts.stadtwerke-ssl.de/sourcesanspro/sourcesanspro-full.css" rel="stylesheet">
+	<!-- Styles für Fahrplanauskunft -->
+	<!-- stylesheets -->
+	<link rel="STYLESHEET" href="/de/static/Mandanten/Verkehr/cms/Webpage_SVHI/css/jquery/jquery-ui.min.css?nc=1794641778377"/>	<link rel="STYLESHEET" href="/de/static/Mandanten/Verkehr/cms/Webpage_SVHI/page.css?nc=1794641778377" />
+	<!--[if lte IE 7]>
+		<link rel="STYLESHEET" href="/de/static/css/yaml/4.1.2/core/iehacks.min.css?nc=1794641778377" />
+		<link rel="STYLESHEET" href="/de/static/Mandanten/Verkehr/cms/Webpage_SVHI/css/patches/patch_layout.css?nc=1794641778377"/>
+	<![endif]-->
+		<script>
+			if (typeof(HRJavaScriptIncludesRegistry) != "object")
+			{
+				var head = document.getElementsByTagName("head")[0];
+				var script = document.createElement("script");
+				script.innerHTML = "var HRJavaScriptIncludesRegistry = new Array();";
+				head.appendChild(script);
+			}
+		</script>
+			<script src="/de/static/js/HRSysLib/Event.js?nc=1794641778377"></script>
+			<script src="/de/static/ajax.js?nc=1794641778377"></script>
+			<script src="/de/static/js/httpClient/httpClient.js?nc=1794641778377"></script>
+			<script src="/de/static/js/textClipper/textClipper.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/String.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Security/securityLevel.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Security/parameter.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Security/cryptTools.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/DOM.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/Logging.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/Browser.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/OperatingSystem.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/Position.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/CSS.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/OOPLib.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/Cookie.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/Formular.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/File.js?nc=1794641778377"></script>
+			<script src="/de/static/js/dayjs/dayjs.min.js?nc=1794641778377"></script>
+			<script src="/de/static/js/dayjs/plugin/customParseFormat.min.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/Date.js?nc=1794641778377"></script>
+	<script>
+		dayjs.extend(window.dayjs_plugin_customParseFormat);
+	</script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/HRScrollTo.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/Hilfsfunktionen/URL.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/messagehandlers/messagehandler.js?nc=1794641778377"></script>
+				<script src="/de/static/js/HRSysLib/Transition/animator.js?nc=1794641778377"></script>
+				<script src="/de/static/js/HRSysLib/NavigationControl.js?nc=1794641778377"></script>
+	<script src="/de/static/js/jquery/1.8.3/jquery-1.8.3.js?nc=1794641778377"></script>
+	<!--[if lt IE 9]>
+		<script src="/de/static/js/yaml/4.1.2/lib/html5shiv/html5shiv.js?nc=1794641778377"></script>
+	<![endif]-->
+	<script>
+	<!--
+		$(document).ready(function(){
+			$("#ColInhalt table").wrap("<div class='table-responsive-wrap'></div>");
+		});
+	//-->
+	</script>
+	<script>
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function() {
+			var u="https://stats.gipsprojekt.de/hildesheim/piwik/";
+			_paq.push(['setTrackerUrl', u+'matomo.php']);
+			_paq.push(['setSiteId', '3']);
+		})();
+	</script>
+			<script src="/de/static/js/HRSysLib/consentManager/consentManager.js?nc=1794641778377"></script>
+		<script>
+			HRIsExternalMediaActive = function(consentItemArt)
+			{
+				return isExternalMediaActive(consentItemArt);
+			}
+		</script>
+		</head>		<body class=" linearize-level-1">
+			<div id="page_margins" class="ym-wrapper linearize-level-1">
+				<div id="page" class="ym-wbox linearize-level-1">	<header id="header" class="linearize-level-1">
+		<div id="header_innen" class="linearize-level-1">
+			<a id="logo" href="https://www.svhi-hildesheim.de">
+				<img src="/de/static/Mandanten/Verkehr/cms/Webpage_SVHI/img/SVHI-Logo-3c-ohne.svg" alt="SVHI Logo" />
+			</a>	<div id="topnav" class="ym-noprint">
+		<ul class="ym-skiplinks">
+			<li><a class="ym-skip" href="#nav" title="Direkt zur Navigation springen">Zur Navigation springen (Press Enter)</a></li>
+			<li><a class="ym-skip" href="#main" title="Direkt zum Inhalt springen">Zum Inhalt springen (Press Enter)</a></li>
+		</ul>			<script>
+				<!--
+				var MainNavigationControl = new HRNavigationControl('topnav');
+				MainNavigationControl.addMobileNavigation(new HROnClickOpenNavigation(0, 10000, {idElementToMove : 'idTopnavElementToMove', mobileOnly : true}));
+				// -->
+			</script>
+				<ul class="ebene0" id="idTopnavElementToMove">
+																						<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="1" ><a role="menuitem"  id="id_208863771"  href="https://www.svhi-hildesheim.de" >Home</a>
+					</li>
+																	<li role="none" class="  has-children" data-children="7" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_649956309" id="id_649956309"  href="/de/Kopfnavigation/Unternehmen/" >Unternehmen</a>
+						<ul id="ul_id_649956309" role="menu" data-ebene="2">					<li id="id_1782762663" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_490993751" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Kopfnavigation/Unternehmen/" >Unternehmen</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1158366760"  href="/de/Kopfnavigation/Unternehmen/Geschaeftsfuehrung/" >Gesch&auml;ftsf&uuml;hrung</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1546022667"  href="/de/Kopfnavigation/Unternehmen/E-Mobilitaet-/" >E-Mobilit&auml;t </a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_982633843"  href="/de/Kopfnavigation/Unternehmen/Gremien/" >Gremien</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_543550086"  href="/de/Kopfnavigation/Unternehmen/Kennzahlen/" >Kennzahlen</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1311320517"  href="/stellenausschreibungen" >Arbeiten</a>
+					</li>
+															<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1981333934"  target="_blank" rel="noopener" href="https://www.svhi-hildesheim.de/ausbildungzumbusfahrer_in" >Ausbildung Busfahrer:in</a>
+					</li>
+														<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_282863592"  href="/de/Kopfnavigation/Unternehmen/Werbung-bei-uns/" >Werbung bei uns</a>
+					</li>
+					</ul>
+					</li>
+																	<li role="none" class="  has-children" data-children="2" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_2143266231" id="id_2143266231"  href="/de/Kopfnavigation/Presse/" >Presse</a>
+						<ul id="ul_id_2143266231" role="menu" data-ebene="2">					<li id="id_1593405611" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_1254484997" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Kopfnavigation/Presse/" >Presse</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_290825346"  href="/de/Kopfnavigation/Presse/Pressemeldungen/" >Pressemeldungen</a>
+					</li>
+														<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1953644202"  href="/de/Kopfnavigation/Presse/Presseanschluss/" >Presseanschluss</a>
+					</li>
+					</ul>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="1" ><a role="menuitem"  id="id_748643837"  href="/de/Kopfnavigation/Anfahrt/" >Anfahrt</a>
+					</li>
+																	<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="1" ><a role="menuitem"  id="id_864316024"  href="/de/Service/Kontakt/Kontaktformular1_459513.html" >Kontakt</a>
+					</li>
+		</ul>	<div id="suche" class="ym-noprint">				<form class="ym-searchform" id="CMSSuchformular" name="suchen" method="get" action="https://www.svhi-hildesheim.de/hildesheimGips/Gips" role="search">			<input type="hidden" name="Anwendung" value="CMSWebpage"><input type="hidden" name="Methode" value="ShowHTMLAusgabe"><input type="hidden" name="SessionMandant" value="Verkehr">
+			<input type="hidden" name="RessourceID" value="" >
+			<input type="hidden" name="Schluessel" value="Volltextsuche_SVHI" >
+					<input type="hidden" name="WebPublisher.NavId" value="" >
+							<input type="hidden" name="VolltextZielverzeichnisId" value="ba9eabe5e92b06bd795f9321e9474f984ffad7e987cc59b782426314fbb246c2" >
+												<input type="text" id="VolltextSuchbegriff" name="VolltextSuchbegriff" maxlength="255" class="ym-searchfield" placeholder="Volltextsuche" autocomplete="off" >
+						<input type="submit" name="suche" value="" title="Suchen" class="submit ym-searchbutton" >
+						</form>
+	</div>
+	</div>
+	<nav id="nav" class="ym-noprint">
+		<a id="navigation"></a>
+		<a id="NavButton">Navigation</a>
+		<div id="nav_main" class="ym-hlist">				<script>
+					<!--
+					var MainNavigationControl = new HRNavigationControl('nav_main');
+					MainNavigationControl.addMobileNavigation(new HROffCanvasNavigation(0, 759, {idElementToMove : 'idNavElementToMove', keepInitialIdention : false }));
+					MainNavigationControl.addMobileNavigation(new HROnClickOpenNavigation(760, 10000, {idElementToMove : 'idNavElementToMove', mobileOnly : true}));
+					new HRNavigationButton('NavButton', 0, 759, { idElementChangeId: 'nav', idToChangeTo: 'navMobile', idElementToShow: 'nav_main' });
+					// -->
+				</script>
+						<ul class="ebene0" id="idNavElementToMove">
+																		<li role="none" class=" selected ersterNaviEintrag has-children" data-children="6" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_2062654381" id="id_2062654381"  class="nav_selected" href="/de/Fahrplan/" >Fahrplan</a>
+						<ul id="ul_id_2062654381" role="menu" data-ebene="2">					<li id="id_529442958" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_1711986413" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Fahrplan/" >Fahrplan</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1801738966"  href="/de/Fahrplan/Fahrplanauskunft/" >Fahrplanauskunft</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_936731869"  href="/de/Fahrplan/Haltestellenfahrplaene-ab-01.-Januar-2026/" >Haltestellenfahrpl&auml;ne ab 01. Januar 2026</a>
+					</li>
+													<li role="none"   class=" current notOpen  no-children"  data-ebene="2" >				<span class="navigationSpanAktiv">Linienfahrpl&auml;ne ab 01. Januar 2026</span>
+								</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_567949116"  href="/E-Fahrten" >E-Fahrten</a>
+					</li>
+															<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_777023919"  target="_blank" rel="noopener" href="https://www.rvhi-hildesheim.de/nachtsbus" >Regionaler Nachtsbus</a>
+					</li>
+																<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1668378028"  target="_blank" rel="noopener" href="https://www.rvhi-hildesheim.de/de/Fahrplan/" >RVHI Fahrplan</a>
+					</li>
+					</ul>
+					</li>
+																	<li role="none" class="  has-children" data-children="3" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_76791824" id="id_76791824"  href="/de/Fahrkarten/" >Fahrkarten</a>
+						<ul id="ul_id_76791824" role="menu" data-ebene="2">					<li id="id_1420159565" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_1725978572" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Fahrkarten/" >Fahrkarten</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1164835194"  href="/de/Fahrkarten/Einzel-und-Tageskarten/" >Einzel- und Tageskarten</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_820141055"  href="/de/Fahrkarten/Zeitkarten-Abo/" >Zeitkarten &amp; Abo</a>
+					</li>
+														<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1957804228"  href="/de/Fahrkarten/Sonstige-Fahrkarten/" >Sonstige Fahrkarten</a>
+					</li>
+					</ul>
+					</li>
+																	<li role="none" class="  has-children" data-children="2" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_2023845649" id="id_2023845649"  href="/de/Liniennetz/" >Liniennetz</a>
+						<ul id="ul_id_2023845649" role="menu" data-ebene="2">					<li id="id_423135249" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_1912696999" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Liniennetz/" >Liniennetz</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_849439298"  href="/de/Liniennetz/Tagesliniennetz1/" >Tagesliniennetz</a>
+					</li>
+														<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1211826079"  href="/de/Liniennetz/Abendliniennetz1/" >Abendliniennetz</a>
+					</li>
+					</ul>
+					</li>
+																		<li role="none" class=" letzterNaviEintrag has-children" data-children="6" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_1184818600" id="id_1184818600"  href="/de/Service/" >Service</a>
+						<ul id="ul_id_1184818600" role="menu" data-ebene="2">					<li id="id_1038112958" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_627935502" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Service/" >Service</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_175295885"  href="/de/Service/Beratung-Verkauf/" >Beratung &amp; Verkauf</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1887756735"  href="/Kontaktformular" >Kontakt</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1716956337"  href="/de/Service/Fundsachen/" >Fundsachen</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1920290102"  href="/de/Service/Besondere-Tipps/" >Besondere Tipps</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_515315178"  href="/planZOB" >ZOB</a>
+					</li>
+														<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1935781395"  href="/de/Service/Schlichtungsstelle/" >Schlichtungsstelle</a>
+					</li>
+					</ul>
+					</li>
+			</ul>
+		</div>
+	</nav>
+		</div>
+	</header>
+	<div id="Kopfbild">
+							<img src="/de/Kopfbild/kopfbild-stadt.jpg"   loading="lazy" onload="if (typeof(HREventManager) == 'object'){ HREventManager.dispatchEvent(this, 'resize', {notifySelf: false, bubbles: true, useStandard: false, notifyAll: true});}"  alt="Bild">
+	</div>
+					<main id="main" class="linearize-level-1">	<div id="brotkrumen" class="ym-noprint">
+		<ul>
+			<li><a href="https://www.svhi-hildesheim.de">Home</a><span class="BrotkrumenPfeil"> &gt; </span></li>
+				<li data-ebene="1"><a href="/de/Fahrplan/">Fahrplan</a><span class="BrotkrumenPfeil"> &gt; </span></li>
+				<li data-ebene="2"><span>Linienfahrpläne ab 01. Januar 2026</span></li>
+		</ul>
+	</div>
+						<div class="ym-column">
+			<!-- Mittlere Spalte -->
+							<div class="ym-col2 linearize-level-1" id="ColInhalt">
+								<div class="ym-cbox">	<h1 class="seitenname">Linienfahrpl&auml;ne ab 01. Januar 2026</h1>
+							<img src="/de/Fahrplan/LFP.png"   loading="lazy" onload="if (typeof(HREventManager) == 'object'){ HREventManager.dispatchEvent(this, 'resize', {notifySelf: false, bubbles: true, useStandard: false, notifyAll: true});}"  alt="" class="float_right" >
+														<p>Hier finden Sie&nbsp;unsere Fahrpl&auml;ne, so wie man sie aus dem Fahrplanbuch&nbsp;kennt. Wir haben sie als PDF-Dateien zum Download bereit gestellt.</p>
+				<iframe id="iFrameFahrplaene" src="https://extern.gipsprojekt.de/hildesheim/svhi/svhi2023/isoli/tfp/tfp_linien2017.htm" width="100%" height="2600" style="border: none; padding: 0px;margin: 0px;" frameborder=0></iframe>
+<script>
+if (window.location.protocol != "https:") {
+    ssldomain = "https://ssl.webpack.de";
+   $("#iFrameFahrplaene").attr("src",$("#iFrameFahrplaene").attr("src").replace(ssldomain,"http:/"));
+}
+</script>
+								</div>
+							</div>
+						</div>	<footer id="footer" class="ym-noprint">
+		<div id="footer_content">
+			<div id="FussSitemap">
+				<ul>
+																		<li role="none" class=" selected ersterNaviEintrag has-children" data-children="6" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_407425923" id="id_407425923"  class="nav_selected" href="/de/Fahrplan/" >Fahrplan</a>
+						<ul id="ul_id_407425923" role="menu" data-ebene="2">					<li id="id_1495969835" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_1232270330" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Fahrplan/" >Fahrplan</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_366077472"  href="/de/Fahrplan/Fahrplanauskunft/" >Fahrplanauskunft</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_869628975"  href="/de/Fahrplan/Haltestellenfahrplaene-ab-01.-Januar-2026/" >Haltestellenfahrpl&auml;ne ab 01. Januar 2026</a>
+					</li>
+													<li role="none"   class=" current notOpen  no-children"  data-ebene="2" >				<span class="navigationSpanAktiv">Linienfahrpl&auml;ne ab 01. Januar 2026</span>
+								</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_101854814"  href="/E-Fahrten" >E-Fahrten</a>
+					</li>
+															<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1244348173"  target="_blank" rel="noopener" href="https://www.rvhi-hildesheim.de/nachtsbus" >Regionaler Nachtsbus</a>
+					</li>
+																<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_784399957"  target="_blank" rel="noopener" href="https://www.rvhi-hildesheim.de/de/Fahrplan/" >RVHI Fahrplan</a>
+					</li>
+					</ul>
+					</li>
+																	<li role="none" class="  has-children" data-children="3" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_176916921" id="id_176916921"  href="/de/Fahrkarten/" >Fahrkarten</a>
+						<ul id="ul_id_176916921" role="menu" data-ebene="2">					<li id="id_1614376078" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_1889459593" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Fahrkarten/" >Fahrkarten</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1140040798"  href="/de/Fahrkarten/Einzel-und-Tageskarten/" >Einzel- und Tageskarten</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1586992611"  href="/de/Fahrkarten/Zeitkarten-Abo/" >Zeitkarten &amp; Abo</a>
+					</li>
+														<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1331155995"  href="/de/Fahrkarten/Sonstige-Fahrkarten/" >Sonstige Fahrkarten</a>
+					</li>
+					</ul>
+					</li>
+																	<li role="none" class="  has-children" data-children="2" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_236410451" id="id_236410451"  href="/de/Liniennetz/" >Liniennetz</a>
+						<ul id="ul_id_236410451" role="menu" data-ebene="2">					<li id="id_1484774431" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_1714531114" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Liniennetz/" >Liniennetz</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1867976040"  href="/de/Liniennetz/Tagesliniennetz1/" >Tagesliniennetz</a>
+					</li>
+														<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1688163464"  href="/de/Liniennetz/Abendliniennetz1/" >Abendliniennetz</a>
+					</li>
+					</ul>
+					</li>
+																		<li role="none" class=" letzterNaviEintrag has-children" data-children="6" data-ebene="1" ><a role="menuitem"  aria-controls="ul_id_944066692" id="id_944066692"  href="/de/Service/" >Service</a>
+						<ul id="ul_id_944066692" role="menu" data-ebene="2">					<li id="id_926949731" class=" hr-MobileNavZurueckLink" data-ebene="2" style="display : none;"><a href="#" aria-label="Zur vorherigen Menüebene zurückkehren" onclick="return HRNavigationControlsOnZurueckClicked(this, 1);">zur&uuml;ck</a></li>
+									<li id="id_617525735" class=" hr-MobileNavFolderpageLink" data-ebene="2" style="display : none;"><a href="/de/Service/" >Service</a></li>
+														<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_1186851278"  href="/de/Service/Beratung-Verkauf/" >Beratung &amp; Verkauf</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_434498118"  href="/Kontaktformular" >Kontakt</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1501678936"  href="/de/Service/Fundsachen/" >Fundsachen</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1119887409"  href="/de/Service/Besondere-Tipps/" >Besondere Tipps</a>
+					</li>
+													<li role="none" class="  no-children"  data-ebene="2" ><a role="menuitem"  id="id_1607828618"  href="/planZOB" >ZOB</a>
+					</li>
+														<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="2" ><a role="menuitem"  id="id_996260225"  href="/de/Service/Schlichtungsstelle/" >Schlichtungsstelle</a>
+					</li>
+					</ul>
+					</li>
+				</ul>
+			</div>
+			<div id="FussText">
+				<div id="FussTextContent">
+														<h3>Telefonischer Kontakt</h3>
+														<table style="background: none transparent scroll repeat 0% 0%;" border="0">
+<tbody>
+<tr>
+<td>
+<p>Info-Hotline,</p>
+<p>Fundsachen,</p>
+<p>ROSA Abo-</p>
+<p>Verwaltung:&nbsp;</p>
+</td>
+<td><a rel="noopener noopener" href="tel:+49512166666" target="_blank">05121 666 - 66</a></td>
+</tr>
+</tbody>
+</table>
+																																		<a target="_blank" rel="noopener" href="https://de-de.facebook.com/svhi.hildesheim?sk=wall" class="NoFileIcon float_left" onclick="if (typeof HRLogAction == 'function') { HRLogAction('SP=d5bec7d676dad45c0f24556772cb4d8a31bccb3ea7f034b4fd4996289436116f4c6f908d3493b47f50c2a842015cf431f8f1a649d4bdefdfdc09ad5369c35112bd58ffa5e1372720101a64713bf8302f'); } ">
+							<img src="/de/Footer/FacebookButton.jpg"   loading="lazy" onload="if (typeof(HREventManager) == 'object'){ HREventManager.dispatchEvent(this, 'resize', {notifySelf: false, bubbles: true, useStandard: false, notifyAll: true});}"  alt="Facebook">
+										</a>
+														<p>...oder besuchen Sie uns auf <a href="https://de-de.facebook.com/svhi.hildesheim?sk=wall" target="_blank">Facebook</a>.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<div id="Fussnavigation">
+		<ul class="float_left">
+																	<li role="none" class=" ersterNaviEintrag no-children"  data-ebene="1" ><a role="menuitem"  id="id_295512904"  href="/de/Home/Datenschutz/Datenschutz_350851.html" >Datenschutz</a>
+					</li>
+																	<li role="none" class="  no-children"  data-ebene="1" ><a role="menuitem"  id="id_595573295"  href="/de/Home/DSGVO/DSGVO_883193.html" >DSGVO</a>
+					</li>
+																	<li role="none" class=" letzterNaviEintrag no-children"  data-ebene="1" ><a role="menuitem"  id="id_3313727"  href="/de/Home/Impressum/Impressum_350852.html" >Impressum</a>
+					</li>
+		</ul>
+		<ul class="float_right">
+			<script>
+				<!--
+				document.write ("<li><a class='drucken' href='#' onClick='window.print(); return false;'>diese Seite drucken</a></li>");
+				//-->
+			</script>
+			<li><a class="oben" href="#">nach oben</a></li>
+		</ul>
+	</div>
+					</main>
+				</div>
+			</div>
+			<script src="/de/static/js/HRSysLib/Transition/Sequenzen/CollapsableBlock.js?nc=1794641778377"></script>
+			<script src="/de/static/js/spinner/spin.js?nc=1794641778377"></script>
+		<script>
+			showSpinner = function(target, config)
+			{
+				config = config || {};
+				const opts = {							lines: config.lines || 9,
+							length: config.length || 20,
+							width: config.width || 12,
+							radius: config.radius || 23,
+							corners: config.corners || 0.7,
+							rotate: config.rotate || 0,
+							direction: config.direction || 1,
+							color: config.color || '#000',
+							speed: config.speed || 1,
+							trail: config.trail || 46,
+							shadow: config.shadow || true,
+							hwaccel: config.hwaccel || false,
+							className: config.className || 'spinner',
+							zIndex: config.zIndex || 2e9,
+							top: config.top || 'auto',
+							left: config.left || 'auto',
+							position: config.position || 'relative',
+							offsetTop: config.offsetTop || 0,
+							offsetLeft: config.offsetLeft || 0
+								};
+				if (target && typeof(target) === 'string')
+				{
+					var target = document.getElementById(target);
+				}
+				var spinner = new Spinner(opts).spin(target);
+				return spinner;
+			};
+		</script>
+			<script src="/de/static/js/HRSysLib/DragAndDrop/DragAndDropManager.js?nc=1794641778377"></script>
+			<script src="/de/static/js/HRSysLib/DragAndDrop/Draggable.js?nc=1794641778377"></script>
+												<script src="/de/static/js/HRSysLib/ibox/16/HRIBox.js?nc=1794641778377"></script>
+																																																																													<script>	</script>
+	<div id="wpeConsentBanner_1475452" class="consent-banner" style="display:none">
+		<h2 id="consent-dialog-title">Wir verwenden Cookies auf unserer Website.</h2>
+		<p id="consent-dialog-desc">Sie haben hier die M&ouml;glichkeit zu entscheiden, welche Cookies verwendet werden d&uuml;rfen. Ihre Auswahl bleibt f&uuml;r 30 Tage gespeichert. Sie haben jederzeit die M&ouml;glichkeit, Ihre Cookie-Einstellungen &uuml;ber die Datenschutzerkl&auml;rung zu &auml;ndern.</p>
+			<div class="consent-banner-categories">
+		<fieldset class="formElements">																			<div id="ConsentCategory_1475452_PGMHDL_Notwendige_Rahmen" class="Feldrahmen   disabled " data-field-frame >
+	<input type="checkbox" id="ConsentCategory_1475452_PGMHDL_Notwendige" name="WebPublisher.Rahmen_Consent-Manager.Container.Children:0.AcceptedCategories" value="PGMHDL_Notwendige"  class="formElementCheck " disabled="disabled"  checked="checked" onchange="if (typeof HREventManager === 'object') HREventManager.dispatchEvent(this, 'HRFormValueChanged', {'notifyAll': true, 'bubbles': true, 'useStandard': false}); " oninput="if (window.HRMessageHandler){window.HRMessageHandler.removeFieldMessagesIfExist(this);}" data-instance-id="2046155730"  onclick="return false;">		<input type="hidden" name="__System__CheckboxNames" value="WebPublisher.Rahmen_Consent-Manager.Container.Children:0.AcceptedCategories">
+			<label for="ConsentCategory_1475452_PGMHDL_Notwendige" id="ConsentCategory_1475452_PGMHDL_Notwendige_description"  class="formElement  description" style="">Notwendige		</label>
+			</div>
+																																			<div id="ConsentCategory_1475452_PGMHDL_Statistik_Rahmen" class="Feldrahmen  " data-field-frame >
+	<input type="checkbox" id="ConsentCategory_1475452_PGMHDL_Statistik" name="WebPublisher.Rahmen_Consent-Manager.Container.Children:0.AcceptedCategories" value="PGMHDL_Statistik"  class="formElementCheck "    onchange="if (typeof HREventManager === 'object') HREventManager.dispatchEvent(this, 'HRFormValueChanged', {'notifyAll': true, 'bubbles': true, 'useStandard': false}); " oninput="if (window.HRMessageHandler){window.HRMessageHandler.removeFieldMessagesIfExist(this);}" data-instance-id="2046155730"  >		<input type="hidden" name="__System__CheckboxNames" value="WebPublisher.Rahmen_Consent-Manager.Container.Children:0.AcceptedCategories">
+			<label for="ConsentCategory_1475452_PGMHDL_Statistik" id="ConsentCategory_1475452_PGMHDL_Statistik_description"  class="formElement  description" style="">Statistik		</label>
+			</div>
+													</fieldset>
+	</div>
+						<button type="button" id="alle_akzeptieren_btn_1475452" onclick="saveConfig('1475452', 350587, true, false, ['1', '1', '1', '1', '1', '2', '2'], ['PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Statistik', 'PGMHDL_Statistik'], ['6', '7', '8', '14', '23', '1', '4'], ['PGMHDL_JSESSIONID', 'PGMHDL_HRCookieManager', 'PGMHDL_WarenkorbUID', 'PGMHDL_PopupAccepted', 'PGMHDL_TrustedDeviceUID', 'PGMHDL_GIPSStatistik', 'PGMHDL_Piwik'], 'www.svhi-hildesheim.de', '30', '/hildesheimGips/Gips?SessionMandant=Verkehr', true);closeConsentManager(m_ConsentBannerIBox_1475452);return false;">Alle akzeptieren</button>
+						<button type="button" id="speichern_btn_1475452" onclick="saveConfig('1475452', 350587, false, false, ['1', '1', '1', '1', '1', '2', '2'], ['PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Statistik', 'PGMHDL_Statistik'], ['6', '7', '8', '14', '23', '1', '4'], ['PGMHDL_JSESSIONID', 'PGMHDL_HRCookieManager', 'PGMHDL_WarenkorbUID', 'PGMHDL_PopupAccepted', 'PGMHDL_TrustedDeviceUID', 'PGMHDL_GIPSStatistik', 'PGMHDL_Piwik'], 'www.svhi-hildesheim.de', '30', '/hildesheimGips/Gips?SessionMandant=Verkehr', true);closeConsentManager(m_ConsentBannerIBox_1475452);return false;">Speichern</button>
+						<button type="button" id="alle_ablehnen_btn_1475452" onclick="saveConfig('1475452', 350587, false, true, ['1', '1', '1', '1', '1', '2', '2'], ['PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Statistik', 'PGMHDL_Statistik'], ['6', '7', '8', '14', '23', '1', '4'], ['PGMHDL_JSESSIONID', 'PGMHDL_HRCookieManager', 'PGMHDL_WarenkorbUID', 'PGMHDL_PopupAccepted', 'PGMHDL_TrustedDeviceUID', 'PGMHDL_GIPSStatistik', 'PGMHDL_Piwik'], 'www.svhi-hildesheim.de', '30', '/hildesheimGips/Gips?SessionMandant=Verkehr', true);closeConsentManager(m_ConsentBannerIBox_1475452);return false;">Alle ablehnen</button>
+		<div class="consent-banner-explanation">											<div class="Aufklappkasten2 ">							<h2 class="InfoboxUeberschrift">
+								<a id="kasten_button_PGMHDL_Notwendige_1475452" class="kasten_button" href="#" title="Erläuterungen zu der Kategorie 'Notwendige'">Notwendige</a>
+							</h2>
+							<div id="explanation_PGMHDL_Notwendige_1475452" class="kasten_content" style="display: none;">		<p>Diese Website verwendet technisch notwendige Cookies, um grundlegende Funktionen bereitzustellen und den sicheren Betrieb zu gewährleisten. Eine Deaktivierung dieser Cookies ist nicht möglich. Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse).</p>
+		<table>
+		<tr>
+			<th scope="row">Name</th>
+			<td>JSESSIONID</td>
+		</tr>
+		<tr>
+			<th scope="row">Domain</th>								<td><a href="//www.svhi-hildesheim.de">www.svhi-hildesheim.de</a></td>
+					</tr>
+		<tr>
+			<th scope="row">Anbieter</th>
+			<td>SVHI Stadtverkehr Hildesheim GmbH & RVHI Regionalverkehr Hildesheim GmbH</td>
+		</tr>
+		<tr>
+			<th scope="row">Zweck</th>
+			<td>Sitzungscookie Aufrechterhaltung der Sitzung</td>
+		</tr>
+		<tr>
+			<th scope="row">Daten</th>
+			<td>Session-ID</td>
+		</tr>
+		<tr>
+			<th scope="row">Session-ID</th>
+			<td>Sitzungscookie</td>
+		</tr>
+		<tr>
+			<th scope="row">Laufzeit</th>
+			<td>Beim Beenden der Browsersitzung</td>
+		</tr>
+	</table>
+											<table>
+		<tr>
+			<th scope="row">Name</th>
+			<td>HRCookieManager</td>
+		</tr>
+		<tr>
+			<th scope="row">Domain</th>								<td><a href="//www.svhi-hildesheim.de">www.svhi-hildesheim.de</a></td>
+					</tr>
+		<tr>
+			<th scope="row">Anbieter</th>
+			<td>SVHI Stadtverkehr Hildesheim GmbH & RVHI Regionalverkehr Hildesheim GmbH</td>
+		</tr>
+		<tr>
+			<th scope="row">Zweck</th>
+			<td>Speichern der vom Besucher getroffenen Einstellungen im Consent-Manager.</td>
+		</tr>
+		<tr>
+			<th scope="row">Daten</th>
+			<td>Speichert die vom Besucher getroffenen Cookie-Einstellungen</td>
+		</tr>
+		<tr>
+			<th scope="row">Session-ID</th>
+			<td>Permanenter Cookie</td>
+		</tr>
+		<tr>
+			<th scope="row">Laufzeit</th>
+			<td>30 Tage</td>
+		</tr>
+	</table>
+											<table>
+		<tr>
+			<th scope="row">Name</th>
+			<td>Popup-Accepted-*</td>
+		</tr>
+		<tr>
+			<th scope="row">Domain</th>								<td><a href="//www.svhi-hildesheim.de">www.svhi-hildesheim.de</a></td>
+					</tr>
+		<tr>
+			<th scope="row">Anbieter</th>
+			<td>SVHI Stadtverkehr Hildesheim GmbH & RVHI Regionalverkehr Hildesheim GmbH</td>
+		</tr>
+		<tr>
+			<th scope="row">Zweck</th>
+			<td>Merkt sich, ob der Besucher ein Popup bereits akzeptiert hat.</td>
+		</tr>
+		<tr>
+			<th scope="row">Daten</th>
+			<td>"Accepted"</td>
+		</tr>
+		<tr>
+			<th scope="row">Session-ID</th>
+			<td>Permanenter Cookie</td>
+		</tr>
+		<tr>
+			<th scope="row">Laufzeit</th>
+			<td>variabel (Default: 30 Tage)</td>
+		</tr>
+	</table>
+							</div>
+											</div>
+									<div class="Aufklappkasten2 ">							<h2 class="InfoboxUeberschrift">
+								<a id="kasten_button_PGMHDL_Statistik_1475452" class="kasten_button" href="#" title="Erläuterungen zu der Kategorie 'Statistik'">Statistik</a>
+							</h2>
+							<div id="explanation_PGMHDL_Statistik_1475452" class="kasten_content" style="display: none;">		<p>Statistik-Cookies dienen dazu, die Nutzung der Website besser zu verstehen und deren Inhalte fortlaufend zu verbessern. Eine personenbezogene Auswertung oder Profilbildung findet nicht statt, Besucher bleiben anonym. Die Verarbeitung erfolgt nur nach ausdrücklicher Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO (Einwilligung).</p>
+							<table>
+		<tr>
+			<th scope="row">Name</th>
+			<td>GIPS-Tsid</td>
+		</tr>
+		<tr>
+			<th scope="row">Domain</th>								<td><a href="//www.svhi-hildesheim.de">www.svhi-hildesheim.de</a></td>
+					</tr>
+		<tr>
+			<th scope="row">Anbieter</th>
+			<td>SVHI Stadtverkehr Hildesheim GmbH & RVHI Regionalverkehr Hildesheim GmbH</td>
+		</tr>
+		<tr>
+			<th scope="row">Zweck</th>
+			<td>Aufrechterhaltung der Sitzung für die lokale GIPS Statistik</td>
+		</tr>
+		<tr>
+			<th scope="row">Daten</th>
+			<td>Statistik-Session-ID</td>
+		</tr>
+		<tr>
+			<th scope="row">Session-ID</th>
+			<td>Sitzungscookie</td>
+		</tr>
+		<tr>
+			<th scope="row">Laufzeit</th>
+			<td>Beim Beenden der Browsersitzung</td>
+		</tr>
+	</table>
+											<table>
+		<tr>
+			<th scope="row">Name</th>
+			<td>_pk_id</td>
+		</tr>
+		<tr>
+			<th scope="row">Domain</th>								<td><a href="//www.svhi-hildesheim.de">www.svhi-hildesheim.de</a></td>
+					</tr>
+		<tr>
+			<th scope="row">Anbieter</th>
+			<td>SVHI Stadtverkehr Hildesheim GmbH & RVHI Regionalverkehr Hildesheim GmbH</td>
+		</tr>
+		<tr>
+			<th scope="row">Zweck</th>
+			<td>Registriert eine eindeutige ID, die verwendet wird, um statistische Daten dazu, wie der Besucher die Website nutzt, zu generieren.</td>
+		</tr>
+		<tr>
+			<th scope="row">Daten</th>
+			<td>Aufruf-ID</td>
+		</tr>
+		<tr>
+			<th scope="row">Session-ID</th>
+			<td>Permanenter Cookie</td>
+		</tr>
+		<tr>
+			<th scope="row">Laufzeit</th>
+			<td>13 Monate</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<th scope="row">Name</th>
+			<td>_pk_ref</td>
+		</tr>
+		<tr>
+			<th scope="row">Domain</th>								<td><a href="//www.svhi-hildesheim.de">www.svhi-hildesheim.de</a></td>
+					</tr>
+		<tr>
+			<th scope="row">Anbieter</th>
+			<td>SVHI Stadtverkehr Hildesheim GmbH & RVHI Regionalverkehr Hildesheim GmbH</td>
+		</tr>
+		<tr>
+			<th scope="row">Zweck</th>
+			<td>Cookie von Matomo, das für Website-Analysen verwendet wird.</td>
+		</tr>
+		<tr>
+			<th scope="row">Daten</th>
+			<td>Referenzierte Domain</td>
+		</tr>
+		<tr>
+			<th scope="row">Session-ID</th>
+			<td>Permanenter Cookie</td>
+		</tr>
+		<tr>
+			<th scope="row">Laufzeit</th>
+			<td>6 Monate</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<th scope="row">Name</th>
+			<td>_pk_ses</td>
+		</tr>
+		<tr>
+			<th scope="row">Domain</th>								<td><a href="//www.svhi-hildesheim.de">www.svhi-hildesheim.de</a></td>
+					</tr>
+		<tr>
+			<th scope="row">Anbieter</th>
+			<td>SVHI Stadtverkehr Hildesheim GmbH & RVHI Regionalverkehr Hildesheim GmbH</td>
+		</tr>
+		<tr>
+			<th scope="row">Zweck</th>
+			<td>Cookie von Matomo, das für Website-Analysen verwendet wird.</td>
+		</tr>
+		<tr>
+			<th scope="row">Daten</th>
+			<td>1</td>
+		</tr>
+		<tr>
+			<th scope="row">Session-ID</th>
+			<td>Permanenter Cookie</td>
+		</tr>
+		<tr>
+			<th scope="row">Laufzeit</th>
+			<td>30 Minuten</td>
+		</tr>
+	</table>
+							</div>
+											</div>
+						</div>
+				<div class="wichtige-infos" >
+														<h2>Zugang zu den wichtigen Informationen&nbsp;</h2>
+																								<ul class="linkliste " data-link-count="2">
+					<li class=" int">										<a target="_top"  href="/de/Home/Impressum/Impressum_1475463.html"  onclick="if (typeof HRLogAction == 'function') { HRLogAction('SP=28cfb3fad931d73f2949e764f0e363a57090777b8a0aabe27440c6f8870adf724c6f908d3493b47f50c2a842015cf431d1548831c54cbf2d718936060a90403411c2b5de11cb28f3eb21585d291b249d');  } "  title="Link führt zu einer Seite im selben Fenster" >							Impressum
+											</a>
+							</li>
+					<li class=" int">										<a target="_top"  href="/de/Home/Datenschutz/Datenschutz_1475463.html"  onclick="if (typeof HRLogAction == 'function') { HRLogAction('SP=db00ea983d7fb27afd762ff78da88b913fcbd93038c076f459f2227c9ec590da4c6f908d3493b47f50c2a842015cf431d1548831c54cbf2d718936060a904034da636657f8fdc7f7897f6ee14b36d6a8');  } "  title="Link führt zu einer Seite im selben Fenster" >							Datenschutz
+											</a>
+							</li>
+			</ul>
+				</div>
+	</div>	<script>
+		var m_ConsentBannerIBox_1475452 = null;
+		HRAddOnLoad(function() {
+			try
+			{
+				if (showBanner('30'))
+				{
+					m_ConsentBannerIBox_1475452 = HROpenHtmlElementInIbox('#wpeConsentBanner_1475452', {
+						additionalIBoxClass : '',
+						alignX : 'center',
+						alignY : 'center',
+						width : 'null',
+						height : 'null',
+						closeButton : false,
+						blackOverlay : true,
+						removeByBlackOverlayClick : false,
+						bodyClass : 'consent-bg',
+						singleton : true,
+						onEscape: () => {
+							saveConfig('1475452', 350587, false, true, ['1', '1', '1', '1', '1', '2', '2'], ['PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Statistik', 'PGMHDL_Statistik'], ['6', '7', '8', '14', '23', '1', '4'], ['PGMHDL_JSESSIONID', 'PGMHDL_HRCookieManager', 'PGMHDL_WarenkorbUID', 'PGMHDL_PopupAccepted', 'PGMHDL_TrustedDeviceUID', 'PGMHDL_GIPSStatistik', 'PGMHDL_Piwik'], 'www.svhi-hildesheim.de', '30', '/hildesheimGips/Gips?SessionMandant=Verkehr', true);closeConsentManager(m_ConsentBannerIBox_1475452);
+							return false;
+						},
+						onContentLoaded: () => {
+							let initialFocusedBtn;								initialFocusedBtn = document.getElementById('alle_ablehnen_btn_1475452');
+														if (initialFocusedBtn)
+								initialFocusedBtn.focus();
+						},
+						modal: true
+					});
+					initCheckboxValues('1475452', ['PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Notwendige', 'PGMHDL_Statistik', 'PGMHDL_Statistik'], ['PGMHDL_JSESSIONID', 'PGMHDL_HRCookieManager', 'PGMHDL_WarenkorbUID', 'PGMHDL_PopupAccepted', 'PGMHDL_TrustedDeviceUID', 'PGMHDL_GIPSStatistik', 'PGMHDL_Piwik']);
+					if (HRBrowser.isDoNotTrackActive() && !isIgnoreDNT(['6', '7', '8', '14', '23', '1', '4']))
+					{
+						handleDNT('1475452');
+					}
+				}
+			}
+			catch(e)
+			{
+				if (typeof(HRLogError) === 'function')
+					HRLogError(e);
+			}
+		});
+	</script>
+																													<input id="trIgnoreDNT_1" name="WebPublisher.Rahmen_Tracking.Container.Children:0.IgnoreDoNotTrack" value="N" class="formElement " type="Hidden"       onchange="if (typeof HREventManager === 'object') HREventManager.dispatchEvent(this, HREventNames.formValueChanged, {'notifyAll': true, 'bubbles': true, 'useStandard': false}); " oninput="if (window.HRMessageHandler){window.HRMessageHandler.removeFieldMessagesIfExist(this);}"  data-instance-id="1091045470"  >
+																													<input id="trIgnoreDNT_4" name="WebPublisher.Rahmen_Tracking.Container.Children:2.IgnoreDoNotTrack" value="N" class="formElement " type="Hidden"       onchange="if (typeof HREventManager === 'object') HREventManager.dispatchEvent(this, HREventNames.formValueChanged, {'notifyAll': true, 'bubbles': true, 'useStandard': false}); " oninput="if (window.HRMessageHandler){window.HRMessageHandler.removeFieldMessagesIfExist(this);}"  data-instance-id="526682189"  >
+	<script>
+		try
+		{
+			var consentGiven = true;
+			let trackingPixelUrl = '/hildesheimGips/Gips?SP=1194e3f7d36f0c6bb5171dc4f328d56d7b32b1a4d114b707683eb8df7851a7924811d690e58febd9c8afe7a793a18374b056415b862fa1be8767d3f2407a444e61d5642796d5afe979df386d3053311848d53f238d04e31e05793bc5e160055543322823429a748763fa60972624f7329379b64c1d3201024e3f6507db6a4049b510c5ba2b2875d6d519aa41f539d9117241887d50ebd4e663c76d8fe46ba67c7433b160a62072a331101ba965c44905dbad2930c196b338b52b09287351fd0c32aae1d6bb985706e57822cf86b166453c73cfa57d2ef56c633473f31eef330e';				var consentGiven = isStatistikActive();
+						let cookieLess = false;
+			if (consentGiven || cookieLess)
+			{
+				var referrer = (document.cookie.indexOf('GIPS-Tsid=') == -1 && document.referrer ? encodeURIComponent(document.referrer) : '');					if (document.cookie.indexOf('GIPS-Tsid=') == -1 && localStorage && localStorage.getItem('ConsentReferrer'))
+					{
+						referrer = encodeURIComponent(localStorage.getItem('ConsentReferrer'));
+						localStorage.removeItem('ConsentReferrer');
+					}
+								document.write("<img src='" + trackingPixelUrl + "&Referer=" + referrer + "&Width=" + screen.width + "&Height=" + screen.height + "&Scale=" + (window.devicePixelRatio ? window.devicePixelRatio : "1") + "' alt='' style='position:absolute;top:-25px;left:-25px;'>");
+			}
+		}
+		catch (e)
+		{
+		}
+	</script>
+	<noscript>		<img src='/hildesheimGips/Gips?SP=1194e3f7d36f0c6bb5171dc4f328d56d7b32b1a4d114b707683eb8df7851a7924811d690e58febd9c8afe7a793a18374b056415b862fa1be8767d3f2407a444e61d5642796d5afe979df386d3053311848d53f238d04e31e05793bc5e160055543322823429a748763fa60972624f7329379b64c1d3201024e3f6507db6a4049b510c5ba2b2875d6d519aa41f539d9117241887d50ebd4e663c76d8fe46ba67c7433b160a62072a331101ba965c44905dbad2930c196b338b52b09287351fd0c32aae1d6bb985706e57822cf86b166453c73cfa57d2ef56c633473f31eef330e' alt='' style='position:absolute;top:-25px;left:-25px;'>
+	</noscript>
+				<script>
+			function HRLogAction(parameter)
+			{
+				try
+				{
+					var consentGiven = true;
+					let url = '/hildesheimGips/Gips?SP=ad0b4475c20f63da2ed34a5e199a6ba55c257d47c145570888a10f7f997fac0c9f9b7a2ba6a2a14becdae9cbe7ec8ca444e2de4f230ac229de51eb846d110ebb890518a9864125700d20e546863f3cb1151ff927dd2eeb54e84edaba93bb806b5471811685532f668890f71633bbe63409adddeb9098c5adf1cf10d9020e35de548dded84b9c63145c638a60327fbe32b6de176d35cc798df839df745e18b942&';						var consentGiven = isStatistikActive();
+									let cookieLess = false;
+					if (consentGiven || cookieLess)
+					{
+						HRSendRequest(url + parameter, null, {
+							method: 'POST',
+							keepAlive: true
+						});
+					}
+				}
+				catch (e)
+				{
+				}
+			}
+			function HRLogFormAction(parameter)
+			{
+				try
+				{
+					let url = '/hildesheimGips/Gips?SessionMandant=Verkehr&'
+					var consentGiven = true;						var consentGiven = isStatistikActive();
+									let cookieLess = false;
+					if (consentGiven || cookieLess)
+					{
+						HRSendRequest(url + parameter, null, {
+							method: 'POST',
+							keepAlive: true
+						});
+					}
+				}
+				catch (e)
+				{
+				}
+			}
+			HRAddEventListener(null, 'onpagehide' in window ? 'pagehide' : 'beforeunload', function(){ HRLogAction('SP=8fb36393896f0bab3367f2bbabfff04ca0ef5c3ec645792b9717e0b6d505e981d9af3bf1ed1e5434282f13435ecfa7970f67c2babc731d2e28146a958d77714a1ccb32c9e2a19429424e3ae729468395' + '&Scroll=' + HRScrollPercent ); });				var HRScrollPercent = HRGetScrollPercent();
+				HRAddEventListener(null, 'scroll', function(){ HRScrollPercent = HRGetScrollPercent(HRScrollPercent); });
+				</script>
+			<script>
+				<!--
+				HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Event.js');
+HRJavaScriptIncludesRegistry.push('/ajax.js');
+HRJavaScriptIncludesRegistry.push('/js/httpClient/httpClient.js');
+HRJavaScriptIncludesRegistry.push('/js/textClipper/textClipper.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/String.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Security/securityLevel.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Security/parameter.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Security/cryptTools.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/DOM.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/Logging.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/Browser.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/OperatingSystem.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/Position.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/CSS.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/OOPLib.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/Cookie.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/Formular.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/File.js');
+HRJavaScriptIncludesRegistry.push('/js/dayjs/dayjs.min.js');
+HRJavaScriptIncludesRegistry.push('/js/dayjs/plugin/customParseFormat.min.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/Date.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/HRScrollTo.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Hilfsfunktionen/URL.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/messagehandlers/messagehandler.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Transition/animator.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/NavigationControl.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/consentManager/consentManager.js');
+HRAddOnLoad(function() {
+try
+{
+	if (isStatistikActive())
+	{
+HRAppendScriptIncludeToHead('https://stats.gipsprojekt.de/hildesheim/piwik/matomo.js', null);
+}
+}
+catch(e)
+{
+	if (typeof(HRLogError) === 'function')
+		HRLogError(e);
+}
+});
+	var aTag = document.getElementById('id_649956309');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_649956309', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_649956309', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_1782762663', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_490993751', 1);
+	var aTag = document.getElementById('id_2143266231');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_2143266231', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_2143266231', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_1593405611', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_1254484997', 1);
+	var aTag = document.getElementById('id_2062654381');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_2062654381', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_2062654381', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_529442958', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_1711986413', 1);
+	HRNavigationControlsAddInitialSelectedEbene('id_2062654381', 1);
+	var aTag = document.getElementById('id_76791824');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_76791824', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_76791824', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_1420159565', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_1725978572', 1);
+	var aTag = document.getElementById('id_2023845649');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_2023845649', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_2023845649', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_423135249', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_1912696999', 1);
+	var aTag = document.getElementById('id_1184818600');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_1184818600', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_1184818600', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_1038112958', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_627935502', 1);
+	HRNavigationControlsAddMobileNavZurueckLinks('', 0);
+	HRNavigationControlsAddInitialSelectedEbene('', 0);
+	var aTag = document.getElementById('id_407425923');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_407425923', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_407425923', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_1495969835', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_1232270330', 1);
+	HRNavigationControlsAddInitialSelectedEbene('id_407425923', 1);
+	var aTag = document.getElementById('id_176916921');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_176916921', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_176916921', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_1614376078', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_1889459593', 1);
+	var aTag = document.getElementById('id_236410451');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_236410451', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_236410451', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_1484774431', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_1714531114', 1);
+	var aTag = document.getElementById('id_944066692');
+	if (aTag)
+	{
+		aTag.onclick = function() { return HRNavigationControlsOnEntryClicked('id_944066692', 1); }
+		aTag.ontouchend = function(event) { return HRNavigationControlsOnTouchEnd(event, 'id_944066692', 1); }
+		aTag.ontouchmove = HRNavigationControlsOnTouchMove;
+	}
+	HRNavigationControlsAddMobileNavZurueckLinks('id_926949731', 1);
+	HRNavigationControlsAddMobileNavFolderpageLink('id_617525735', 1);
+	HRNavigationControlsAddMobileNavZurueckLinks('', 0);
+	HRNavigationControlsAddInitialSelectedEbene('', 0);
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/Transition/Sequenzen/CollapsableBlock.js');
+HRJavaScriptIncludesRegistry.push('/js/spinner/spin.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/DragAndDrop/DragAndDropManager.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/DragAndDrop/Draggable.js');
+HRJavaScriptIncludesRegistry.push('/js/HRSysLib/ibox/16/HRIBox.js');
+HRAddOnLoad(function() {var collapsableBlock = new CollapsableBlock('explanation_PGMHDL_Notwendige_1475452', 'kasten_button_PGMHDL_Notwendige_1475452', null, 'FAQoffen', '');});
+HRAddOnLoad(function() {var collapsableBlock = new CollapsableBlock('explanation_PGMHDL_Statistik_1475452', 'kasten_button_PGMHDL_Statistik_1475452', null, 'FAQoffen', '');});
+HRAddOnLoad(function() {
+try
+{
+	if (isStatistikActive())
+	{
+HRAppendScriptIncludeToHead('https://stats.gipsprojekt.de/hildesheim/piwik/matomo.js', null);
+}
+}
+catch(e)
+{
+	if (typeof(HRLogError) === 'function')
+		HRLogError(e);
+}
+});
+				// -->
+			</script>
+		</body>
+	</html>

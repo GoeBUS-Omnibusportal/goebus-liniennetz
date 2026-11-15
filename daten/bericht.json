@@ -1,26 +1,24 @@
 {
- "erzeugt": "2026-11-15T09:14:10Z",
- "version": "2.1",
+ "erzeugt": "2026-11-15T13:34:26Z",
+ "version": "2.4",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {
-   "linien": 176,
+   "linien": 162,
    "verlauf": {
-    "haltestellen": 40,
+    "haltestellen": 26,
     "osm": 51,
     "osm+haltestellen": 85
    },
-   "aus_vorwoche": 6,
+   "aus_vorwoche": 4,
    "betreiber": {
-    "VSN-Direkt": 66,
-    "Regionalbus Braunschweig": 52,
+    "VSN-Direkt": 65,
+    "Regionalbus Braunschweig": 45,
     "Göttinger Verkehrsbetriebe": 31,
     "NVV - Faisy": 9,
     "Hildesheim": 5,
-    "DB Nord": 4,
     "Verkehrsgesellschaft Paderborn/Höxter": 3,
     "Bus GmbH": 2,
-    "NordWestBahn": 2,
     "LK Hameln-Pyrmont": 1,
     "Ostwestfalen-Lippe": 1
    },
@@ -206,15 +204,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "9130",
-     "betreiber": "Regionalbus Braunschweig",
-     "von": "Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)",
-     "nach": "Klein Wiershausen Dorfstraße, Mast 1 N",
-     "verlauf": "haltestellen",
-     "muster": 3,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "51",
      "betreiber": "LK Hameln-Pyrmont",
      "von": "Bodenwerder, Im Hagen",
@@ -332,15 +321,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "9220",
-     "betreiber": "Regionalbus Braunschweig",
-     "von": "Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)",
-     "nach": "Asche, Ortsmitte",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "N10",
      "betreiber": "Göttinger Verkehrsbetriebe",
      "von": "Söseweg",
@@ -437,24 +417,6 @@
      "nach": "Grete-Henry-Straße",
      "verlauf": "osm+haltestellen",
      "muster": 3,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RB82",
-     "betreiber": "DB Nord",
-     "von": "Kreiensen, Bahnhof",
-     "nach": "Göttingen, Bahnhof/ZOB I",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RB80",
-     "betreiber": "DB Nord",
-     "von": "Bahnhof/ZOB, Northeim",
-     "nach": "Göttingen, Bahnhof/ZOB I",
-     "verlauf": "haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-15"
     },
     {
@@ -620,15 +582,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "9173",
-     "betreiber": "Regionalbus Braunschweig",
-     "von": "Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)",
-     "nach": "Holzerode Hünstollenstraße, Mast 2 S",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "201",
      "betreiber": "VSN-Direkt",
      "von": "Einbeck, Möncheplatz",
@@ -680,15 +633,6 @@
      "nach": "Göttingen, Bahnhof/ZOB E",
      "verlauf": "osm+haltestellen",
      "muster": 8,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RB85",
-     "betreiber": "NordWestBahn",
-     "von": "Göttingen Busbf",
-     "nach": "Bahnhof, Bodenfelde",
-     "verlauf": "haltestellen",
-     "muster": 1,
      "gesehen": "2026-11-15"
     },
     {
@@ -779,15 +723,6 @@
      "nach": "Weender Straße-Ost",
      "verlauf": "osm",
      "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "9154",
-     "betreiber": "Regionalbus Braunschweig",
-     "von": "Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)",
-     "nach": "Etzenborn Sportplatz, Mast 1 W",
-     "verlauf": "haltestellen",
-     "muster": 4,
      "gesehen": "2026-11-15"
     },
     {
@@ -935,24 +870,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "9186",
-     "betreiber": "Regionalbus Braunschweig",
-     "von": "Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)",
-     "nach": "Emmenhausen, Harster Straße",
-     "verlauf": "haltestellen",
-     "muster": 4,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "ALT",
-     "betreiber": "VSN-Direkt",
-     "von": "Adelebsen Bergstraße, Mast 2 W",
-     "nach": "Wibbecke, Hitzing",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "115",
      "betreiber": "VSN-Direkt",
      "von": "Adelebsen, Bahnhof",
@@ -986,15 +903,6 @@
      "nach": "Hardegsen, Rathaus C",
      "verlauf": "osm+haltestellen",
      "muster": 7,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "9180",
-     "betreiber": "Regionalbus Braunschweig",
-     "von": "Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)",
-     "nach": "Elvese, Hillerser Straße",
-     "verlauf": "haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-15"
     },
     {
@@ -1076,15 +984,6 @@
      "nach": "Einbeck, Mitte/ZOB",
      "verlauf": "osm+haltestellen",
      "muster": 8,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RB86",
-     "betreiber": "DB Nord",
-     "von": "Bahnhof/ZOB, Northeim",
-     "nach": "Göttingen, Bahnhof/ZOB I",
-     "verlauf": "haltestellen",
-     "muster": 1,
      "gesehen": "2026-11-15"
     },
     {
@@ -1238,15 +1137,6 @@
      "nach": "Eschershausen(Ith) Mitte",
      "verlauf": "osm+haltestellen",
      "muster": 6,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "9140",
-     "betreiber": "Regionalbus Braunschweig",
-     "von": "Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)",
-     "nach": "Lichtenhagen Kirche, Mast 1 S",
-     "verlauf": "haltestellen",
-     "muster": 3,
      "gesehen": "2026-11-15"
     },
     {
@@ -1590,35 +1480,24 @@
      "verlauf": "haltestellen",
      "muster": 8,
      "gesehen": "2026-11-02"
-    },
-    {
-     "ref": "RE2",
-     "betreiber": "DB Nord",
-     "von": "Bahnhof/ZOB, Northeim",
-     "nach": "Hauptbahnhof/ZOB, Hannover",
-     "verlauf": "haltestellen",
-     "muster": 3,
-     "gesehen": "2026-11-02"
-    },
-    {
-     "ref": "RB84",
-     "betreiber": "NordWestBahn",
-     "von": "Bahnhof, Holzminden",
-     "nach": "Bahnhof, Bodenfelde",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-02"
     }
    ],
    "abgleich": {
     "verschwunden": [
-     "110"
-    ],
-    "neu": [
+     "ALT",
+     "9130",
+     "9140",
+     "9154",
+     "9173",
+     "9180",
+     "9186",
+     "9220",
      "RB80",
      "RB82",
+     "RB85",
      "RB86"
     ],
+    "neu": [],
     "nur_osm": [
      "837"
     ],
@@ -1663,42 +1542,28 @@
      "533",
      "642",
      "721",
-     "ALT",
-     "RE2",
      "9115",
      "9120",
-     "9130",
-     "9140",
-     "9154",
-     "9173",
-     "9180",
-     "9186",
-     "9220",
      "9510",
      "9520",
-     "9530",
-     "RB80",
-     "RB82",
-     "RB84",
-     "RB85",
-     "RB86"
+     "9530"
     ]
    },
-   "osm": "ok",
+   "osm": "ok (Auszug)",
    "verlauf_vorwoche": 0
   },
   "nvv": {
-   "linien": 439,
+   "linien": 436,
    "verlauf": {
-    "haltestellen": 278,
-    "osm": 57,
-    "osm+haltestellen": 104
+    "haltestellen": 275,
+    "osm": 54,
+    "osm+haltestellen": 107
    },
    "aus_vorwoche": 3,
    "betreiber": {
-    "NVV - Faisy": 308,
+    "NVV - Faisy": 307,
     "NVV ESM AST": 56,
-    "KVG M": 38,
+    "KVG M": 37,
     "Verkehrsgesellschaft Paderborn/Höxter": 7,
     "Verkehrsunternehmen Wartburgmobil VUW gkAör": 6,
     "Flixbus": 6,
@@ -1709,7 +1574,6 @@
     "800523 DB RegioNetz Verkehrs GmbH Kurhessenbahn": 1,
     "Bus GmbH": 1,
     "VGO": 1,
-    "8005SV DB Regio AG Mitte": 1,
     "Verkehrsgemeinschaft Westfalen-Süd": 1,
     "Hessische Landesbahn": 1
    },
@@ -2018,15 +1882,6 @@
      "nach": "Frielendorf Siebertshausen Siebertshausen",
      "verlauf": "haltestellen",
      "muster": 3,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "95",
-     "betreiber": "KVG M",
-     "von": "Lindenberg  Endhaltestelle",
-     "nach": "Alt Waldau Diakoniewohnheim",
-     "verlauf": "haltestellen",
-     "muster": 4,
      "gesehen": "2026-11-15"
     },
     {
@@ -2754,7 +2609,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hatzfeld Hatzfeld Binzer",
      "nach": "Frankenberg Frankenberg Bahnhof",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 8,
      "gesehen": "2026-11-15"
     },
@@ -3285,15 +3140,6 @@
      "betreiber": "NVV - Faisy",
      "von": "Baunatal Rengershausen Guntershäuser Straße",
      "nach": "Baunatal Guntershausen Bahnhof",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "74",
-     "betreiber": "NVV - Faisy",
-     "von": "Kaufungen Oberkaufungen DRK-Klinik (AST)",
-     "nach": "Kfg-Oberkaufungen, DRK-Klinik  Ri. Okfg. Bahnhof",
      "verlauf": "haltestellen",
      "muster": 2,
      "gesehen": "2026-11-15"
@@ -4482,7 +4328,7 @@
      "betreiber": "VGM/VRL",
      "von": "Willingen, Bahnhof",
      "nach": "Düdinghausen, Kirche",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 2,
      "gesehen": "2026-11-15"
     },
@@ -4617,7 +4463,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Medebach Medebach Park Hochsauerland",
      "nach": "Frankenberg Frankenberg Bahnhof",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 4,
      "gesehen": "2026-11-15"
     },
@@ -5015,15 +4861,6 @@
      "nach": "Naumburg Altenstädt Mitte",
      "verlauf": "haltestellen",
      "muster": 3,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RE30E",
-     "betreiber": "8005SV DB Regio AG Mitte",
-     "von": "Bahnhof, Gießen",
-     "nach": "Hauptbahnhof Nord, Kassel",
-     "verlauf": "haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-15"
     },
     {
@@ -5667,11 +5504,12 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [],
-    "neu": [
-     "EVRT1",
-     "EVRT4"
+    "verschwunden": [
+     "74",
+     "95",
+     "RE30E"
     ],
+    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
@@ -5680,7 +5518,6 @@
    "pruefung": {
     "ohne_betreiber": [],
     "wenige_halte": [
-     "74",
      "EVRT5"
     ],
     "mehrere_betreiber": [
@@ -5724,13 +5561,11 @@
      "70",
      "71",
      "72",
-     "74",
      "90",
      "91",
      "92",
      "93",
      "94",
-     "95",
      "96",
      "97",
      "EV",
@@ -5978,37 +5813,30 @@
      "EVRT4",
      "EVRT5",
      "N1335",
-     "RE30E",
      "N1360B"
     ]
    },
-   "osm": "ok",
-   "verlauf_vorwoche": 1
+   "osm": "ok (Auszug)",
+   "verlauf_vorwoche": 3
   },
   "vrb": {
-   "linien": 327,
+   "linien": 317,
    "verlauf": {
-    "haltestellen": 84,
-    "osm+haltestellen": 127,
-    "osm": 116
+    "haltestellen": 74,
+    "osm+haltestellen": 122,
+    "osm": 121
    },
    "aus_vorwoche": 2,
    "betreiber": {
-    "Tarifverb Region Braunschweig": 291,
+    "Tarifverb Region Braunschweig": 290,
     "Harzer Verkehrsbetriebe GmbH": 6,
     "Flixbus": 4,
     "Regionalbus Braunschweig": 4,
-    "DB Regio AG Südost": 3,
     "BördeBus Verkehrsgesellschaft": 3,
     "Großraumverkehr Hannover": 3,
     "Stade": 2,
     "PVG Salzwedel": 2,
     "VSN-Direkt": 2,
-    "enno": 2,
-    "gooBL": 1,
-    "WestfalenBahn": 1,
-    "Nahreisezug": 1,
-    "erixx": 1,
     "Hildesheim": 1
    },
    "liste": [
@@ -6280,15 +6108,6 @@
      "nach": "Calberlah, Schule",
      "verlauf": "haltestellen",
      "muster": 6,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RB36",
-     "betreiber": "DB Regio AG Südost",
-     "von": "Hauptbahnhof, Wolfsburg",
-     "nach": "Rätzlingen Bahnhof, Oebisfelde-Weferlingen",
-     "verlauf": "haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-15"
     },
     {
@@ -6611,7 +6430,7 @@
      "betreiber": "PVG Salzwedel",
      "von": "Salzwedel ZOB",
      "nach": "Wolfsburg Hauptbahnhof",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 7,
      "gesehen": "2026-11-15"
     },
@@ -6620,15 +6439,6 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Gifhorn, II. Koppelweg",
      "nach": "Tor West / Halle 103, Mast 2",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "ALT",
-     "betreiber": "Tarifverb Region Braunschweig",
-     "von": "Schöppenstedt, Markt",
-     "nach": "Winnigstedt, Mattierzoll",
      "verlauf": "haltestellen",
      "muster": 2,
      "gesehen": "2026-11-15"
@@ -6949,15 +6759,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RE30",
-     "betreiber": "gooBL",
-     "von": "Fallersleben Bahnhof, Wolfsburg",
-     "nach": "Hauptbahnhof, Wolfsburg",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "1",
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Braunschweig, Salzdahlumer Weg",
@@ -7097,15 +6898,6 @@
      "betreiber": "PVG Salzwedel",
      "von": "Diesdorf Kirche",
      "nach": "Wittingen Bahnhof",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RE21",
-     "betreiber": "DB Regio AG Südost",
-     "von": "Hauptbahnhof (Kehrstraße), Halberstadt",
-     "nach": "ZOB, Goslar",
      "verlauf": "haltestellen",
      "muster": 2,
      "gesehen": "2026-11-15"
@@ -7277,7 +7069,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Goslar, ZOB",
      "nach": "Langelsheim, Schulzentrum",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm",
      "muster": 5,
      "gesehen": "2026-11-15"
     },
@@ -7403,7 +7195,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "SZ-Bad, Bahnhof",
      "nach": "Goslar, ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm",
      "muster": 8,
      "gesehen": "2026-11-15"
     },
@@ -7453,20 +7245,11 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RE70",
-     "betreiber": "WestfalenBahn",
-     "von": "Hannover Hbf ZOB",
-     "nach": "Braunschweig, Hauptbahnhof",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "399",
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Helmstedt, Bahnhof",
      "nach": "Beendorf, Schulplatz",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 2,
      "gesehen": "2026-11-15"
     },
@@ -7475,7 +7258,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Schöppenstedt, Markt",
      "nach": "Remlingen, Ehrenmal",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm",
      "muster": 3,
      "gesehen": "2026-11-15"
     },
@@ -7493,7 +7276,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Goslar, Bahnhof",
      "nach": "Goslar, Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm",
      "muster": 8,
      "gesehen": "2026-11-15"
     },
@@ -7732,15 +7515,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RE30",
-     "betreiber": "enno",
-     "von": "Wolfsburg Hbf",
-     "nach": "Fallersleben",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "656",
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "SZ-Bad, Schützenplatz",
@@ -7925,7 +7699,7 @@
      "betreiber": "Harzer Verkehrsbetriebe GmbH",
      "von": "Braunlage Schulzentrum",
      "nach": "Benneckenstein Haus d. Gastes",
-     "verlauf": "osm",
+     "verlauf": "osm+haltestellen",
      "muster": 2,
      "gesehen": "2026-11-15"
     },
@@ -7936,15 +7710,6 @@
      "nach": "SZ-Bad, Bahnhof",
      "verlauf": "osm",
      "muster": 4,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RE50",
-     "betreiber": "enno",
-     "von": "Wolfsburg Hbf",
-     "nach": "Braunschweig Hbf",
-     "verlauf": "haltestellen",
-     "muster": 1,
      "gesehen": "2026-11-15"
     },
     {
@@ -7963,15 +7728,6 @@
      "nach": "Wolfsburg, An der Kiesgrube",
      "verlauf": "haltestellen",
      "muster": 4,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RB40",
-     "betreiber": "Nahreisezug",
-     "von": "Marienborn Bahnhof (Bus), Sommersdorf (Börde)",
-     "nach": "Braunschweig, Hauptbahnhof",
-     "verlauf": "haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-15"
     },
     {
@@ -8087,17 +7843,8 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Schulenberg, Ort",
      "nach": "Goslar, ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm",
      "muster": 4,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RB35",
-     "betreiber": "DB Regio AG Südost",
-     "von": "Hauptbahnhof (ZOB), Stendal",
-     "nach": "Hauptbahnhof, Wolfsburg",
-     "verlauf": "haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-15"
     },
     {
@@ -8366,7 +8113,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Othfresen, Schule",
      "nach": "Klein Mahner, Kirche",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm",
      "muster": 2,
      "gesehen": "2026-11-15"
     },
@@ -8447,7 +8194,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Goslar, ZOB",
      "nach": "Bad Harzburg, Burgstraße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm",
      "muster": 8,
      "gesehen": "2026-11-15"
     },
@@ -8476,15 +8223,6 @@
      "nach": "Wittingen, Nöhre",
      "verlauf": "osm+haltestellen",
      "muster": 5,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RB47",
-     "betreiber": "erixx",
-     "von": "Braunschweig Hbf",
-     "nach": "Uelzen",
-     "verlauf": "haltestellen",
-     "muster": 1,
      "gesehen": "2026-11-15"
     },
     {
@@ -8564,7 +8302,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Goslar, ZOB",
      "nach": "Vienenburg, Schule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm",
      "muster": 7,
      "gesehen": "2026-11-15"
     },
@@ -8956,17 +8694,19 @@
      "gesehen": "2026-11-02"
     }
    ],
-   "ersetzt": {
-    "141E": "141"
-   },
    "abgleich": {
     "verschwunden": [
-     "141E"
-    ],
-    "neu": [
+     "ALT",
+     "RB35",
+     "RB36",
+     "RB40",
      "RB47",
-     "Flexo"
+     "RE21",
+     "RE30",
+     "RE50",
+     "RE70"
     ],
+    "neu": [],
     "nur_osm": [
      "166",
      "837",
@@ -8978,17 +8718,14 @@
    },
    "pruefung": {
     "ohne_betreiber": [],
-    "wenige_halte": [
-     "RE30"
-    ],
+    "wenige_halte": [],
     "mehrere_betreiber": [
      "211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "470 (Stade, VSN-Direkt)",
-     "803 (PVG Salzwedel, Tarifverb Region Braunschweig)",
-     "re30 (enno, gooBL)"
+     "803 (PVG Salzwedel, Tarifverb Region Braunschweig)"
     ],
     "ohne_verlauf": [
      "107",
@@ -9062,39 +8799,26 @@
      "803",
      "834",
      "858",
-     "ALT",
      "Golf",
      "N881",
-     "RB35",
-     "RB36",
-     "RB40",
-     "RB47",
-     "RE21",
-     "RE30",
-     "RE50",
-     "RE70",
      "Flexo"
     ]
    },
-   "osm": "ok",
-   "verlauf_vorwoche": 241
+   "osm": "ok (Auszug)",
+   "verlauf_vorwoche": 7
   },
   "rosa": {
-   "linien": 87,
+   "linien": 82,
    "verlauf": {
-    "osm": 26,
+    "osm": 25,
     "osm+haltestellen": 29,
-    "haltestellen": 32
+    "haltestellen": 28
    },
-   "aus_vorwoche": 1,
+   "aus_vorwoche": 0,
    "betreiber": {
-    "Hildesheim": 78,
-    "Großraumverkehr Hannover": 3,
-    "DB Regio AG Nord": 2,
-    "erixx": 1,
-    "S-Bahn Hannover": 1,
-    "Flixbus": 1,
-    "DB Nord": 1
+    "Hildesheim": 79,
+    "Großraumverkehr Hannover": 2,
+    "Flixbus": 1
    },
    "liste": [
     {
@@ -9197,15 +8921,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RE10",
-     "betreiber": "erixx",
-     "von": "Hannover Hbf",
-     "nach": "Hildesheim Hbf",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "53",
      "betreiber": "Hildesheim",
      "von": "Hildesheim Hauptbahnhof-ZOB",
@@ -9296,24 +9011,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RB79",
-     "betreiber": "DB Regio AG Nord",
-     "von": "Bad Salzdetfurth",
-     "nach": "Hildesheim Hbf",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "S4",
-     "betreiber": "S-Bahn Hannover",
-     "von": "Hannover Hbf",
-     "nach": "Hildesheim Hbf",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "105",
      "betreiber": "Hildesheim",
      "von": "Hildesheim Hauptbahnhof-ZOB",
@@ -9338,15 +9035,6 @@
      "nach": "Hotteln/Distelberg",
      "verlauf": "haltestellen",
      "muster": 8,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "1",
-     "betreiber": "Großraumverkehr Hannover",
-     "von": "Langenhagen",
-     "nach": "Sarstedt",
-     "verlauf": "osm",
-     "muster": 4,
      "gesehen": "2026-11-15"
     },
     {
@@ -9611,6 +9299,15 @@
      "gesehen": "2026-11-15"
     },
     {
+     "ref": "5/43",
+     "betreiber": "Hildesheim",
+     "von": "Diekholzen/Südwaldstr.",
+     "nach": "Hildesheim Hauptbahnhof-ZOB",
+     "verlauf": "haltestellen",
+     "muster": 7,
+     "gesehen": "2026-11-15"
+    },
+    {
      "ref": "63",
      "betreiber": "Hildesheim",
      "von": "Alfeld/Bahnhof-ZOB",
@@ -9845,15 +9542,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RB77",
-     "betreiber": "DB Regio AG Nord",
-     "von": "Elze(Han)",
-     "nach": "Löhne(Westf)",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "103",
      "betreiber": "Hildesheim",
      "von": "Hildesheim Hildesheimer Wald",
@@ -9870,20 +9558,18 @@
      "verlauf": "haltestellen",
      "muster": 3,
      "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RE2",
-     "betreiber": "DB Nord",
-     "von": "Bahnhof/ZOB, Northeim",
-     "nach": "Hauptbahnhof/ZOB, Hannover",
-     "verlauf": "haltestellen",
-     "muster": 3,
-     "gesehen": "2026-11-02"
     }
    ],
    "abgleich": {
-    "verschwunden": [],
-    "neu": [],
+    "verschwunden": [
+     "S4",
+     "RB77",
+     "RB79",
+     "RE10"
+    ],
+    "neu": [
+     "5/43"
+    ],
     "nur_osm": [
      "52/22",
      "52/23",
@@ -9901,9 +9587,7 @@
    "pruefung": {
     "ohne_betreiber": [],
     "wenige_halte": [],
-    "mehrere_betreiber": [
-     "1 (Großraumverkehr Hannover, Hildesheim)"
-    ],
+    "mehrere_betreiber": [],
     "ohne_verlauf": [
      "35",
      "51",
@@ -9916,7 +9600,6 @@
      "N7",
      "N8",
      "N9",
-     "S4",
      "105",
      "106",
      "201",
@@ -9925,39 +9608,32 @@
      "522",
      "642",
      "661",
-     "RE2",
      "2024",
      "2031",
      "2032",
      "2033",
      "2041",
      "2341",
+     "5/43",
      "N881",
-     "RB77",
-     "RB79",
-     "RE10",
      "SalzeBus"
     ]
    },
-   "osm": "ok",
-   "verlauf_vorwoche": 1
+   "osm": "ok (Auszug)",
+   "verlauf_vorwoche": 0
   },
   "rvhi": {
-   "linien": 87,
+   "linien": 82,
    "verlauf": {
     "osm": 25,
     "osm+haltestellen": 29,
-    "haltestellen": 33
+    "haltestellen": 28
    },
-   "aus_vorwoche": 1,
+   "aus_vorwoche": 0,
    "betreiber": {
-    "Hildesheim": 78,
-    "Großraumverkehr Hannover": 3,
-    "DB Regio AG Nord": 2,
-    "erixx": 1,
-    "S-Bahn Hannover": 1,
-    "Flixbus": 1,
-    "DB Nord": 1
+    "Hildesheim": 79,
+    "Großraumverkehr Hannover": 2,
+    "Flixbus": 1
    },
    "liste": [
     {
@@ -10060,15 +9736,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RE10",
-     "betreiber": "erixx",
-     "von": "Hannover Hbf",
-     "nach": "Hildesheim Hbf",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "53",
      "betreiber": "Hildesheim",
      "von": "Hildesheim Hauptbahnhof-ZOB",
@@ -10159,24 +9826,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RB79",
-     "betreiber": "DB Regio AG Nord",
-     "von": "Bad Salzdetfurth",
-     "nach": "Hildesheim Hbf",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "S4",
-     "betreiber": "S-Bahn Hannover",
-     "von": "Hannover Hbf",
-     "nach": "Hildesheim Hbf",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "105",
      "betreiber": "Hildesheim",
      "von": "Hildesheim Hauptbahnhof-ZOB",
@@ -10201,15 +9850,6 @@
      "nach": "Hotteln/Distelberg",
      "verlauf": "haltestellen",
      "muster": 8,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "1",
-     "betreiber": "Großraumverkehr Hannover",
-     "von": "Langenhagen",
-     "nach": "Sarstedt",
-     "verlauf": "haltestellen",
-     "muster": 4,
      "gesehen": "2026-11-15"
     },
     {
@@ -10474,6 +10114,15 @@
      "gesehen": "2026-11-15"
     },
     {
+     "ref": "5/43",
+     "betreiber": "Hildesheim",
+     "von": "Diekholzen/Südwaldstr.",
+     "nach": "Hildesheim Hauptbahnhof-ZOB",
+     "verlauf": "haltestellen",
+     "muster": 7,
+     "gesehen": "2026-11-15"
+    },
+    {
      "ref": "63",
      "betreiber": "Hildesheim",
      "von": "Alfeld/Bahnhof-ZOB",
@@ -10708,15 +10357,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RB77",
-     "betreiber": "DB Regio AG Nord",
-     "von": "Elze(Han)",
-     "nach": "Löhne(Westf)",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "103",
      "betreiber": "Hildesheim",
      "von": "Hildesheim Hildesheimer Wald",
@@ -10733,20 +10373,18 @@
      "verlauf": "haltestellen",
      "muster": 3,
      "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "RE2",
-     "betreiber": "DB Nord",
-     "von": "Bahnhof/ZOB, Northeim",
-     "nach": "Hauptbahnhof/ZOB, Hannover",
-     "verlauf": "haltestellen",
-     "muster": 3,
-     "gesehen": "2026-11-02"
     }
    ],
    "abgleich": {
-    "verschwunden": [],
-    "neu": [],
+    "verschwunden": [
+     "S4",
+     "RB77",
+     "RB79",
+     "RE10"
+    ],
+    "neu": [
+     "5/43"
+    ],
     "nur_osm": [
      "43"
     ],
@@ -10757,11 +10395,8 @@
    "pruefung": {
     "ohne_betreiber": [],
     "wenige_halte": [],
-    "mehrere_betreiber": [
-     "1 (Großraumverkehr Hannover, Hildesheim)"
-    ],
+    "mehrere_betreiber": [],
     "ohne_verlauf": [
-     "1",
      "35",
      "51",
      "N1",
@@ -10773,7 +10408,6 @@
      "N7",
      "N8",
      "N9",
-     "S4",
      "105",
      "106",
      "201",
@@ -10782,39 +10416,34 @@
      "522",
      "642",
      "661",
-     "RE2",
      "2024",
      "2031",
      "2032",
      "2033",
      "2041",
      "2341",
+     "5/43",
      "N881",
-     "RB77",
-     "RB79",
-     "RE10",
      "SalzeBus"
     ]
    },
-   "osm": "ok",
+   "osm": "ok (Auszug)",
    "verlauf_vorwoche": 0
   },
   "oeffis": {
-   "linien": 73,
+   "linien": 70,
    "verlauf": {
-    "haltestellen": 40,
+    "haltestellen": 37,
     "osm+haltestellen": 18,
     "osm": 15
    },
    "aus_vorwoche": 1,
    "betreiber": {
-    "LK Hameln-Pyrmont": 54,
+    "LK Hameln-Pyrmont": 53,
     "Ostwestfalen-Lippe": 10,
     "LK Schaumburg": 4,
     "Regionalbus Braunschweig": 2,
-    "S-Bahn Hannover": 1,
-    "Großraumverkehr Hannover": 1,
-    "DB Regio AG Nord": 1
+    "Großraumverkehr Hannover": 1
    },
    "liste": [
     {
@@ -11070,15 +10699,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "S5",
-     "betreiber": "S-Bahn Hannover",
-     "von": "Bad Pyrmont",
-     "nach": "Hannover Hbf",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "6",
      "betreiber": "LK Hameln-Pyrmont",
      "von": "Hastenbeck, Teichstraße",
@@ -11184,15 +10804,6 @@
      "nach": "Börry, Schule",
      "verlauf": "haltestellen",
      "muster": 3,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "AST",
-     "betreiber": "LK Hameln-Pyrmont",
-     "von": "Hameln, Bahnhof",
-     "nach": "Thüste, Schmiedebrink",
-     "verlauf": "haltestellen",
-     "muster": 8,
      "gesehen": "2026-11-15"
     },
     {
@@ -11439,15 +11050,6 @@
      "gesehen": "2026-11-15"
     },
     {
-     "ref": "RB77",
-     "betreiber": "DB Regio AG Nord",
-     "von": "Elze(Han)",
-     "nach": "Löhne(Westf)",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
      "ref": "38",
      "betreiber": "LK Hameln-Pyrmont",
      "von": "Aerzen, Schulzentrum",
@@ -11476,7 +11078,11 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [],
+    "verschwunden": [
+     "S5",
+     "AST",
+     "RB77"
+    ],
     "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
@@ -11509,13 +11115,11 @@
      "71",
      "72",
      "94",
-     "S5",
      "522",
      "524",
      "726",
      "789",
      "792",
-     "AST",
      "B16",
      "B52",
      "B54",
@@ -11528,26 +11132,14 @@
      "R44",
      "2014",
      "2022",
-     "2024",
-     "RB77"
+     "2024"
     ]
    },
-   "osm": "ok",
+   "osm": "ok (Auszug)",
    "verlauf_vorwoche": 0
   }
  },
  "overpass": [
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter",
-  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
-  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
-  "Fehler: https://overpass.private.coffee/api/interpreter (HTTP Error 504: Gateway Timeout)",
-  "ok: https://overpass-api.de/api/interpreter",
-  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
-  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
-  "Fehler: https://overpass.private.coffee/api/interpreter (HTTP Error 504: Gateway Timeout)",
-  "ok: https://overpass-api.de/api/interpreter",
-  "ok: https://overpass-api.de/api/interpreter"
+  "Geofabrik-Auszug (ohne Overpass)"
  ]
 }

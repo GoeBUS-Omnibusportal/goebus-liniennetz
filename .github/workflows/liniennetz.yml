@@ -1,4 +1,8 @@
 # GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.4); Fahrschulen (Fassung 42); Fahrplanseiten (Fassung 46)
+# Fassung 50: Der Job „fahrplanseiten“ speichert wieder die Kopien der Seiten (daten/fahrplanseiten/*.html) – Fassung 48 legte nur
+#   fahrplanseiten.json ab, die Website fand die Kopien nicht (404). fahrplanseiten.py 1.1 legt die Seiten zusätzlich in die Übersicht.
+# Fassung 49: Ubuntu 24.04 fest (ubuntu-latest wechselt zu Ubuntu 26), checkout@v5 und setup-python@v6 (Node.js 24 statt 20),
+#   fehlende Bundesländer brechen den Auszug nicht ab, „Ergebnis speichern“ holt vorher fremde Commits (Hochladen während des Laufs).
 # Fassung 48:
 #   – Fahrplanseiten (RVHI/ROSA) als eigener, schneller Job: läuft parallel und wird sofort gespeichert – unabhängig davon,
 #     wie lange das Liniennetz braucht (vorher kam der Schritt nie an die Reihe, weil der Lauf nach 90 Minuten abbrach).
@@ -27,14 +31,14 @@ jobs:
   fahrplanseiten:
     # Der Webserver erreicht extern.gipsprojekt.de nicht (RVHI, ROSA). GitHub lädt die Fahrplantabellen, die Website liest
     # die Kopie daten/fahrplanseiten.json. Dauert wenige Minuten.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Dateien holen
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Python einrichten
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -47,21 +51,21 @@ jobs:
         run: |
           git config user.name "GöBUS Fahrplanseiten"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add daten/fahrplanseiten.json
+          git add daten/fahrplanseiten.json daten/fahrplanseiten   # Fassung 50: auch die Kopien selbst (Fassung 48 speicherte nur die Übersicht)
           if git diff --cached --quiet; then echo "Keine Änderungen."; exit 0; fi
           git commit -m "Fahrplanseiten $(date +%F)"
           for i in 1 2 3 4 5; do git pull --rebase --quiet && git push && exit 0; sleep 10; done
           exit 1
 
   liniennetz:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
       - name: Dateien holen
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Python einrichten
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -76,10 +80,16 @@ jobs:
           for land in niedersachsen hessen thueringen nordrhein-westfalen/detmold-regbez; do
             n=$(basename "$land")
             echo "$(date +%T) Lade $land"
-            curl -fsSL --retry 3 --retry-delay 15 --connect-timeout 30 -o "osm/$n.osm.pbf" "https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf"
-            osmium tags-filter "osm/$n.osm.pbf" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school -o "osm/$n-teil.osm.pbf" --overwrite
+            # Fassung 49: ein fehlendes Bundesland bricht den Schritt nicht ab – die übrigen werden trotzdem genutzt
+            if curl -fsSL --retry 3 --retry-delay 15 --connect-timeout 30 -o "osm/$n.osm.pbf" "https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf" \
+               && osmium tags-filter "osm/$n.osm.pbf" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school -o "osm/$n-teil.osm.pbf" --overwrite; then
+              echo "$(date +%T) $land fertig"
+            else
+              echo "::warning::OpenStreetMap-Auszug $land nicht geladen – weiter ohne dieses Gebiet"
+            fi
             rm -f "osm/$n.osm.pbf"
           done
+          ls osm/*-teil.osm.pbf >/dev/null 2>&1 || { echo "::warning::Kein Auszug geladen – das Skript fragt Overpass"; exit 0; }
           osmium merge osm/*-teil.osm.pbf -o osm/alles.osm.pbf --overwrite
           osmium tags-filter osm/alles.osm.pbf r/route=bus,trolleybus,minibus,share_taxi,tram -o osm/routen.osm.pbf --overwrite
           osmium cat osm/routen.osm.pbf -f opl,add_metadata=false -o osm/auszug.opl --overwrite

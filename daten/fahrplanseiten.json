@@ -1,0 +1,20 @@
+{
+ "version": "1.0",
+ "stand": "2026-11-15T13:28:19Z",
+ "seiten": {
+  "https://extern.gipsprojekt.de/hildesheim/rvhi/rvhi2019/isoli/tfp/tfp_linien.htm": {
+   "stand": "2026-11-15T13:28:19Z",
+   "ok": true,
+   "datei": "fahrplanseiten/ec0a96803ad5252ea69f.html",
+   "bytes": 31737,
+   "pdf_links": 79
+  },
+  "https://extern.gipsprojekt.de/hildesheim/svhi/svhi2023/isoli/tfp/tfp_linien2017.htm": {
+   "stand": "2026-11-15T13:28:19Z",
+   "ok": true,
+   "datei": "fahrplanseiten/10c105c9d33172ffc9f5.html",
+   "bytes": 20368,
+   "pdf_links": 42
+  }
+ }
+}

@@ -1,6 +1,6 @@
 {
- "erzeugt": "2026-11-15T17:58:50Z",
- "version": "2.6",
+ "erzeugt": "2026-11-15T19:44:36Z",
+ "version": "2.7",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {
@@ -1505,9 +1505,7 @@
    "abgleich": {
     "verschwunden": [],
     "neu": [],
-    "nur_osm": [
-     "837"
-    ],
+    "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
     "quellen_fehler": []
@@ -1562,7 +1560,7 @@
      "9530"
     ]
    },
-   "osm": "ok (Auszug)",
+   "osm": "ok",
    "verlauf_vorwoche": 0
   },
   "nvv": {
@@ -5844,8 +5842,8 @@
      "N1360B"
     ]
    },
-   "osm": "ok (Auszug)",
-   "verlauf_vorwoche": 3
+   "osm": "nicht erreichbar",
+   "verlauf_vorwoche": 161
   },
   "vrb": {
    "linien": 319,
@@ -8743,11 +8741,7 @@
    "abgleich": {
     "verschwunden": [],
     "neu": [],
-    "nur_osm": [
-     "166",
-     "837",
-     "166 - 1040"
-    ],
+    "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
     "quellen_fehler": []
@@ -8842,8 +8836,8 @@
      "Flexo"
     ]
    },
-   "osm": "ok (Auszug)",
-   "verlauf_vorwoche": 7
+   "osm": "nicht erreichbar",
+   "verlauf_vorwoche": 242
   },
   "rosa": {
    "linien": 83,
@@ -9609,20 +9603,9 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "43"
-    ],
+    "verschwunden": [],
     "neu": [],
-    "nur_osm": [
-     "52/22",
-     "52/23",
-     "52/25",
-     "52/53",
-     "501/52",
-     "52/501",
-     "201/202",
-     "641/501/52"
-    ],
+    "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
     "quellen_fehler": []
@@ -9667,8 +9650,8 @@
      "SalzeBus"
     ]
    },
-   "osm": "ok (Auszug)",
-   "verlauf_vorwoche": 0
+   "osm": "nicht erreichbar",
+   "verlauf_vorwoche": 54
   },
   "rvhi": {
    "linien": 83,
@@ -10434,9 +10417,7 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "43"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
@@ -10483,8 +10464,8 @@
      "SalzeBus"
     ]
    },
-   "osm": "ok (Auszug)",
-   "verlauf_vorwoche": 0
+   "osm": "nicht erreichbar",
+   "verlauf_vorwoche": 54
   },
   "oeffis": {
    "linien": 75,
@@ -11246,11 +11227,14 @@
      "2024"
     ]
    },
-   "osm": "ok (Auszug)",
-   "verlauf_vorwoche": 0
+   "osm": "nicht erreichbar",
+   "verlauf_vorwoche": 33
   }
  },
  "overpass": [
-  "Geofabrik-Auszug (ohne Overpass)"
+  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (The read operation timed out)",
+  "ok: https://overpass.private.coffee/api/interpreter",
+  "Fehler: https://overpass.private.coffee/api/interpreter (The read operation timed out)"
  ]
 }

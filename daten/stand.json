@@ -1,6 +1,6 @@
 {
- "erzeugt": "2026-11-15T17:58:50Z",
- "version": "2.6",
+ "erzeugt": "2026-11-15T19:44:36Z",
+ "version": "2.7",
  "linienwege": false,
  "verbuende": {
   "vsn": {
@@ -12,82 +12,85 @@
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
    "aus_vorwoche": 5,
-   "osm": "ok (Auszug)"
+   "osm": "ok"
   },
   "nvv": {
    "datei": "nvv_linien.json",
    "linien": 438,
    "liste_wege": 380,
    "liste_neu": 0,
-   "osm_verlauf": 158,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 3,
+   "verlauf_vorwoche": 161,
    "aus_vorwoche": 3,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "vrb": {
    "datei": "vrb_linien.json",
    "linien": 319,
    "liste_wege": 293,
    "liste_neu": 0,
-   "osm_verlauf": 235,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 7,
+   "verlauf_vorwoche": 242,
    "aus_vorwoche": 2,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "rosa": {
    "datei": "svhi_rvhi_linien.json",
    "linien": 83,
    "liste_wege": 64,
    "liste_neu": 0,
-   "osm_verlauf": 54,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
+   "verlauf_vorwoche": 54,
    "aus_vorwoche": 1,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "rvhi": {
    "datei": "rvhi_linien.json",
    "linien": 83,
    "liste_wege": 42,
    "liste_neu": 0,
-   "osm_verlauf": 54,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
+   "verlauf_vorwoche": 54,
    "aus_vorwoche": 1,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "oeffis": {
    "datei": "vhp_linien.json",
    "linien": 75,
    "liste_wege": 68,
    "liste_neu": 0,
-   "osm_verlauf": 33,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
+   "verlauf_vorwoche": 33,
    "aus_vorwoche": 5,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   }
  },
  "regeln": true,
  "dauer": {
-  "fahrplandaten_laden": 34,
-  "fahrplandaten_auswerten": 188,
-  "osm_auszug_lesen": 6,
+  "fahrplandaten_laden": 14,
+  "fahrplandaten_auswerten": 159,
+  "osm_auszug_lesen": 0,
   "verbuende": {
-   "vsn": 24,
-   "nvv": 32,
-   "vrb": 42,
-   "rosa": 17,
-   "rvhi": 18,
-   "oeffis": 15
+   "vsn": 276,
+   "nvv": 155,
+   "vrb": 10,
+   "rosa": 1,
+   "rvhi": 1,
+   "oeffis": 1
   },
-  "gesamt": 377
+  "gesamt": 618
  },
- "osm_quelle": "geofabrik",
+ "osm_quelle": "overpass",
  "overpass": [
-  "Geofabrik-Auszug (ohne Overpass)"
+  "Fehler: https://overpass-api.de/api/interpreter (HTTP Error 502: Bad Gateway)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (The read operation timed out)",
+  "ok: https://overpass.private.coffee/api/interpreter",
+  "Fehler: https://overpass.private.coffee/api/interpreter (The read operation timed out)"
  ],
- "haltestellen": 12907
+ "haltestellen": 12918
 }

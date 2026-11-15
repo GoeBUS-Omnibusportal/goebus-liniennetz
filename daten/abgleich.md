@@ -1,6 +1,6 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-15T17:36:08Z · Skript 2.4 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-15T17:58:50Z · Skript 2.6 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
 Overpass: Geofabrik-Auszug (ohne Overpass)
 
@@ -11,7 +11,7 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Weniger als drei Halte:** 800
 - **Gleiche Nummer, mehrere Betreiber:** 1 (Bus GmbH, VSN-Direkt), 33 (Göttinger Verkehrsbetriebe, NVV - Faisy), 34 (Göttinger Verkehrsbetriebe, NVV - Faisy), 41 (Göttinger Verkehrsbetriebe, Hildesheim), 42 (Göttinger Verkehrsbetriebe, NVV - Faisy), 61 (Göttinger Verkehrsbetriebe, Hildesheim), 62 (Göttinger Verkehrsbetriebe, Hildesheim), 63 (Göttinger Verkehrsbetriebe, Hildesheim), 71 (Göttinger Verkehrsbetriebe, NVV - Faisy), 72 (Göttinger Verkehrsbetriebe, NVV - Faisy)
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 25, 30, 51, 71, 72, 123, 194, 242, 260, 262, 275, 452, 457, 509, 515, 521, 522, 526, 533, 642, 721, 800, 836, 9115, 9120, 9510, 9520, 9530
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 800
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
 - **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** 837
 - **Nur in der Linienübersicht des Verbunds:** keine
@@ -31,10 +31,10 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## VRB – 321 Linien
+## VRB – 319 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 122 OpenStreetMap, 124 teilweise, 75 nur Haltestellen (7 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
-- **Gleiche Nummer, mehrere Betreiber:** 182 (Flixbus, Tarifverb Region Braunschweig), 211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 450 (Tarifverb Region Braunschweig, VSN-Direkt), 455 (Tarifverb Region Braunschweig, VSN-Direkt), 460 (Stade, VSN-Direkt), 470 (Stade, VSN-Direkt), 803 (PVG Salzwedel, Tarifverb Region Braunschweig)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 121 OpenStreetMap, 123 teilweise, 75 nur Haltestellen (7 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
+- **Gleiche Nummer, mehrere Betreiber:** 182 (Flixbus, Tarifverb Region Braunschweig), 211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 460 (Stade, VSN-Direkt), 470 (Stade, VSN-Direkt), 803 (PVG Salzwedel, Tarifverb Region Braunschweig)
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 107, 108, 114, 115, 116, 136, 138, 139, 143, 144, 147, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 161, 165, 174, 175, 182, 183, 184, 185, 186, 187, 194, 197, 221, 222, 223, 224, 225, 226, 227, 263, 264, 265, 266, 268, 269, 335, 373, 382, 394, 614, 653, 658, 659, 666, 733, 734, 736, 741, 742
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
 - **Neu in den Fahrplandaten:** keine
@@ -49,8 +49,8 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Ohne Betreiber in den Fahrplandaten:** 43
 - **Weniger als drei Halte:** 43
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 35, 43, 51, N1, N2, N3, N4, N5, N6, N7, N8, N9, 105, 106, 201, 212, 341, 522, 642, 661, 2024, 2031, 2032, 2033, 2041, 2341, 5/43, N881, SalzeBus
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** 43
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 43
+- **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** 52/22, 52/23, 52/25, 52/53, 501/52, 52/501, 201/202, 641/501/52
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
@@ -62,21 +62,21 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Ohne Betreiber in den Fahrplandaten:** 43
 - **Weniger als drei Halte:** 43
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 35, 43, 51, N1, N2, N3, N4, N5, N6, N7, N8, N9, 105, 106, 201, 212, 341, 522, 642, 661, 2024, 2031, 2032, 2033, 2041, 2341, 5/43, N881, SalzeBus
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** 43
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 43
+- **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## OEFFIS – 76 Linien
+## OEFFIS – 75 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 15 OpenStreetMap, 19 teilweise, 42 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 15 OpenStreetMap, 18 teilweise, 42 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 39, 525, 59, 79
 - **Weniger als drei Halte:** 39, 79
-- **Gleiche Nummer, mehrere Betreiber:** 64 (Hildesheim, LK Hameln-Pyrmont), 812 (LK Schaumburg, Ostwestfalen-Lippe)
+- **Gleiche Nummer, mehrere Betreiber:** 812 (LK Schaumburg, Ostwestfalen-Lippe)
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 17, 21, 22, 23, 24, 25, 27, 28, 34, 39, 43, 44, 45, 51, 52, 54, 59, 64, 71, 72, 79, 94, 521, 522, 524, 525, 726, 789, 792, B16, B52, B54, B71, B72, R15, R24, R27, R28, R44, 2014, 2022, 2024
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 39, 59, 79, 525
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
 - **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine

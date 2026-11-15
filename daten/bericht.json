@@ -1,6 +1,6 @@
 {
- "erzeugt": "2026-11-15T17:36:08Z",
- "version": "2.4",
+ "erzeugt": "2026-11-15T17:58:50Z",
+ "version": "2.6",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {
@@ -1503,9 +1503,7 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "800"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [
      "837"
@@ -5850,21 +5848,21 @@
    "verlauf_vorwoche": 3
   },
   "vrb": {
-   "linien": 321,
+   "linien": 319,
    "verlauf": {
     "haltestellen": 75,
-    "osm+haltestellen": 124,
-    "osm": 122
+    "osm+haltestellen": 123,
+    "osm": 121
    },
    "aus_vorwoche": 2,
    "betreiber": {
     "Tarifverb Region Braunschweig": 290,
     "Harzer Verkehrsbetriebe GmbH": 6,
-    "VSN-Direkt": 5,
     "Flixbus": 5,
     "Regionalbus Braunschweig": 4,
     "BördeBus Verkehrsgesellschaft": 3,
     "Großraumverkehr Hannover": 3,
+    "VSN-Direkt": 3,
     "Stade": 2,
     "PVG Salzwedel": 2,
     "Hildesheim": 1
@@ -5904,15 +5902,6 @@
      "nach": "Königslutter, Bahnhof",
      "verlauf": "osm+haltestellen",
      "muster": 8,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "455",
-     "betreiber": "VSN-Direkt",
-     "von": "Herzberg, Bahnhof",
-     "nach": "St. Andreasberg, Am Glockenberg A",
-     "verlauf": "osm+haltestellen",
-     "muster": 4,
      "gesehen": "2026-11-15"
     },
     {
@@ -6300,15 +6289,6 @@
      "nach": "Gifhorn, Stadt (Bahnhof)",
      "verlauf": "osm+haltestellen",
      "muster": 6,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "450",
-     "betreiber": "VSN-Direkt",
-     "von": "Herzberg, Bahnhof",
-     "nach": "Braunlage, Schulzentrum A",
-     "verlauf": "osm",
-     "muster": 2,
      "gesehen": "2026-11-15"
     },
     {
@@ -8781,8 +8761,6 @@
      "262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
-     "450 (Tarifverb Region Braunschweig, VSN-Direkt)",
-     "455 (Tarifverb Region Braunschweig, VSN-Direkt)",
      "460 (Stade, VSN-Direkt)",
      "470 (Stade, VSN-Direkt)",
      "803 (PVG Salzwedel, Tarifverb Region Braunschweig)"
@@ -8874,7 +8852,7 @@
     "osm+haltestellen": 29,
     "haltestellen": 29
    },
-   "aus_vorwoche": 0,
+   "aus_vorwoche": 1,
    "betreiber": {
     "Hildesheim": 79,
     "Großraumverkehr Hannover": 2,
@@ -9627,14 +9605,14 @@
      "nach": "Hildesheim",
      "verlauf": "haltestellen",
      "muster": 1,
-     "gesehen": ""
+     "gesehen": "2026-11-15"
     }
    ],
    "abgleich": {
-    "verschwunden": [],
-    "neu": [
+    "verschwunden": [
      "43"
     ],
+    "neu": [],
     "nur_osm": [
      "52/22",
      "52/23",
@@ -9699,7 +9677,7 @@
     "osm+haltestellen": 29,
     "haltestellen": 29
    },
-   "aus_vorwoche": 0,
+   "aus_vorwoche": 1,
    "betreiber": {
     "Hildesheim": 79,
     "Großraumverkehr Hannover": 2,
@@ -10452,14 +10430,14 @@
      "nach": "Hildesheim",
      "verlauf": "haltestellen",
      "muster": 1,
-     "gesehen": ""
+     "gesehen": "2026-11-15"
     }
    ],
    "abgleich": {
-    "verschwunden": [],
-    "neu": [
+    "verschwunden": [
      "43"
     ],
+    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
@@ -10509,10 +10487,10 @@
    "verlauf_vorwoche": 0
   },
   "oeffis": {
-   "linien": 76,
+   "linien": 75,
    "verlauf": {
     "haltestellen": 42,
-    "osm+haltestellen": 19,
+    "osm+haltestellen": 18,
     "osm": 15
    },
    "aus_vorwoche": 5,
@@ -10522,7 +10500,6 @@
     "LK Schaumburg": 4,
     "(ohne Angabe)": 4,
     "Regionalbus Braunschweig": 3,
-    "Hildesheim": 1,
     "Großraumverkehr Hannover": 1
    },
    "liste": [
@@ -10839,15 +10816,6 @@
      "nach": "Kirchohsen, Schule",
      "verlauf": "haltestellen",
      "muster": 2,
-     "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "64",
-     "betreiber": "Hildesheim",
-     "von": "Alfeld/Gymnasium",
-     "nach": "Ockensen/Ort",
-     "verlauf": "osm+haltestellen",
-     "muster": 8,
      "gesehen": "2026-11-15"
     },
     {
@@ -11212,12 +11180,7 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "39",
-     "59",
-     "79",
-     "525"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
@@ -11236,7 +11199,6 @@
      "79"
     ],
     "mehrere_betreiber": [
-     "64 (Hildesheim, LK Hameln-Pyrmont)",
      "812 (LK Schaumburg, Ostwestfalen-Lippe)"
     ],
     "ohne_verlauf": [

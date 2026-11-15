@@ -1,5 +1,5 @@
 # GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.2, Fassung 28); Fahrschulen (Fassung 42)
-# Läuft montags und donnerstags früh, nach jedem Hochladen von liniennetz.py oder verbuende.json und jederzeit von Hand („Run workflow“).
+# Fassung 46: Fahrplanseiten (RVHI/ROSA). Läuft montags und donnerstags früh, nach jedem Hochladen von liniennetz.py oder verbuende.json und jederzeit von Hand („Run workflow“).
 name: Liniennetz aktualisieren
 
 on:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['liniennetz.py', 'fahrschulen.py', 'verbuende.json', 'landkreise.topo.json', '.github/workflows/liniennetz.yml']
+    paths: ['liniennetz.py', 'fahrschulen.py', 'fahrplanseiten.py', 'verbuende.json', 'landkreise.topo.json', '.github/workflows/liniennetz.yml']
 
 concurrency:
   group: liniennetz
@@ -44,6 +44,16 @@ jobs:
         continue-on-error: true
         timeout-minutes: 20
         run: python fahrschulen.py --ausgabe daten
+
+      - name: Fahrplanseiten der Verbünde zwischenspeichern
+        # Fassung 46: Der Webserver erreicht extern.gipsprojekt.de nicht (RVHI, ROSA). GitHub lädt die Fahrplantabellen,
+        # die Website liest die Kopie (daten/fahrplanseiten.json). Schlägt dieser Schritt fehl, bleibt der Rest unberührt.
+        if: ${{ hashFiles('fahrplanseiten.py') != '' }}
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
+        run: python fahrplanseiten.py --ausgabe daten
 
       - name: Ergebnis speichern
         run: |

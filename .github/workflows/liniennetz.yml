@@ -1,5 +1,11 @@
-# GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.2, Fassung 28); Fahrschulen (Fassung 42)
-# Fassung 46: Fahrplanseiten (RVHI/ROSA). Läuft montags und donnerstags früh, nach jedem Hochladen von liniennetz.py oder verbuende.json und jederzeit von Hand („Run workflow“).
+# GöBUS – Liniennetze aus Fahrplandaten (GTFS) und OpenStreetMap erzeugen (Skript 2.4); Fahrschulen (Fassung 42); Fahrplanseiten (Fassung 46)
+# Fassung 48:
+#   – Fahrplanseiten (RVHI/ROSA) als eigener, schneller Job: läuft parallel und wird sofort gespeichert – unabhängig davon,
+#     wie lange das Liniennetz braucht (vorher kam der Schritt nie an die Reihe, weil der Lauf nach 90 Minuten abbrach).
+#   – OpenStreetMap aus den Auszügen der Geofabrik (Niedersachsen, Hessen, Thüringen, Regierungsbezirk Detmold) statt Overpass:
+#     die öffentlichen Overpass-Server waren von GitHub aus nicht erreichbar (Network is unreachable, 502, 504) und
+#     kosteten je Versuch mehrere Minuten. Nur wenn der Auszug fehlt, wird Overpass noch gefragt (höchstens 12 Minuten).
+# Läuft montags und donnerstags früh, nach jedem Hochladen der Skripte und jederzeit von Hand („Run workflow“).
 name: Liniennetz aktualisieren
 
 on:
@@ -18,9 +24,11 @@ permissions:
   contents: write
 
 jobs:
-  liniennetz:
+  fahrplanseiten:
+    # Der Webserver erreicht extern.gipsprojekt.de nicht (RVHI, ROSA). GitHub lädt die Fahrplantabellen, die Website liest
+    # die Kopie daten/fahrplanseiten.json. Dauert wenige Minuten.
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 15
     steps:
       - name: Dateien holen
         uses: actions/checkout@v4
@@ -30,39 +38,78 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Fahrplandaten und OpenStreetMap verarbeiten
-        # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE
-        # (Settings → Secrets and variables → Actions → Variables); ohne Variable läuft alles wie bisher.
-        env:
-          GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
-        run: python liniennetz.py --ausgabe daten
-
-      - name: Fahrschulen mit Busführerschein suchen
-        # Fassung 42: OpenStreetMap und Websites der Fahrschulen – der Webserver erreicht Overpass nicht; die Website holt daten/fahrschulen.json ab.
-        # Schlägt dieser Schritt fehl, bleibt das Liniennetz davon unberührt.
-        if: ${{ hashFiles('fahrschulen.py') != '' }}
-        continue-on-error: true
-        timeout-minutes: 20
-        run: python fahrschulen.py --ausgabe daten
-
       - name: Fahrplanseiten der Verbünde zwischenspeichern
-        # Fassung 46: Der Webserver erreicht extern.gipsprojekt.de nicht (RVHI, ROSA). GitHub lädt die Fahrplantabellen,
-        # die Website liest die Kopie (daten/fahrplanseiten.json). Schlägt dieser Schritt fehl, bleibt der Rest unberührt.
-        if: ${{ hashFiles('fahrplanseiten.py') != '' }}
-        continue-on-error: true
-        timeout-minutes: 10
         env:
           GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
         run: python fahrplanseiten.py --ausgabe daten
 
       - name: Ergebnis speichern
         run: |
+          git config user.name "GöBUS Fahrplanseiten"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add daten/fahrplanseiten.json
+          if git diff --cached --quiet; then echo "Keine Änderungen."; exit 0; fi
+          git commit -m "Fahrplanseiten $(date +%F)"
+          for i in 1 2 3 4 5; do git pull --rebase --quiet && git push && exit 0; sleep 10; done
+          exit 1
+
+  liniennetz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Dateien holen
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: OpenStreetMap-Auszüge laden (Geofabrik)
+        # Ganze Bundesländer als Datei (zusammen gut 1,4 GB, Laden 1–3 Minuten), daraus mit osmium nur Buslinien und Fahrschulen.
+        # Schlägt dieser Schritt fehl, fragen die Skripte Overpass (mit Zeitbegrenzung) – der Lauf geht weiter.
+        continue-on-error: true
+        timeout-minutes: 20
+        run: |
+          sudo apt-get install -y -qq osmium-tool >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq osmium-tool >/dev/null)
+          mkdir -p osm
+          for land in niedersachsen hessen thueringen nordrhein-westfalen/detmold-regbez; do
+            n=$(basename "$land")
+            echo "$(date +%T) Lade $land"
+            curl -fsSL --retry 3 --retry-delay 15 --connect-timeout 30 -o "osm/$n.osm.pbf" "https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf"
+            osmium tags-filter "osm/$n.osm.pbf" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school -o "osm/$n-teil.osm.pbf" --overwrite
+            rm -f "osm/$n.osm.pbf"
+          done
+          osmium merge osm/*-teil.osm.pbf -o osm/alles.osm.pbf --overwrite
+          osmium tags-filter osm/alles.osm.pbf r/route=bus,trolleybus,minibus,share_taxi,tram -o osm/routen.osm.pbf --overwrite
+          osmium cat osm/routen.osm.pbf -f opl,add_metadata=false -o osm/auszug.opl --overwrite
+          osmium tags-filter osm/alles.osm.pbf nwr/amenity=driving_school -o osm/fahrschulen.osm.pbf --overwrite
+          osmium cat osm/fahrschulen.osm.pbf -f opl,add_metadata=false -o osm/fahrschulen.opl --overwrite
+          ls -la osm
+
+      - name: Fahrplandaten und OpenStreetMap verarbeiten
+        # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE
+        # (Settings → Secrets and variables → Actions → Variables); ohne Variable läuft alles wie bisher.
+        timeout-minutes: 35
+        env:
+          GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
+        run: python liniennetz.py --ausgabe daten --osm-auszug osm/auszug.opl
+
+      - name: Fahrschulen mit Busführerschein suchen
+        # Fassung 42: OpenStreetMap (Fassung 48: aus dem Auszug) und Websites der Fahrschulen. Schlägt dieser Schritt fehl,
+        # bleibt das Liniennetz davon unberührt.
+        if: ${{ !cancelled() && hashFiles('fahrschulen.py') != '' }}
+        continue-on-error: true
+        timeout-minutes: 15
+        run: python fahrschulen.py --ausgabe daten --osm-auszug osm/fahrschulen.opl
+
+      - name: Ergebnis speichern
+        if: ${{ !cancelled() }}
+        run: |
           git config user.name "GöBUS Liniennetz"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add daten
-          if git diff --cached --quiet; then
-            echo "Keine Änderungen."
-          else
-            git commit -m "Liniennetz $(date +%F)"
-            git push
-          fi
+          if git diff --cached --quiet; then echo "Keine Änderungen."; exit 0; fi
+          git commit -m "Liniennetz $(date +%F)"
+          for i in 1 2 3 4 5; do git pull --rebase --quiet && git push && exit 0; sleep 10; done
+          exit 1

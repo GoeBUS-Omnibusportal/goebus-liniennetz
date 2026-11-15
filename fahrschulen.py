@@ -173,26 +173,68 @@ def overpass(gebiet):
     q = ('[out:json][timeout:120];(nwr["amenity"="driving_school"](%s);nwr["name"~"%s",i](%s););out center tags 3000;'
          % (gebiet, ANBIETER_NAME, gebiet))
     daten = urllib.parse.urlencode({'data': q}).encode()
-    for versuch in range(2):
-        for u in OVERPASS:
-            try:
-                req = urllib.request.Request(u, data=daten, headers={'User-Agent': UA, 'Accept': 'application/json'})
-                with urllib.request.urlopen(req, timeout=180) as r:
-                    return json.loads(r.read().decode('utf-8')), u
-            except Exception as e:
-                log('Overpass %s nicht nutzbar (%s)' % (u, e))
-        time.sleep(30 * (versuch + 1))
+    for u in OVERPASS:    # Fassung 48: ein Versuch je Server, kurze Wartezeit (vorher bis zu 20 Minuten)
+        try:
+            req = urllib.request.Request(u, data=daten, headers={'User-Agent': UA, 'Accept': 'application/json'})
+            with urllib.request.urlopen(req, timeout=90) as r:
+                return json.loads(r.read().decode('utf-8')), u
+        except Exception as e:
+            log('Overpass %s nicht nutzbar (%s)' % (u, e))
     return None, ''
+
+
+def opl_text(s):
+    return re.sub(r'%([0-9a-fA-F]+)%', lambda m: chr(int(m.group(1), 16)), s) if '%' in s else s
+
+
+def auszug(pfad, gebiet):
+    """Fassung 48: Fahrschulen aus dem Geofabrik-Auszug (osm/fahrschulen.opl, osmium) statt Overpass – Antwort im Overpass-Format."""
+    s_, w_, n_, e_ = (float(x) for x in gebiet.split(','))
+    knoten, objekte = {}, []
+    with open(pfad, encoding='utf-8') as fh:
+        for z in fh:
+            teile = z.rstrip('\n').split(' ')
+            if not teile[0]:
+                continue
+            art, oid = teile[0][0], int(teile[0][1:])
+            f = {t[0]: t[1:] for t in teile[1:] if t}
+            tags = {}
+            for kv in (f.get('T') or '').split(','):
+                k, _, w = kv.partition('=')
+                if k:
+                    tags[opl_text(k)] = opl_text(w)
+            if art == 'n' and f.get('x'):
+                knoten[oid] = (float(f['x']), float(f['y']))
+            if tags.get('amenity') == 'driving_school' and art in 'nw':
+                objekte.append((art, oid, tags, [int(x[1:]) for x in (f.get('N') or '').split(',') if len(x) > 1]))
+    els = []
+    for art, oid, tags, nds in objekte:
+        pts = [knoten[oid]] if art == 'n' and oid in knoten else [knoten[n] for n in nds if n in knoten]
+        if not pts:
+            continue
+        lon, lat = sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)
+        if s_ <= lat <= n_ and w_ <= lon <= e_:
+            els.append({'type': 'node' if art == 'n' else 'way', 'id': oid, 'tags': tags, **({'lat': lat, 'lon': lon} if art == 'n' else {'center': {'lat': lat, 'lon': lon}})})
+    return {'elements': els}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ausgabe', default='daten')
     ap.add_argument('--gebiet', default=os.environ.get('GOEBUS_FAHRSCHUL_GEBIET') or GEBIET)
+    ap.add_argument('--osm-auszug', default=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'osm', 'fahrschulen.opl'))
     a = ap.parse_args()
     os.makedirs(a.ausgabe, exist_ok=True)
     ziel = os.path.join(a.ausgabe, 'fahrschulen.json')
-    j, server = overpass(a.gebiet)
+    j, server = None, ''
+    if a.osm_auszug and os.path.exists(a.osm_auszug) and os.path.getsize(a.osm_auszug) > 0:
+        try:
+            j, server = auszug(a.osm_auszug, a.gebiet), 'Geofabrik-Auszug'
+            log('%d Fahrschulen im OpenStreetMap-Auszug' % len(j['elements']))
+        except Exception as e:
+            log('Auszug nicht lesbar (%s) – frage Overpass' % e)
+    if not j:
+        j, server = overpass(a.gebiet)
     if not j:
         log('OpenStreetMap nicht erreichbar – bisherige Datei bleibt')
         return 0

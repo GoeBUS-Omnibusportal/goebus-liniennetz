@@ -15,7 +15,9 @@ Ablauf
   5. Linienverlauf (Version 2, Update 24), in dieser Reihenfolge:
      a) Linienweg aus den Fahrplandaten (shapes.txt), wenn die Datei ihn enthält und er zu den Haltestellen passt,
      b) OpenStreetMap (straßengenau), wenn dort eine Linie derselben Nummer dicht an den Haltestellen verläuft –
-        Nummern werden dabei vereinheitlicht („Bus 30“, „30“, „30;31“), Overpass mit mehreren Servern,
+        Nummern werden dabei vereinheitlicht („Bus 30“, „30“, „30;31“). Version 2.4 (Fassung 48): aus dem lokalen Auszug
+        der Geofabrik (osm/auszug.opl, im Workflow mit osmium erzeugt) – ohne Overpass. Nur ohne Auszug wird Overpass
+        gefragt, mit kurzer Wartezeit, ohne Wiederholung nicht erreichbarer Server und höchstens 12 Minuten insgesamt,
      c) der straßengenaue Verlauf der Vorwoche, wenn OpenStreetMap diesmal nicht erreichbar war,
      d) sonst Verbindung der Haltestellen.
   6. Je Verbund eine Datei im bisherigen Format schreiben (daten/vsn_linien.json usw.).
@@ -24,6 +26,7 @@ Aufruf
   python liniennetz.py                         # alles (Download, OpenStreetMap, Ausgabe nach daten/)
   python liniennetz.py --gtfs feed.zip         # vorhandene GTFS-Datei verwenden
   python liniennetz.py --ohne-osm              # nur Haltestellen-Verläufe (schneller)
+  python liniennetz.py --osm-auszug osm/auszug.opl   # OpenStreetMap aus dem Geofabrik-Auszug (Vorgabe, wenn vorhanden)
 """
 import argparse
 import csv
@@ -39,13 +42,18 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '2.1'
+VERSION = '2.4'
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
 OVERPASS_WEITERE = ['https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter']
 HIER = os.path.dirname(os.path.abspath(__file__))
 UA = 'GoeBUS-Liniennetz/' + VERSION + ' (+https://www.goebus.de)'
+HALTE_REGION = []  # Version 2.3: (lon, lat, Name, Suchname) aller Haltestellen der Region – für Linien aus der offiziellen Linienliste
+EIN = {'5/43'}     # Version 2.3: zusammengesetzte Nummern, die trotzdem aufgenommen werden (ROSA 5/43; weitere aus den Regeln „ein“)
+LISTEN = {}        # Version 2.3: slug → {Nummer (Schlüssel): (Nummer, Linienweg, Hinweis)} aus der Website
+HALTESTELLEN = {}  # Version 2.4: Name → {'p': [(lon, lat) der Steige], 'l': {(Nummer, Verbund)}} – für daten/haltestellen.json
+HALTE_ALLE = []   # (lon, lat, Name) aller Haltestellen der ausgewählten Fahrten – für „von → nach“, wenn der Linienweg fehlt
 ROUTE_TYPEN = {0: 'tram', 1: 'subway', 2: 'train', 3: 'bus', 4: 'ferry', 5: 'tram', 6: 'aerialway', 7: 'funicular', 11: 'trolleybus', 12: 'monorail'}
 
 
@@ -165,6 +173,8 @@ def gtfs_auswerten(pfad, kreise, verbuende):
             k = cache[schl]
             if k:
                 region[s['stop_id']] = k
+                if LISTEN:
+                    HALTE_REGION.append((lon, lat, s.get('stop_name', ''), halt_norm(s.get('stop_name', ''))))
     log(len(region), 'Haltestellen in der Region')
 
     log('Fahrten durchsuchen (1. Durchgang) …')
@@ -215,6 +225,8 @@ def gtfs_auswerten(pfad, kreise, verbuende):
                 halte[s['stop_id']] = (float(s['stop_lon']), float(s['stop_lat']), s.get('stop_name', ''))
             except ValueError:
                 pass
+
+    HALTE_ALLE.extend(halte.values())
 
     # Linienwege aus den Fahrplandaten (shapes.txt) – nur für die ausgewählten Fahrten
     formen = {}
@@ -276,11 +288,19 @@ def gtfs_auswerten(pfad, kreise, verbuende):
         except ValueError:
             art = 'bus'
         op = betreiber.get(r.get('agency_id', ''), '')
+        try:
+            rt = int(r.get('route_type', 3))
+        except ValueError:
+            rt = 3
+        # Version 2.2: keine Züge (RB, RE, S-Bahn: 2, 100–199), keine Taxis und Anruf-Linien-Taxis (1500–1599, ALT/AST im Namen)
+        if rt == 2 or 100 <= rt < 200 or 1500 <= rt < 1600 or keine_linie(ref, '', '', ' '.join([r.get('route_long_name', ''), r.get('route_desc', ''), r.get('route_short_name', '')]), art):
+            continue
         for v in verbuende:
             im_verbund = sum(zaehler[k] for k in v['kreise'])
             anteil = im_verbund / summe if summe else 0
             eigener_betreiber = im_verbund >= 1 and any(b.lower() in op.lower() for b in v.get('betreiber', []) if b)
-            if (anteil >= 0.25 and im_verbund >= 2) or eigener_betreiber:
+            gelistet = im_verbund >= 1 and ref_norm(ref) in LISTEN.get(v['slug'], {})     # 2.3: in der offiziellen Linienliste
+            if (anteil >= 0.25 and im_verbund >= 2) or eigener_betreiber or gelistet:
                 von, nach = halte[haupt[0]][2], halte[haupt[-1]][2]
                 muster_l = [[(x, y) for x, y, _ in q] for q in seqs]
                 geom, verlauf = geometrie(muster_l, fo)
@@ -290,9 +310,11 @@ def gtfs_auswerten(pfad, kreise, verbuende):
                         'ref': ref, 'name': '%s: %s => %s' % (ref, von, nach), 'from': von, 'to': nach,
                         'operator': op, 'network': v['kurz'], 'route': art,
                         'gtfs:route_id': rid, 'quelle': 'gtfs', 'verlauf': verlauf, 'muster': len(seqs), 'halte': len(haupt),
+                        'description': (r.get('route_long_name') or '').strip(),
                     },
                     'geometry': geom,
                     '_halte': list(dict.fromkeys((x, y) for q in seqs for x, y, _ in q)),
+                    '_namen': list(dict.fromkeys((n, round(x, 5), round(y, 5)) for q in seqs for x, y, n in q)),   # 2.4: Haltestellenseiten
                     '_muster': muster_l,
                     '_formen': fo,
                 })
@@ -408,28 +430,132 @@ def overpass_abfrage(v, refs):
 
 OVERPASS_STATUS = []
 FORMEN_IM_FEED = []
+OVERPASS_TOT = set()          # 2.4: Server, die in diesem Lauf nicht erreichbar waren, werden nicht erneut gefragt
+OVERPASS_BUDGET = [12 * 60]   # 2.4: höchstens 12 Minuten Overpass je Lauf (sonst dauerte ein Lauf über 90 Minuten)
 
 
 def overpass_holen(abfrage, url):
-    """Fragt Overpass ab – bei Fehlern, Zeitüberschreitung oder abgebrochener Antwort („remark“) auch die weiteren Server."""
+    """Fragt Overpass ab (nur, wenn kein Geofabrik-Auszug vorliegt). Version 2.4: ein Versuch je Server, Wartezeit 150 s,
+    nicht erreichbare Server („Network is unreachable“, 502/504) werden für den Rest des Laufs übersprungen,
+    insgesamt höchstens OVERPASS_BUDGET Sekunden – danach gelten die Verläufe der Vorwoche."""
     daten = urllib.parse.urlencode({'data': abfrage}).encode()
-    server = [url] + [u for u in OVERPASS_WEITERE if u != url]
-    for versuch in range(2):
-        for u in server:
-            try:
-                req = urllib.request.Request(u, data=daten, headers={'User-Agent': UA, 'Accept': 'application/json'})
-                with urllib.request.urlopen(req, timeout=360) as r:
-                    j = json.loads(r.read().decode('utf-8'))
-                bem = str(j.get('remark') or '')
-                if 'error' in bem.lower() or 'timed out' in bem.lower():
-                    raise RuntimeError('Antwort unvollständig: ' + bem[:120])
-                OVERPASS_STATUS.append('ok: ' + u)
-                return j
-            except Exception as e:    # Overpass ist manchmal ausgelastet – anderen Server versuchen, später erneut
-                log('Overpass %s nicht nutzbar (%s)' % (u, e))
-                OVERPASS_STATUS.append('Fehler: %s (%s)' % (u, str(e)[:100]))
-        time.sleep(45 * (versuch + 1))
+    for u in [url] + [u for u in OVERPASS_WEITERE if u != url]:
+        if u in OVERPASS_TOT:
+            continue
+        if OVERPASS_BUDGET[0] <= 0:
+            if 'budget' not in OVERPASS_TOT:
+                log('Overpass: Zeitbudget aufgebraucht – weiter mit den Verläufen der Vorwoche')
+                OVERPASS_TOT.add('budget')
+            return None
+        t0 = time.time()
+        try:
+            req = urllib.request.Request(u, data=daten, headers={'User-Agent': UA, 'Accept': 'application/json'})
+            with urllib.request.urlopen(req, timeout=min(150, max(20, OVERPASS_BUDGET[0]))) as r:
+                j = json.loads(r.read().decode('utf-8'))
+            bem = str(j.get('remark') or '')
+            if 'error' in bem.lower() or 'timed out' in bem.lower():
+                raise RuntimeError('Antwort unvollständig: ' + bem[:120])
+            OVERPASS_STATUS.append('ok: ' + u)
+            return j
+        except Exception as e:
+            log('Overpass %s nicht nutzbar (%s) – in diesem Lauf nicht mehr gefragt' % (u, e))
+            OVERPASS_STATUS.append('Fehler: %s (%s)' % (u, str(e)[:100]))
+            OVERPASS_TOT.add(u)
+        finally:
+            OVERPASS_BUDGET[0] -= time.time() - t0
     return None
+
+
+# ---------------------------------------------------------------------------
+# Version 2.4: OpenStreetMap aus dem Geofabrik-Auszug (OPL, erzeugt mit osmium) statt Overpass
+# ---------------------------------------------------------------------------
+ROUTE_OSM = ('bus', 'trolleybus', 'minibus', 'share_taxi', 'tram')
+
+
+def opl_text(s):
+    """OPL-Maskierung auflösen: „%20%“ → Leerzeichen usw."""
+    return re.sub(r'%([0-9a-fA-F]+)%', lambda m: chr(int(m.group(1), 16)), s) if '%' in s else s
+
+
+def opl_tags(s):
+    out = {}
+    for kv in s.split(',') if s else []:
+        k, _, w = kv.partition('=')
+        if k:
+            out[opl_text(k)] = opl_text(w)
+    return out
+
+
+def osm_auszug_laden(pfad):
+    """OPL-Datei (osmium cat -f opl,add_metadata=false) → {'knoten': {id: (lon, lat)}, 'wege': {id: [Knoten]}, 'rel': [...]}"""
+    knoten, wege, rel = {}, {}, []
+    with open(pfad, encoding='utf-8') as fh:
+        for z in fh:
+            teile = z.rstrip('\n').split(' ')
+            if not teile[0]:
+                continue
+            art, oid = teile[0][0], int(teile[0][1:])
+            f = {t[0]: t[1:] for t in teile[1:] if t}
+            if art == 'n':
+                if f.get('x') and f.get('y'):
+                    knoten[oid] = (float(f['x']), float(f['y']))
+            elif art == 'w':
+                wege[oid] = [int(n[1:]) for n in f.get('N', '').split(',') if len(n) > 1]
+            elif art == 'r':
+                t = opl_tags(f.get('T', ''))
+                if t.get('type') != 'route' or t.get('route') not in ROUTE_OSM:
+                    continue
+                mem = []
+                for m in f.get('M', '').split(','):
+                    if len(m) > 1:
+                        ref, _, rolle = m[1:].partition('@')
+                        mem.append((m[0], int(ref), opl_text(rolle)))
+                rel.append({'id': oid, 'tags': t, 'members': mem})
+    log('OpenStreetMap-Auszug: %d Linienrouten, %d Wege, %d Punkte' % (len(rel), len(wege), len(knoten)))
+    return {'knoten': knoten, 'wege': wege, 'rel': rel}
+
+
+def ref_regex(refs):
+    """wie ref_muster(), aber als Python-Ausdruck"""
+    werte = [' *'.join(re.escape(c) for c in r) for r in sorted({ref_norm(x) for x in refs if str(x).strip()})]
+    return re.compile(r'(^|;) *((bus|linie) *)?(%s) *(;|$)' % '|'.join(werte), re.I) if werte else None
+
+
+def auszug_antwort(az, v, kreise, refs=None, nur_tags=False):
+    """Liefert dasselbe wie die Overpass-Abfragen: Routen im Gebiet des Verbunds (mindestens ein Wegpunkt in einem seiner
+    Landkreise), auf Wunsch nur mit passender Nummer; mit Geometrie der Wege (wie „out geom“) oder nur Merkmale."""
+    ids = [k for k in v['kreise'] if k in kreise]
+    if not az or not ids:
+        return None
+    muster = ref_regex(refs) if refs is not None else None
+    if refs is not None and muster is None:
+        return {'elements': []}
+    zelle = {}
+
+    def im_gebiet(p):
+        k = (round(p[0], 2), round(p[1], 2))
+        if k not in zelle:
+            zelle[k] = kreis_von(p[0], p[1], kreise, ids) is not None
+        return zelle[k]
+    els = []
+    for r in az['rel']:
+        t = r['tags']
+        if muster is not None and not muster.search(t.get('ref') or ''):
+            continue
+        glieder, drin = [], False
+        for typ, ref, rolle in r['members']:
+            if typ != 'w':
+                continue
+            pts = [az['knoten'][n] for n in az['wege'].get(ref, ()) if n in az['knoten']]
+            if not pts:
+                continue
+            if not drin:
+                drin = any(im_gebiet(p) for p in pts[::max(1, len(pts) // 4)] + [pts[-1]])
+            if not nur_tags:
+                glieder.append({'type': 'way', 'ref': ref, 'role': rolle, 'geometry': [{'lon': x, 'lat': y} for x, y in pts]})
+        if drin:
+            els.append({'type': 'relation', 'id': r['id'], 'tags': t, **({} if nur_tags else {'members': glieder})})
+    return {'elements': els}
 
 
 def osm_linien(antwort):
@@ -546,13 +672,24 @@ def verlauf_aus_osm(features, osm, nah=350, mindestens=0.6, variante=0.75):
     return n
 
 
-def keine_linie(ref, von='', nach=''):
-    """Version 2.1: Linien, die nicht ins Liniennetz gehören – zusammengesetzte Nummern („31, 32“, „501/52“, „31+32“),
-    Sonderkennungen ohne Fahrgastbetrieb („E“, „E80“, „F“, „S“) und „Bahnhof A → Bahnhof A“."""
+ZUG_RX = re.compile(r'^(?:RB|RE|RS|S|IRE|ME|MEX|ERB|HLB|NWB|STB|IC|ICE|EC|EN|FLX|TER)\s?\d{0,4}[a-z]?$', re.I)   # 2.3: „R15“ ist ein Rufbus, kein Zug
+ALT_RX = re.compile(r'\b(?:ALT|AST|AnrufLinienTaxi|Anruf-?Linien-?Taxi|Anruflinientaxi|Anruf-?Sammel-?Taxi|Anrufsammeltaxi|Linientaxi|Anruf-?Bus)\b', re.I)
+
+
+def keine_linie(ref, von='', nach='', name='', art=''):
+    """Version 2.2: Linien, die nicht ins Liniennetz gehören – zusammengesetzte Nummern („31, 32“, „501/52“, „31+32“),
+    Sonderkennungen ohne Fahrgastbetrieb („E“, „E80“, „F“, „S“), Züge (RB, RE, S-Bahn …), Anruf-Linien-Taxis
+    (ALT, AST) und „Bahnhof A → Bahnhof A“."""
     ref = str(ref or '').strip()
+    if ref and ''.join(ref.split()).lower() in EIN:     # 2.3: ausdrücklich aufgenommen (Vorgabe ROSA 5/43, Regel „ROSA: 5/43 = +“)
+        return str(art or '').lower() in ('train', 'subway', 'rail', 'monorail', 'funicular', 'aerialway', 'taxi')
     if not ref or re.search(r'[,;/+&]|\s(?:und|u\.)\s', ref, re.I):
         return True
     if re.match(r'^(?:E|F|S)$', ref, re.I) or re.match(r'^E\d{1,3}$', ref, re.I):
+        return True
+    if ZUG_RX.match(ref) or str(art or '').lower() in ('train', 'subway', 'rail', 'monorail', 'funicular', 'aerialway', 'taxi'):
+        return True
+    if re.match(r'^(?:ALT|AST|AL)\s?\d*[a-z]?$', ref, re.I) or ALT_RX.search(str(name or '')):
         return True
     a, b = str(von or '').strip().lower(), str(nach or '').strip().lower()
     return bool(a and a == b and re.match(r'^(?:bahnhof\s?[a-z]?|betriebshof.*|depot.*)$', a))
@@ -600,7 +737,7 @@ def gedaechtnis(feats, alt_pfad, heute, tage=28, slug=''):
     for f in alt.get('features', []):
         p = f.get('properties', {})
         gesehen = str(p.get('gesehen') or alt.get('erzeugt', '')[:10] or heute)
-        if schl(p) in vorhanden or gesehen < grenze or not f.get('geometry') or keine_linie(p.get('ref', ''), p.get('from'), p.get('to')):
+        if schl(p) in vorhanden or gesehen < grenze or not f.get('geometry') or keine_linie(p.get('ref', ''), p.get('from'), p.get('to'), p.get('name', ''), p.get('route', '')):
             continue
         neu = ersetzt_durch(f, [x for x in feats if not x['properties'].get('aus_vorwoche')])
         if neu:
@@ -613,6 +750,262 @@ def gedaechtnis(feats, alt_pfad, heute, tage=28, slug=''):
         vorhanden.add(schl(p))
         n += 1
     return n
+
+
+# ---------------------------------------------------------------------------
+# Version 2.2: Regeln der Website (ersetzte Linien) und fehlende Linienwege („von → nach“)
+# ---------------------------------------------------------------------------
+def regeln_laden(quelle):
+    """Regeln aus der Website (_data/verbund-tarife/linien-regeln.json) oder einer Datei.
+    {"ersetzt": {"vsn": {"265": {"neu": "260", "von": "Northeim", "nach": "Bad Gandersheim"}}, "*": {…}}, "aus": {"vsn": ["…"]}}"""
+    if not quelle:
+        return {}
+    try:
+        if re.match(r'^https?://', quelle):
+            req = urllib.request.Request(quelle, headers={'User-Agent': UA})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                d = json.loads(r.read().decode('utf-8'))
+        else:
+            d = json.load(open(quelle, encoding='utf-8'))
+        log('Regeln der Website geladen:', sum(len(x) for x in (d.get('ersetzt') or {}).values()), 'ersetzte Linien')
+        return d if isinstance(d, dict) else {}
+    except Exception as e:      # Regeln sind freiwillig – ohne sie läuft alles wie bisher
+        log('Regeln nicht geladen:', quelle, '–', e)
+        return {}
+
+
+def archiv_laden(pfad):
+    try:
+        return json.load(open(pfad, encoding='utf-8'))
+    except (ValueError, OSError):
+        return {}
+
+
+def regeln_anwenden(feats, regeln, slug, alt_pfad, archiv):
+    """Ersetzte Linien: alte Nummer entfällt, ihr Verlauf geht auf die neue über, wenn die neue keinen eigenen
+    (Fahrplan oder OpenStreetMap) hat. Verläufe ersetzter Linien bleiben im Archiv (daten/ersetzt-archiv.json) dauerhaft erhalten.
+    Rückgabe: Anzahl übertragener Verläufe."""
+    ers = dict((regeln.get('ersetzt') or {}).get('*') or {})
+    ers.update((regeln.get('ersetzt') or {}).get(slug) or {})
+    aus = {ref_norm(x) for x in ((regeln.get('aus') or {}).get(slug) or [])}
+    if aus:
+        feats[:] = [f for f in feats if ref_norm(f['properties'].get('ref', '')) not in aus]
+    if not ers:
+        return 0
+    alt = []
+    if os.path.exists(alt_pfad):
+        try:
+            alt = json.load(open(alt_pfad, encoding='utf-8')).get('features', [])
+        except (ValueError, OSError):
+            alt = []
+    n = 0
+    for alte, r in ers.items():
+        neu_ref = str((r or {}).get('neu', '')).strip()
+        if not neu_ref:
+            continue
+        ka = ref_norm(alte)
+        quelle = None
+        for f in feats + alt:
+            if ref_norm(f['properties'].get('ref', '')) == ka and f.get('geometry'):
+                quelle = f
+                break
+        schl = slug + '|' + ka
+        if quelle is not None:
+            archiv[schl] = {'properties': {k: v for k, v in quelle['properties'].items() if not k.startswith('_')}, 'geometry': quelle['geometry']}
+        elif schl in archiv:
+            quelle = archiv[schl]
+        feats[:] = [f for f in feats if ref_norm(f['properties'].get('ref', '')) != ka]
+        kn = ref_norm(neu_ref)
+        ziel = next((f for f in feats if ref_norm(f['properties'].get('ref', '')) == kn), None)
+        von, nach = str((r or {}).get('von', '')).strip(), str((r or {}).get('nach', '')).strip()
+        stark = ziel is not None and ziel.get('geometry') and str(ziel['properties'].get('verlauf', '')).split('+')[0] in ('fahrplan', 'osm', 'vorwoche')
+        if ziel is not None and stark:
+            p = ziel['properties']
+            if von and not p.get('from'):
+                p['from'] = von
+            if nach and not p.get('to'):
+                p['to'] = nach
+            continue
+        if quelle is None:
+            if ziel is not None and (von or nach):
+                ziel['properties'].update({'from': von or ziel['properties'].get('from', ''), 'to': nach or ziel['properties'].get('to', '')})
+            continue
+        p = dict(ziel['properties'] if ziel is not None else quelle['properties'])
+        p.update({'ref': neu_ref, 'ersetzt_von': str(alte), 'verlauf': 'uebernommen', 'aus_vorwoche': False})
+        if von or nach:
+            p['from'], p['to'] = von or p.get('from', ''), nach or p.get('to', '')
+            p['name'] = '%s: %s => %s' % (neu_ref, p['from'], p['to'])
+        else:
+            p['name'] = '%s: %s => %s' % (neu_ref, p.get('from', ''), p.get('to', ''))
+        f_neu = {'type': 'Feature', 'properties': p, 'geometry': quelle['geometry']}
+        if ziel is not None:
+            feats[feats.index(ziel)] = f_neu
+        else:
+            feats.append(f_neu)
+        ERSETZT.setdefault(slug, {})[str(alte)] = neu_ref
+        log(slug, 'Regel: Linie', alte, '→', neu_ref, '– Verlauf übertragen')
+        n += 1
+    return n
+
+
+def wege_ergaenzen(feats, halte_alle, osm=None):
+    """Fehlt „von“/„nach“, kommt der Linienweg (in dieser Reihenfolge) aus: Namen der Fahrplandaten („route_long_name“,
+    z. B. „Hameln - Klein Berkel“), OpenStreetMap (from/to bzw. „Bus 6: A => B“) oder den nächsten Haltestellen an beiden Enden."""
+    n = 0
+    for f in feats:
+        p = f['properties']
+        if str(p.get('from', '')).strip() and str(p.get('to', '')).strip():
+            continue
+        von = nach = ''
+        m = re.match(r'^\s*(.+?)\s*(?:<=>|<->|=>|->|→|–|—| - )\s*(.+?)\s*$', str(p.get('description', '')))
+        if m:
+            von, nach = m.group(1), m.group(2)
+        if not (von and nach) and osm:
+            for rel in osm.get(ref_norm(p.get('ref', '')), []):
+                t = rel.get('tags', {})
+                if t.get('from') and t.get('to'):
+                    von, nach = t['from'], t['to']
+                    break
+                m = re.match(r'^[^:]*:\s*(.+?)\s*(?:=>|->|→|<=>)\s*(.+?)\s*$', str(t.get('name', '')))
+                if m:
+                    von, nach = m.group(1), m.group(2)
+                    break
+        if not (von and nach) and halte_alle and f.get('geometry'):
+            g = f['geometry']
+            teile = g.get('coordinates', []) if g.get('type') == 'MultiLineString' else ([g.get('coordinates', [])] if g.get('type') == 'LineString' else [])
+            if teile and teile[0]:
+                a, b = tuple(teile[0][0]), tuple(teile[-1][-1] if teile[-1] else teile[0][-1])
+                von, nach = naechster_halt(a, halte_alle), naechster_halt(b, halte_alle)
+        if von and nach:
+            p['from'], p['to'] = von, nach
+            if not str(p.get('name', '')).strip() or re.match(r'^(?:Linie|Bus)?\s*' + re.escape(str(p.get('ref', ''))) + r'$', str(p.get('name', '')).strip(), re.I):
+                p['name'] = '%s: %s => %s' % (p.get('ref', ''), von, nach)
+            n += 1
+    return n
+
+
+def listen_laden(regeln):
+    """2.3: offizielle Linienlisten der Website ({"listen": {slug: {"linien": {Nummer: {"weg", "hinweis"}}}}})."""
+    LISTEN.clear()
+    for slug, l in ((regeln or {}).get('ein') or {}).items():
+        for x in (l or []):
+            EIN.add(''.join(str(x).split()).lower())
+    for slug, l in ((regeln or {}).get('listen') or {}).items():
+        d = {}
+        for ref, x in ((l or {}).get('linien') or {}).items():
+            if str(ref).strip():
+                d[ref_norm(ref)] = (str(ref).strip(), str((x or {}).get('weg', '')), str((x or {}).get('hinweis', '')))
+        if d:
+            LISTEN[slug] = d
+    if LISTEN:
+        log('Offizielle Linienlisten:', ', '.join('%s %d' % (k, len(v)) for k, v in LISTEN.items()))
+
+
+def halt_norm(s):
+    s = str(s or '').lower().replace('ß', 'ss').replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue')
+    s = re.sub(r'\bhess\.?\s*', 'hessisch ', s)
+    s = re.sub(r'\b(?:bf|bhf)\b\.?', 'bahnhof', s)
+    s = re.sub(r'\bstr\b\.?', 'strasse', s)
+    return ' '.join(re.findall(r'[a-z0-9]+', s))
+
+
+def _m(a, b):
+    return math.hypot((a[0] - b[0]) * 111320 * math.cos(math.radians(a[1])), (a[1] - b[1]) * 110540)
+
+
+def halte_aus_weg(weg, index):
+    """2.3: Linienweg „Hameln – Groß Berkel – Aerzen / Reinerbeck“ → Koordinaten der passenden Haltestellen (lon, lat, Name).
+    Erst eindeutige Namen, dann die übrigen nahe an den Nachbarn (z. B. „Bahnhof“ bei Hameln)."""
+    teile = [t.strip() for t in re.split(r'\s+[–—-]\s+', str(weg or '')) if t.strip()]
+    namen = [halt_norm(re.split(r'\s*/\s*|\(', t)[0]) for t in teile]
+    kand = []
+    for n in namen:
+        if not n:
+            kand.append([])
+            continue
+        k = [h for h in index if h[3] == n or h[3].endswith(' ' + n) or h[3].startswith(n + ' ')]
+        if not k:
+            k = [h for h in index if (' ' + n + ' ') in (' ' + h[3] + ' ')]
+        kand.append(k)
+    wahl = [None] * len(namen)
+    zentral = re.compile(r'bahnhof|zob|markt|mitte|zentrum|rathaus|kirche|post')
+    for i, k in enumerate(kand):
+        orte = {h[3].split(' ')[0] for h in k}
+        if k and len(orte) <= 2:
+            wahl[i] = min(k, key=lambda h: (0 if h[3] == namen[i] or h[3].endswith(' ' + namen[i]) else 1, 0 if zentral.search(h[3]) else 1, len(h[3])))
+    for _ in range(2):
+        for i, k in enumerate(kand):
+            if wahl[i] or not k:
+                continue
+            nb = [wahl[j] for j in (i - 1, i + 1) if 0 <= j < len(wahl) and wahl[j]]
+            if nb:
+                wahl[i] = min(k, key=lambda h: min(_m(h, x) for x in nb))
+    pts = [w for w in wahl if w]
+    out = []
+    for w in pts:
+        if not out or _m(out[-1], w) > 30:
+            out.append(w)
+    return out
+
+
+def liste_anwenden(feats, liste, index, osm_idx, v):
+    """2.3: amtlichen Linienweg und Hinweis an vorhandene Linien hängen; gelistete Linien, die in den Fahrplandaten fehlen,
+    aus OpenStreetMap oder der Verbindung ihrer Haltestellen ergänzen (quelle „liste“). Rückgabe (ergänzte Wege, neue Linien)."""
+    if not liste:
+        return 0, 0
+    da = {ref_norm(f['properties'].get('ref', '')): f for f in feats}
+    weg_n = neu = 0
+    for k, (ref, weg, hinweis) in liste.items():
+        f = da.get(k)
+        if f:
+            p = f['properties']
+            if weg:
+                p['weg'] = weg
+                weg_n += 1
+            if hinweis:
+                p['hinweis'] = hinweis
+            continue
+        if keine_linie(ref):
+            continue
+        halte = halte_aus_weg(weg, index) if weg else []
+        geom, verlauf = None, ''
+        rels = (osm_idx or {}).get(k, [])
+        if rels:
+            ok = []
+            for r in rels:
+                ra = Raster(r['linien'])
+                if halte and sum(1 for h in halte if ra.abstand((h[0], h[1])) <= 400) / len(halte) >= 0.6:
+                    ok.append(r)
+            if ok:
+                geom = {'type': 'MultiLineString', 'coordinates': [[[round(x, 6), round(y, 6)] for x, y in vereinfachen(l)] for r in ok for l in r['linien']]}
+                verlauf = 'osm'
+        if not geom and len(halte) >= 2:
+            geom = {'type': 'LineString', 'coordinates': [[round(h[0], 6), round(h[1], 6)] for h in halte]}
+            verlauf = 'haltestellen'
+        if not geom:
+            continue
+        teile = [t.strip() for t in re.split(r'\s+[–—-]\s+', weg) if t.strip()]
+        feats.append({'type': 'Feature', 'properties': {
+            'ref': ref, 'name': '%s: %s => %s' % (ref, teile[0], teile[-1]) if len(teile) > 1 else 'Linie ' + ref,
+            'from': teile[0] if teile else '', 'to': teile[-1] if len(teile) > 1 else '', 'operator': '', 'network': v.get('kurz', ''), 'route': 'bus',
+            'quelle': 'liste', 'verlauf': verlauf, 'halte': len(halte), 'weg': weg, 'hinweis': hinweis, 'description': weg}, 'geometry': geom})
+        neu += 1
+    if weg_n or neu:
+        log(v['slug'], 'Linienliste:', weg_n, 'Linienwege übernommen,', neu, 'fehlende Linien ergänzt')
+    return weg_n, neu
+
+
+def naechster_halt(pt, halte_alle, max_m=400):
+    """Name der nächsten Haltestelle (höchstens 400 m) zu einem Punkt (lon, lat)."""
+    bester, d_best = '', max_m
+    cx = math.cos(math.radians(pt[1]))
+    for x, y, name in halte_alle:
+        if abs(x - pt[0]) > 0.01 or abs(y - pt[1]) > 0.006 or not name:
+            continue
+        d = math.hypot((x - pt[0]) * cx, y - pt[1]) * 111320
+        if d < d_best:
+            bester, d_best = name, d
+    return bester
 
 
 def ref_schluessel(r):
@@ -778,34 +1171,61 @@ def main():
     ap.add_argument('--overpass-url', default=OVERPASS_URL)
     ap.add_argument('--verbuende', default=os.path.join(HIER, 'verbuende.json'), help='Verbünde (Vorgabe: verbuende.json neben dem Skript)')
     ap.add_argument('--behalten-tage', type=int, default=28, help='fehlende Linien so viele Tage aus der Vorwoche behalten (0 = aus); ersetzte Linien nie')
+    ap.add_argument('--osm-auszug', default=os.path.join(HIER, 'osm', 'auszug.opl'), help='OpenStreetMap-Auszug (OPL), Vorgabe osm/auszug.opl; fehlt er, wird Overpass gefragt')
     ap.add_argument('--osm-json', help='vorbereitete Overpass-Antworten statt Abfrage, z. B. osm/{slug}.json (für Tests)')
+    ap.add_argument('--regeln', default=os.environ.get('GOEBUS_REGELN', ''), help='Regeln der Website (ersetzte Linien), Adresse oder Datei; Vorgabe: Umgebungsvariable GOEBUS_REGELN')
     a = ap.parse_args()
 
+    T0 = time.time()
+    dauer = {}    # 2.4 (Fassung 48): Laufzeit je Abschnitt in Sekunden – die Verwaltung warnt bei langen Läufen
     kreise = landkreise(os.path.join(HIER, 'landkreise.topo.json'))
     verbuende = json.load(open(a.verbuende, encoding='utf-8'))
     pfad = a.gtfs
     if not pfad:
         pfad = os.path.join(HIER, 'gtfs.zip')
         herunterladen(a.gtfs_url, pfad)
+    dauer['fahrplandaten_laden'] = round(time.time() - T0)
+    regeln = regeln_laden(a.regeln)
+    listen_laden(regeln)
+    t = time.time()
     ergebnis = gtfs_auswerten(pfad, kreise, verbuende)
+    dauer['fahrplandaten_auswerten'] = round(time.time() - t)
+    t = time.time()
+    auszug = None
+    if not a.ohne_osm and not a.osm_json and a.osm_auszug and os.path.exists(a.osm_auszug) and os.path.getsize(a.osm_auszug) > 1000:
+        try:
+            auszug = osm_auszug_laden(a.osm_auszug)
+        except Exception as e:    # beschädigter Auszug → Overpass wie bisher
+            log('OpenStreetMap-Auszug nicht lesbar (%s) – frage Overpass' % e)
+    elif not a.ohne_osm and not a.osm_json:
+        log('Kein OpenStreetMap-Auszug (%s) – frage Overpass (höchstens %d Minuten)' % (a.osm_auszug, OVERPASS_BUDGET[0] // 60))
+    dauer['osm_auszug_lesen'] = round(time.time() - t)
+    dauer['verbuende'] = {}
 
     os.makedirs(a.ausgabe, exist_ok=True)
+    archiv_pfad = os.path.join(a.ausgabe, 'ersetzt-archiv.json')
+    archiv = archiv_laden(archiv_pfad)
     stand = {'erzeugt': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'version': VERSION, 'linienwege': bool(FORMEN_IM_FEED and FORMEN_IM_FEED[0]), 'verbuende': {}}
     bericht = {'erzeugt': stand['erzeugt'], 'version': VERSION, 'hinweis': 'Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).', 'verbuende': {}}
     for i, v in enumerate(verbuende):
+        tv = time.time()
         feats = ergebnis.get(v['slug'], [])
         osm_n = 0
+        osm_idx = None
         osm_status = 'aus' if a.ohne_osm else 'nicht nötig'
         if feats and not a.ohne_osm:
             if a.osm_json:
                 p = a.osm_json.replace('{slug}', v['slug'])
                 antwort = json.load(open(p, encoding='utf-8')) if os.path.exists(p) else None
+            elif auszug:
+                antwort = auszug_antwort(auszug, v, kreise, {f['properties']['ref'] for f in feats} | {x[0] for x in LISTEN.get(v['slug'], {}).values()})
             else:
-                if i:
-                    time.sleep(15)    # Overpass schonen
-                antwort = overpass_holen(overpass_abfrage(v, {f['properties']['ref'] for f in feats}), a.overpass_url)
-            osm_status = 'ok' if antwort is not None else 'nicht erreichbar'
-            osm_n = verlauf_aus_osm(feats, osm_linien(antwort))
+                if i and not OVERPASS_TOT:
+                    time.sleep(5)    # Overpass schonen
+                antwort = overpass_holen(overpass_abfrage(v, {f['properties']['ref'] for f in feats} | {x[0] for x in LISTEN.get(v['slug'], {}).values()}), a.overpass_url)
+            osm_status = ('ok (Auszug)' if auszug else 'ok') if antwort is not None else 'nicht erreichbar'
+            osm_idx = osm_linien(antwort)
+            osm_n = verlauf_aus_osm(feats, osm_idx)
         heute = stand['erzeugt'][:10]
         ziel0 = os.path.join(a.ausgabe, v['datei'])
         vw_n = verlauf_vorwoche(feats, ziel0)
@@ -822,17 +1242,32 @@ def main():
             if a.osm_json:
                 p2 = a.osm_json.replace('{slug}', v['slug'] + '-alle')
                 osm_alle = osm_refs_im_netz(json.load(open(p2, encoding='utf-8')) if os.path.exists(p2) else None, v)
-            elif feats:
-                time.sleep(5)
+            elif feats and auszug:
+                osm_alle = osm_refs_im_netz(auszug_antwort(auszug, v, kreise, nur_tags=True), v)
+            elif feats and not OVERPASS_TOT:
                 osm_alle = osm_refs_im_netz(overpass_holen(overpass_alle_abfrage(v), a.overpass_url), v)
         quelle = quellen_refs(v) if v.get('quellen') else (set(), [])
+        for f in feats:    # 2.4: Haltestellen mit ihren Linien sammeln (vor dem Aufräumen)
+            for n, x, y in f.get('_namen') or []:
+                h = HALTESTELLEN.setdefault(n, {'p': [], 'l': set()})
+                if len(h['p']) < 12 and (x, y) not in h['p']:
+                    h['p'].append((x, y))
+                h['l'].add((f['properties']['ref'], v['kurz']))
         for f in feats:
+            f.pop('_namen', None)
             f.pop('_halte', None)
             f.pop('_muster', None)
             f.pop('_formen', None)
             f['properties']['gesehen'] = heute
         ziel = os.path.join(a.ausgabe, v['datei'])
         alt_n = gedaechtnis(feats, ziel, heute, a.behalten_tage, v['slug']) if a.behalten_tage > 0 else 0
+        # Version 2.2: Regeln der Website (ersetzte Linien, z. B. VSN 265 → 260) und fehlende Linienwege ergänzen
+        reg_n = regeln_anwenden(feats, regeln, v['slug'], ziel, archiv) if regeln else 0
+        weg_n = wege_ergaenzen(feats, HALTE_ALLE, osm_idx)
+        li_weg, li_neu = liste_anwenden(feats, LISTEN.get(v['slug'], {}), HALTE_REGION, osm_idx, v)    # 2.3
+        feats[:] = [f for f in feats if not keine_linie(f['properties'].get('ref', ''), f['properties'].get('from'), f['properties'].get('to'), f['properties'].get('name', ''), f['properties'].get('route', ''))]
+        if reg_n or weg_n:
+            log(v['slug'], reg_n, 'Verläufe nach Regeln übertragen,', weg_n, 'Linienwege („von → nach“) ergänzt')
         if not feats:
             log(v['slug'], 'keine Linien – Datei wird nicht geschrieben')
             continue
@@ -842,7 +1277,8 @@ def main():
         with open(ziel + '.neu', 'w', encoding='utf-8') as fh:
             json.dump(geo, fh, ensure_ascii=False, separators=(',', ':'))
         os.replace(ziel + '.neu', ziel)
-        stand['verbuende'][v['slug']] = {'datei': v['datei'], 'linien': len(feats), 'osm_verlauf': osm_n, 'fahrplan_verlauf': fp_n, 'verlauf_vorwoche': vw_n, 'aus_vorwoche': alt_n, 'osm': osm_status}
+        dauer['verbuende'][v['slug']] = round(time.time() - tv)
+        stand['verbuende'][v['slug']] = {'datei': v['datei'], 'linien': len(feats), 'liste_wege': li_weg, 'liste_neu': li_neu, 'osm_verlauf': osm_n, 'fahrplan_verlauf': fp_n, 'verlauf_vorwoche': vw_n, 'aus_vorwoche': alt_n, 'osm': osm_status}
         bericht['verbuende'][v['slug']] = bericht_verbund(v, feats)
         if ERSETZT.get(v['slug']):
             bericht['verbuende'][v['slug']]['ersetzt'] = ERSETZT[v['slug']]
@@ -851,8 +1287,26 @@ def main():
         bericht['verbuende'][v['slug']]['osm'] = osm_status
         bericht['verbuende'][v['slug']]['verlauf_vorwoche'] = vw_n
         log(v['slug'], len(feats), 'Linien gespeichert:', fp_n, 'mit Linienweg aus den Fahrplandaten,', osm_n, 'aus OpenStreetMap (%s),' % osm_status, vw_n, 'Verläufe aus der Vorwoche,', alt_n, 'Linien aus den Vorwochen →', v['datei'])
-    stand['overpass'] = OVERPASS_STATUS[-12:]
+    if archiv:
+        with open(archiv_pfad, 'w', encoding='utf-8') as fh:
+            json.dump(archiv, fh, ensure_ascii=False, separators=(',', ':'))
+    stand['regeln'] = bool(regeln)
+    dauer['gesamt'] = round(time.time() - T0)
+    stand['dauer'] = dauer
+    stand['osm_quelle'] = 'geofabrik' if auszug else ('overpass' if not a.ohne_osm and not a.osm_json else 'aus')
+    stand['overpass'] = (['Geofabrik-Auszug (ohne Overpass)'] if auszug else []) + OVERPASS_STATUS[-12:]
     bericht['overpass'] = stand['overpass']
+    # 2.4: Haltestellen der Region mit ihren Linien (für die Haltestellenseiten der Website)
+    if HALTESTELLEN:
+        hl = []
+        for n, h in sorted(HALTESTELLEN.items()):
+            xs, ys = [p[0] for p in h['p']], [p[1] for p in h['p']]
+            hl.append({'name': n, 'lon': round(sum(xs) / len(xs), 5), 'lat': round(sum(ys) / len(ys), 5),
+                       'linien': [[r, k] for r, k in sorted(h['l'], key=lambda x: (x[1], len(x[0]), x[0]))]})
+        with open(os.path.join(a.ausgabe, 'haltestellen.json'), 'w', encoding='utf-8') as fh:
+            json.dump({'erzeugt': stand['erzeugt'], 'version': VERSION, 'attribution': 'Fahrplandaten: DELFI e.V. über GTFS.DE (CC BY 4.0)', 'haltestellen': hl}, fh, ensure_ascii=False, separators=(',', ':'))
+        stand['haltestellen'] = len(hl)
+        log(len(hl), 'Haltestellen → haltestellen.json')
     with open(os.path.join(a.ausgabe, 'stand.json'), 'w', encoding='utf-8') as fh:
         json.dump(stand, fh, ensure_ascii=False, indent=1)
     with open(os.path.join(a.ausgabe, 'bericht.json'), 'w', encoding='utf-8') as fh:

@@ -12,7 +12,7 @@ Das STRATO-Paket „Homepage Starter“ hat keine Cronjobs. Die Rechenarbeit üb
 1. **GitHub-Konto anlegen** (kostenlos) auf github.com.
 2. **Neues Repository erstellen**: Oben rechts auf „+“ klicken, dann „New repository“ wählen. Als Name zum Beispiel `goebus-liniennetz` eintragen, „Public“ wählen und auf „Create repository“ klicken.
    „Public“ ist nötig, damit die Website die fertigen Dateien ohne Passwort abholen kann. Im Repository liegen nur öffentliche Fahrplan- und Kartendaten, keine Zugangsdaten.
-3. **Dateien hochladen**: Im neuen Repository auf „uploading an existing file“ klicken und den **Inhalt** dieses Ordners hineinziehen. Dazu gehören `liniennetz.py`, `verbuende.json`, `landkreise.topo.json`, `.gitignore`, `README.md` und der Ordner `.github`. Danach auf „Commit changes“ klicken.
+3. **Dateien hochladen**: Im neuen Repository auf „uploading an existing file“ klicken und den **Inhalt** dieses Ordners hineinziehen. Dazu gehören `liniennetz.py`, `fahrschulen.py`, `fahrplanseiten.py`, `verbuende.json`, `landkreise.topo.json`, `.gitignore`, `README.md` und der Ordner `.github`. Danach auf „Commit changes“ klicken.
    Falls der Ordner `.github` beim Hochladen fehlt (versteckter Ordner): Auf „Add file“ und dann „Create new file“ klicken, als Namen `.github/workflows/liniennetz.yml` eingeben und den Inhalt der gleichnamigen Datei hineinkopieren.
 4. **Schreibrecht für den Ablauf erlauben**: Unter „Settings“ → „Actions“ → „General“ → „Workflow permissions“ die Option „Read and write permissions“ wählen und speichern.
 5. **Ersten Lauf starten**: Unter „Actions“ → „Liniennetz aktualisieren“ auf „Run workflow“ klicken. Nach etwa 5 bis 15 Minuten liegt im Repository der Ordner `daten` mit `vsn_linien.json`, `nvv_linien.json` usw.
@@ -28,6 +28,20 @@ Von da an läuft alles automatisch:
 - **Sofort abholen:** in der Verwaltung unter *Verbund & Tarife → Abgleich der Liniennetze → Jetzt abholen*.
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
+
+## Neu in Fassung 48 (Skript 2.4): schnell und ohne Overpass
+
+- **OpenStreetMap aus Geofabrik-Auszügen:** Die öffentlichen Overpass-Server waren von GitHub aus oft nicht erreichbar („Network is unreachable“, 502, 504). Jeder Fehlversuch kostete mehrere Minuten, ein Lauf brach nach 90 Minuten ab. Jetzt lädt der Ablauf die Bundesländer-Dateien der Geofabrik (Niedersachsen, Hessen, Thüringen, Regierungsbezirk Detmold) und filtert mit `osmium` nur Buslinien und Fahrschulen heraus. Erwartet werden wenige Minuten statt einer Stunde; einen echten Lauf damit gab es aber noch nicht.
+- **Overpass nur noch als Notlösung**, wenn der Auszug fehlt: Jeder Server wird einmal gefragt (höchstens 150 Sekunden), ein nicht erreichbarer Server wird im selben Lauf nicht erneut gefragt, insgesamt höchstens 12 Minuten. Danach gelten die Verläufe der Vorwoche.
+- **Fahrplanseiten (RVHI, ROSA) als eigener Job:** Er läuft parallel, dauert wenige Minuten und speichert sofort. Vorher kam dieser Schritt nie an die Reihe, weil der Lauf vorher abbrach.
+- **Neue Dateien:** `daten/haltestellen.json` (Haltestellen der Region mit ihren Linien, für die Haltestellenseiten der Website). Außerdem schreibt das Skript in `stand.json` die Dauer jedes Abschnitts (`dauer`) und die Herkunft der Kartendaten (`osm_quelle`). Die Verwaltung warnt, wenn ein Lauf länger als 30 Minuten dauert oder abbricht.
+
+## Neu in Fassung 42: Fahrschulen mit Busführerschein
+
+- **Neue Datei `fahrschulen.py`** (bitte zusätzlich hochladen, dazu die geänderte `.github/workflows/liniennetz.yml`). Sie läuft im selben Ablauf nach dem Liniennetz.
+- **Warum bei GitHub:** Der Webserver erreicht die Overpass-Server von OpenStreetMap nicht. Außerdem könnte er je Lauf nur wenige Websites prüfen. GitHub liest alle Fahrschulen der Region aus OpenStreetMap, prüft ihre Websites auf die Ausbildung zum Busführerschein (Klasse D, D1, DE, D1E) und schreibt `daten/fahrschulen.json`.
+- **Die Website** holt die Datei mit den Liniennetzen ab und nimmt Fahrschulen mit Beleg für den Busführerschein selbsttätig unter „Werde Busfahrer“ auf (abschaltbar in der Verwaltung unter Beruf Busfahrer → Fundstellen → Einstellungen).
+- **Schlägt die Fahrschul-Suche fehl**, läuft das Liniennetz trotzdem durch und die Datei der letzten Woche bleibt.
 
 ## Neu in Version 2.0 (Update 24): mehr straßengenaue Verläufe
 

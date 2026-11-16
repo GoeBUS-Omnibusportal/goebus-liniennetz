@@ -29,6 +29,16 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 57 (Skript 2.9)
+
+- **Gleiche Nummer, anderes Unternehmen:** Steht eine Nummer in der offiziellen Linienliste und passt mindestens ein Eintrag zu deren Linienweg, fallen die übrigen Einträge mit dieser Nummer weg – wenn sie zu mehr als 25 % außerhalb des Verbunds fahren oder ihr Betreiber einen anderen Verbund nennt. Beispiele: Wartburgmobil 100/172/180/186 im NVV, Paderborn/Höxter 502/504/523, „NVV - Faisy“ 33/42/71/72 im VSN. Linien im Verbund mit gleicher Nummer bleiben (KVG-Tram 4 und StadtBus Eschwege 4). Die Prüfung läuft vor dem Sammeln der Haltestellen und noch einmal nach dem Übernehmen aus der Vorwoche; `stand.json` nennt je Verbund `gleiche_nummer_entfernt`.
+- **Fernbusse** (FlixBus u. a.) werden auch aus der Vorwoche nicht mehr behalten.
+
+## Fassung 56 (Skript 2.8, Ergänzung)
+
+- „ALT“ und „AST“ (Anruf-Linien-Taxi, Anruf-Sammel-Taxi) zählen nur noch in Großbuchstaben – Linien nach „Alt Wolfsburg“, „Alt Drispenstedt“ oder „Alt Wallmoden“ fielen vorher heraus.
+- In der Verwaltung verworfene Skizzen (`skizze_aus` in `linien-regeln.json`) skizziert das Skript nicht mehr.
+
 ## Neu in Fassung 55 (Skript 2.8): Linienweg aus dem Fahrplan, Skizzen, keine Fernbusse
 
 - `weg_fp` je Linie: Linienweg aus der häufigsten Fahrt mit Zwischenorten (höchstens sieben Glieder; bei Stadtlinien die Haltestellen).

@@ -42,7 +42,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '2.8'
+VERSION = '2.9'
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
@@ -603,6 +603,54 @@ def re_werte(werte):
     return '|'.join(out)
 
 
+FERNBUS_RX = re.compile(r'flix|blablabus|eurolines|regiojet|student ?agency', re.I)
+
+
+def fernbus(p):
+    """2.9: Fernbus (FlixBus u. a.) – auch aus der Vorwoche nicht behalten („023 Dresden → Den Haag“ stand im NVV)."""
+    return bool(FERNBUS_RX.search(str(p.get('operator', '') or '')))
+
+
+def gleiche_nummer(feats, liste, v, verbuende, kreise, slug=''):
+    """2.9: Gleiche Nummer mehrmals (NVV 100 Kassel – Calden und VUW 100 Bad Salzungen – Bad Hersfeld): Passt mindestens ein
+    Eintrag zum Linienweg der offiziellen Liste, fallen die übrigen weg, wenn sie überwiegend (über 25 %) außerhalb des Verbunds
+    fahren oder ihr Betreiber einen anderen Verbund nennt („NVV - Faisy“ im VSN). Kasseler Tram 4 neben StadtBus Eschwege 4 bleibt.
+    Verglichen werden Haltestellennamen, Start und Ziel – nicht der angehängte Linienweg der Liste. Rückgabe: Zahl entfernter Einträge."""
+    if not liste:
+        return 0
+    ids = [k for k in v['kreise'] if k in kreise]
+    andere = [str(x.get('kurz', '')).lower() for x in verbuende if x.get('slug') != v['slug'] and x.get('kurz')]
+    gruppen = {}
+    for f in feats:
+        gruppen.setdefault(ref_norm(f['properties'].get('ref', '')), []).append(f)
+    raus = set()
+    for r, fs in gruppen.items():
+        if len(fs) < 2 or r not in liste or not weg_woerter(liste[r][1]):
+            continue
+        def namen(f):
+            p = f['properties']
+            return [[(0, 0, n) for n, _, _ in (f.get('_namen') or [])] + [(0, 0, str(p.get(k, '') or '')) for k in ('from', 'to', 'name', 'description')]]
+        passt = [f for f in fs if weg_passt(liste[r][1], namen(f))]
+        if not passt or len(passt) == len(fs):
+            continue
+        for f in fs:
+            if any(f is x for x in passt):
+                continue
+            p = f['properties']
+            op = str(p.get('operator', '') or '').lower()
+            fremd_op = any(re.search(r'(^|[^a-z])' + re.escape(re.sub(r'[^a-z0-9]', '', k)) + r'([^a-z]|$)', op) for k in andere if re.sub(r'[^a-z0-9]', '', k))
+            pts = list(koordinaten(f.get('geometry')))
+            pts = pts[::max(1, len(pts) // 60)]
+            drin = (sum(1 for x, y in pts if kreis_von(x, y, kreise, ids) is not None) / len(pts)) if pts and ids else 1.0
+            if fremd_op or drin < 0.75:
+                raus.add(id(f))
+                log(slug, 'Linie', p.get('ref'), '(%s, %s → %s) nicht übernommen – gleiche Nummer, anderer Linienweg, %d %% im Verbund'
+                    % (p.get('operator', ''), p.get('from', ''), p.get('to', ''), round(drin * 100)))
+    if raus:
+        feats[:] = [f for f in feats if id(f) not in raus]
+    return len(raus)
+
+
 def ref_norm(r):
     """Liniennummer vereinheitlicht: „Bus 30“, „Linie 30“, „30 “ → „30“; Groß-/Kleinschreibung egal."""
     import re
@@ -873,7 +921,8 @@ def verlauf_aus_osm(features, osm, nah=350, mindestens=0.6, variante=0.75):
 
 
 ZUG_RX = re.compile(r'^(?:RB|RE|RS|S|IRE|ME|MEX|ERB|HLB|NWB|STB|IC|ICE|EC|EN|FLX|TER)\s?\d{0,4}[a-z]?$', re.I)   # 2.3: „R15“ ist ein Rufbus, kein Zug
-ALT_RX = re.compile(r'\b(?:ALT|AST|AnrufLinienTaxi|Anruf-?Linien-?Taxi|Anruflinientaxi|Anruf-?Sammel-?Taxi|Anrufsammeltaxi|Linientaxi|Anruf-?Bus)\b', re.I)
+# 2.8 (Fassung 56): „ALT“/„AST“ nur in Großbuchstaben – mit re.I fielen Linien nach „Alt-Grone“ oder „Alt Wallmoden“ heraus
+ALT_RX = re.compile(r'\b(?:ALT|AST)\b|\b(?:[Aa]nruf-?[Ll]inien-?[Tt]axi|AnrufLinienTaxi|Anruflinientaxi|[Aa]nruf-?[Ss]ammel-?[Tt]axi|Anrufsammeltaxi|Linientaxi|[Aa]nruf-?[Bb]us)\b')
 
 
 def keine_linie(ref, von='', nach='', name='', art=''):
@@ -937,7 +986,7 @@ def gedaechtnis(feats, alt_pfad, heute, tage=28, slug='', fremd=None):
     for f in alt.get('features', []):
         p = f.get('properties', {})
         gesehen = str(p.get('gesehen') or alt.get('erzeugt', '')[:10] or heute)
-        if schl(p) in vorhanden or gesehen < grenze or not f.get('geometry') or keine_linie(p.get('ref', ''), p.get('from'), p.get('to'), p.get('name', ''), p.get('route', '')):
+        if schl(p) in vorhanden or gesehen < grenze or not f.get('geometry') or fernbus(p) or keine_linie(p.get('ref', ''), p.get('from'), p.get('to'), p.get('name', ''), p.get('route', '')):
             continue
         if fremd and fremd(f):    # 2.6: früher fälschlich übernommen (gleiche Nummer, anderer Linienweg) – nicht behalten
             log(slug, 'Linie', p.get('ref'), '(%s) aus der Vorwoche nicht behalten – gleiche Nummer, anderer Linienweg' % p.get('operator', ''))
@@ -1486,6 +1535,8 @@ def main():
             elif feats and not OVERPASS_TOT:
                 osm_alle = osm_refs_im_netz(overpass_holen(overpass_alle_abfrage(v), a.overpass_url), v)
         quelle = quellen_refs(v) if v.get('quellen') else (set(), [])
+        feats[:] = [f for f in feats if not fernbus(f['properties'])]                                   # 2.9
+        gleich_n = gleiche_nummer(feats, LISTEN.get(v['slug'], {}), v, verbuende, kreise, v['slug'])     # 2.9: vor Haltestellen und Folgen
         for f in feats:    # 2.4: Haltestellen mit ihren Linien sammeln (vor dem Aufräumen)
             for n, x, y in f.get('_namen') or []:
                 h = HALTESTELLEN.setdefault(n, {'p': [], 'l': set()})
@@ -1516,6 +1567,7 @@ def main():
             drin = sum(1 for x, y in pts if kreis_von(x, y, kreise, [k for k in v['kreise'] if k in kreise]) is not None) / len(pts)
             return drin < 0.25 and not weg_passt(eintrag[1], [[(0, 0, p.get('from', '')), (0, 0, p.get('to', '')), (0, 0, p.get('name', ''))]])
         alt_n = gedaechtnis(feats, ziel, heute, a.behalten_tage, v['slug'], fremd) if a.behalten_tage > 0 else 0
+        gleich_n += gleiche_nummer(feats, LISTEN.get(v['slug'], {}), v, verbuende, kreise, v['slug'])    # 2.9: auch Einträge aus der Vorwoche
         # Version 2.2: Regeln der Website (ersetzte Linien, z. B. VSN 265 → 260) und fehlende Linienwege ergänzen
         reg_n = regeln_anwenden(feats, regeln, v['slug'], ziel, archiv) if regeln else 0
         weg_n = wege_ergaenzen(feats, HALTE_ALLE, osm_idx)
@@ -1532,7 +1584,8 @@ def main():
                 except (OSError, ValueError):
                     SKIZZE['cache'] = {}
                 SKIZZE['ende'] = time.time() + 60 * float(os.environ.get('GOEBUS_SKIZZE_MINUTEN', '6'))
-            sk_n = skizzen(feats, SKIZZE['cache'], SKIZZE['ende'])
+            verworfen = {str(x).strip() for x in ((regeln or {}).get('skizze_aus') or {}).get(v['slug'], [])}    # Fassung 56: in der Verwaltung verworfen
+            sk_n = skizzen([f for f in feats if f['properties'].get('ref', '').strip() not in verworfen], SKIZZE['cache'], SKIZZE['ende'])
             if sk_n:
                 log(v['slug'], sk_n, 'Linienverläufe über die Straßen skizziert')
         if not feats:
@@ -1545,7 +1598,7 @@ def main():
             json.dump(geo, fh, ensure_ascii=False, separators=(',', ':'))
         os.replace(ziel + '.neu', ziel)
         dauer['verbuende'][v['slug']] = round(time.time() - tv)
-        stand['verbuende'][v['slug']] = {'datei': v['datei'], 'linien': len(feats), 'liste_wege': li_weg, 'liste_neu': li_neu, 'osm_verlauf': osm_n, 'fahrplan_verlauf': fp_n, 'verlauf_vorwoche': vw_n, 'aus_vorwoche': alt_n, 'osm': osm_status}
+        stand['verbuende'][v['slug']] = {'datei': v['datei'], 'linien': len(feats), 'liste_wege': li_weg, 'liste_neu': li_neu, 'osm_verlauf': osm_n, 'fahrplan_verlauf': fp_n, 'verlauf_vorwoche': vw_n, 'aus_vorwoche': alt_n, 'gleiche_nummer_entfernt': gleich_n, 'osm': osm_status}
         bericht['verbuende'][v['slug']] = bericht_verbund(v, feats)
         if ERSETZT.get(v['slug']):
             bericht['verbuende'][v['slug']]['ersetzt'] = ERSETZT[v['slug']]

@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-16T20:56:43Z",
+ "erzeugt": "2026-11-16T22:04:13Z",
  "version": "2.9",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
@@ -8,7 +8,8 @@
    "verlauf": {
     "skizze": 26,
     "osm": 51,
-    "osm+haltestellen": 83
+    "osm+skizze": 78,
+    "osm+haltestellen": 5
    },
    "aus_vorwoche": 8,
    "betreiber": {
@@ -48,7 +49,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Langenholtensen, Schule",
      "nach": "Northeim, Gewerbegebiet Süd",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -57,7 +58,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Herzberg, Bahnhof",
      "nach": "St. Andreasberg, Am Glockenberg A",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -66,7 +67,7 @@
      "betreiber": "Göttinger Verkehrsbetriebe",
      "von": "Schöneberger Straße",
      "nach": "Am Menzelberg",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -84,7 +85,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Drüber, An der Schule",
      "nach": "Einbeck, Möncheplatz",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -93,7 +94,7 @@
      "betreiber": "Göttinger Verkehrsbetriebe",
      "von": "Betriebshof",
      "nach": "Sprangerweg",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -102,7 +103,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Göttingen, Bahnhof/ZOB E",
      "nach": "Duderstadt ZOB, Mast 1 S",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -138,7 +139,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Dassel, Paul-Gerhardt-Schule",
      "nach": "Stadtoldendorf Teichtorplatz, Mast 1 S",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -165,7 +166,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Nörten-Hardenberg Schule, Mast 3 O",
      "nach": "Bahnhof A",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -210,7 +211,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Markoldendorf, Grundschule",
      "nach": "Einbeck, Mitte/ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -228,7 +229,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Hann. Münden, Göttinger Straße",
      "nach": "Bonaforth, Ortsmitte",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -255,7 +256,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Parensen Hauptstraße, Mast 1 W",
      "nach": "Northeim Thomas-Mann-Schule, Mast 1 W",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -264,7 +265,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Bad Gandersheim/Domänenhof",
      "nach": "Echte, Grundschule Echte Grun",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -273,7 +274,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hann. Münden, Göttinger Straße",
      "nach": "Hofgeismar Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -282,7 +283,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Katlenburg, Bahnhof Südseite",
      "nach": "Osterode, Dielenplan",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -291,7 +292,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Dassel, Paul-Gerhardt-Schule",
      "nach": "Einbeck, Mitte/ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -309,7 +310,7 @@
      "betreiber": "Göttinger Verkehrsbetriebe",
      "von": "Am Winterberg",
      "nach": "Spickenweg",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -318,7 +319,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Holzen Stollen Gustav,Holzen (Kr Holzmind)",
      "nach": "Holzminden Bahnhof, Mast 4 W 509",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -345,7 +346,7 @@
      "betreiber": "Göttinger Verkehrsbetriebe",
      "von": "Betriebshof",
      "nach": "Stumpfe Eiche",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -372,7 +373,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Bodenwerder, Schulzentrum",
      "nach": "Bad Pyrmont Markt, Mast 1 S",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -390,7 +391,7 @@
      "betreiber": "Göttinger Verkehrsbetriebe",
      "von": "Europaallee West",
      "nach": "Grete-Henry-Straße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -399,7 +400,7 @@
      "betreiber": "Verkehrsgesellschaft Paderborn/Höxter",
      "von": "Höxter, Bahnhof / Rathaus",
      "nach": "Bad Karlshafen, Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -408,7 +409,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Stadtoldendorf Bahnhof, Mast 1 S",
      "nach": "Bodenwerder Im Hagen, Mast 1 O 523",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -417,7 +418,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Uslar, Bahnhof",
      "nach": "Holzminden, Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -426,7 +427,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Hardegsen Rathaus, Mast 4 W",
      "nach": "Lödingsen Bahnhof, Mast 1 S",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -435,7 +436,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Einbeck, Schulzentrum",
      "nach": "Northeim, Bahnhof F",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -453,7 +454,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Moringen Amtsfreiheit, Mast 1 W",
      "nach": "Bahnhof A",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -462,7 +463,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Heyen, Knapp",
      "nach": "Bodenwerder, Im Hagen",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -480,7 +481,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Groß Schneen Schulzentrum, Mast 1 W",
      "nach": "Sattenhausen Kirchgraben, Mast 2 W",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -552,7 +553,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Duderstadt, Christian-Blank-Straße",
      "nach": "Bahnhof A",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -561,7 +562,7 @@
      "betreiber": "Göttinger Verkehrsbetriebe",
      "von": "Theodor-Heuss-Straße",
      "nach": "Lenglerner Straße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -579,7 +580,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Bühle, Bühle",
      "nach": "Northeim Dieselstraße, Mast 1 O",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -588,7 +589,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Hann. Münden, Bahnhof",
      "nach": "Göttingen, Bahnhof/ZOB E",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -597,7 +598,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Duderstadt, Christian-Blank-Straße",
      "nach": "Ebergötzen Seeburger Straße, Mast 3 N",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -624,7 +625,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Uslar, Neustädter Platz",
      "nach": "Schönhagen, In der Spitze",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -633,7 +634,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Osterode, Jacobitor",
      "nach": "Riefensbeek, Am Alten Riefensbeek",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -660,7 +661,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Herzberg, Am Sieberdamm",
      "nach": "Duderstadt ZOB, Mast 1 S",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -669,7 +670,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Northeim, Bahnhof C",
      "nach": "Bilshausen, Lindenstraße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -696,7 +697,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Holzminden Bahnhof, Mast 3 W 528,531,540",
      "nach": "Einbeck, Mitte/ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -714,7 +715,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Braunlage, Schulzentrum A",
      "nach": "Bad Sachsa, Am Kurpark",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -732,7 +733,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Adelebsen Schule, Mast 1 N",
      "nach": "Bovenden Schulzentrum, Mast 1 N",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -759,7 +760,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Göttingen, Bahnhof/ZOB C",
      "nach": "Holzerode Hünstollenstraße, Mast 1 N",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -786,7 +787,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Scheden, Schulstraße D",
      "nach": "Göttingen, Bahnhof/ZOB E",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -795,7 +796,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Moringen Schule, Mast 1 O",
      "nach": "Northeim Wieterstraße, Mast 1 O",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -813,7 +814,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Osterode, Hohe Straße",
      "nach": "Clausthal-Zellerfeld, ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -822,7 +823,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Adelebsen, Bahnhof",
      "nach": "Dransfeld, Grundschule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -831,7 +832,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Duderstadt, ZOB 4",
      "nach": "Rhumspringe Schule, Mast 1 N",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -849,7 +850,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Nörten-Hardenberg Schule, Mast 3 O",
      "nach": "Hardegsen, Rathaus C",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -858,7 +859,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Moringen Amtsfreiheit, Mast 1 W",
      "nach": "Hardegsen, Rathaus C",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -867,7 +868,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Sudheim Holbornstraße, Mast 2 W",
      "nach": "Langenholtensen, Schule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -894,7 +895,7 @@
      "betreiber": "Göttinger Verkehrsbetriebe",
      "von": "Herberhausen",
      "nach": "Schöneberger Straße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -903,7 +904,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Nörten-Hardenberg Bahnhof/ZOB, Mast 2 W",
      "nach": "Sudershausen Leisenröder Str., Mast 1 S",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -912,7 +913,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Northeim, Verdistraße",
      "nach": "Hillerse, Berwartshäuser Straße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -921,7 +922,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Stadtoldendorf Teichtorplatz, Mast 1 S",
      "nach": "Holzminden Bahnhof, Mast 4 W 509",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -930,7 +931,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Kreiensen, Bahnhof",
      "nach": "Einbeck, Mitte/ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -939,7 +940,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Northeim, Verdistraße",
      "nach": "Northeim, Bahnhof A",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -948,7 +949,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Greene, Schulzentrum",
      "nach": "Echte, Grundschule Echte Grun",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -957,7 +958,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Einbeck, Schulzentrum",
      "nach": "Northeim, Bahnhof G",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -966,7 +967,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Bad Sachsa, Grundschule",
      "nach": "Wieda, In der Steier",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1002,7 +1003,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Rhumspringe Schule, Mast 1 N",
      "nach": "Ebergötzen, Seeburger Straße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -1020,7 +1021,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Clausthal-Zellerfeld, ZOB",
      "nach": "Osterode, Mitte/Stadthalle",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -1029,7 +1030,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Scheden, Schulstraße C",
      "nach": "Göttingen, Bahnhof/ZOB E",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -1056,7 +1057,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Bodenwerder Im Hagen, Mast 4 W 520",
      "nach": "Holzminden, Schulzentrum 2",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -1101,7 +1102,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Stadtoldendorf Schulzentrum, Mast 1 O",
      "nach": "Dassel, Paul-Gerhardt-Schule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -1119,7 +1120,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Dassel, Erholungsheimstraße",
      "nach": "Einbeck, Mitte/ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -1128,7 +1129,7 @@
      "betreiber": "Verkehrsgesellschaft Paderborn/Höxter",
      "von": "Borgentreich, Schulzentrum",
      "nach": "Lauenförde, Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -1146,7 +1147,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Holzminden, Bahnhof",
      "nach": "Holzminden, Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -1155,7 +1156,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Groß Schneen Schulzentrum, Mast 1 W",
      "nach": "Dramfeld Schule, Mast 1 O",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -1173,7 +1174,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Duderstadt, Christian-Blank-Straße",
      "nach": "Bahnhof A",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1200,7 +1201,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Herzberg, Bahnhof",
      "nach": "Sieber, Obersieber",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -1209,7 +1210,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Katlenburg, Burgbergschule",
      "nach": "Lindau, Schule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1254,7 +1255,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Einbeck, Mitte/ZOB",
      "nach": "Einbeck, Möncheplatz",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -1272,7 +1273,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Osterode, Hohe Straße",
      "nach": "Gittelde, Schule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1281,7 +1282,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Bad Lauterberg, Postplatz",
      "nach": "Bad Sachsa, Pädagogium",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1299,7 +1300,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Ebergötzen, Seeburger Straße",
      "nach": "Gieboldehausen Schulzentrum, Mast 1 O",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1317,7 +1318,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Uslar, Zur Schwarzen Erde C",
      "nach": "Hardegsen, Rathaus C",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -1326,7 +1327,7 @@
      "betreiber": "Regionalbus Braunschweig",
      "von": "Göttingen Bahnhof/ZOB, Mast 8 W",
      "nach": "Groß Schneen Schulzentrum, Mast 1 W",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -1344,7 +1345,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Osterode, Dielenplan",
      "nach": "Herzberg, Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1380,7 +1381,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Göttingen, Bahnhof/ZOB F",
      "nach": "Uslar, Zur Schwarzen Erde H",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -1499,10 +1500,11 @@
   "nvv": {
    "linien": 405,
    "verlauf": {
-    "skizze": 91,
+    "skizze": 125,
     "osm": 51,
-    "osm+haltestellen": 103,
-    "haltestellen": 158,
+    "osm+skizze": 46,
+    "haltestellen": 124,
+    "osm+haltestellen": 57,
     "uebernommen": 2
    },
    "aus_vorwoche": 2,
@@ -1576,7 +1578,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Fritzlar Fritzlar Grundschule",
      "nach": "Naumburg Naumburg Im Hain",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -1585,7 +1587,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Arolsen Bad Arolsen Rathausstraße",
      "nach": "Bad Arolsen Kohlgrund Am Knick",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1594,7 +1596,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bebra Bebra Bahnhof",
      "nach": "Alheim Heinebach Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1612,7 +1614,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Niestetal Heiligenrode Schule",
      "nach": "Niestetal Sandershausen Waldstraße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -1648,7 +1650,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Hersfeld Bad Hersfeld Busbahnhof",
      "nach": "Philippsthal Philippsthal Schule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1702,7 +1704,7 @@
      "betreiber": "KVG M",
      "von": "Holländische Straße  Ri. Am Kirschrain",
      "nach": "DEZ-Einkaufszentrum",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1711,7 +1713,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Niestetal Heiligenrode Schule",
      "nach": "Staufenberg Speele Auf der Bilze",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1783,7 +1785,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Warburg Warburg Bahnhof",
      "nach": "Wolfhagen Wolfhagen Walter-Lübcke-Schule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -1792,7 +1794,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Wildeck Obersuhl Zum Dönges",
      "nach": "Bad Hersfeld Bad Hersfeld Breitenstraße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1810,7 +1812,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Schwalmstadt Ziegenhain C-B-Schule",
      "nach": "Neukirchen Neukirchen Kurhessenstraße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -1882,7 +1884,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Wabern Wabern Bahnhof",
      "nach": "Bad Hersfeld Bad Hersfeld Busbahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -1918,7 +1920,7 @@
      "betreiber": "RMV",
      "von": "Bad Hersfeld Busbahnhof",
      "nach": "Alsfeld Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2026,7 +2028,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Grebenstein Grebenstein Gesamtschule",
      "nach": "Immenhausen Immenhausen Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2044,7 +2046,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Lichtenfels Goddelsheim Grundschule",
      "nach": "Korbach Nordenbeck Mitte",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -2062,7 +2064,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Kaufungen Oberkaufungen Kaufungen Gesamtschule",
      "nach": "Staufenberg Speele Auf der Bilze",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2071,7 +2073,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hann. Münden, Göttinger Straße",
      "nach": "Hofgeismar Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2089,7 +2091,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Söhrewald Eiterhagen Haus des Gastes",
      "nach": "Kassel Nord (Holland) Jobcenter",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2098,7 +2100,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Hersfeld Bad Hersfeld Busbahnhof",
      "nach": "Schenklengsfeld Hilmes Hilmes",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2359,7 +2361,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Rosenthal Rosenthal Schule",
      "nach": "Frankenberg Frankenberg Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2368,7 +2370,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Schauenburg Martinhagen Sportplatz",
      "nach": "Niestetal Sandershausen Sandershäuser Berg",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -2377,7 +2379,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Witzenhausen Witzenhausen ZOB",
      "nach": "Witzenhausen Gertenbach Ortsmitte",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -2422,7 +2424,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Vellmar Frommershausen Vellmar Nord",
      "nach": "Liebenau Liebenau Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2431,7 +2433,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Immenhausen Immenhausen Schulzentrum",
      "nach": "Espenau Schäferberg Schäferberg",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2476,7 +2478,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Korbach Korbach Hauptbahnhof",
      "nach": "Willingen Willingen Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2494,7 +2496,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Eschwege Eschwege Brüder-Grimm-Schule",
      "nach": "Eschwege Eschwege Stadtbahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2512,7 +2514,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hatzfeld Hatzfeld Binzer",
      "nach": "Frankenberg Frankenberg Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2521,7 +2523,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Zierenberg Zierenberg Schule",
      "nach": "Zierenberg Oberelsungen Siedlung",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -2548,7 +2550,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hofgeismar Hofgeismar Behördenzentrum",
      "nach": "Reinhardshagen Vaake Bergstraße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -2575,7 +2577,7 @@
      "betreiber": "Verkehrsgesellschaft Paderborn/Höxter",
      "von": "Höxter, Bahnhof / Rathaus",
      "nach": "Bad Karlshafen, Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -2638,7 +2640,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Kassel Bettenhausen Salzmannshausen",
      "nach": "Staufenberg Uschlag Zum Sportplatz",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2665,7 +2667,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Willingen Willingen Bahnhof",
      "nach": "Korbach Korbach Humboldtschule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2692,7 +2694,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Schwalmstadt Ziegenhain C-B-Schule",
      "nach": "Neukirchen Neukirchen Kurhessenstraße",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2755,7 +2757,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Wildungen Bad Wildungen Bahnhof",
      "nach": "Frankenberg Frankenberg Bahnhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2764,7 +2766,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Wesertal Weißehütte Weiße Hütte",
      "nach": "Bad Karlshafen, Gesamtschule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -2773,7 +2775,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Diemelsee Adorf Siedlung",
      "nach": "Korbach Korbach Humboldtschule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2800,7 +2802,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Schwalmstadt Treysa Brauerei",
      "nach": "Kirchheim Kirchheim Feuerwehr",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2827,7 +2829,7 @@
      "betreiber": "Verkehrsgesellschaft Paderborn/Höxter",
      "von": "Warburg, ZOB Warburg",
      "nach": "Di-Rhoden, Schloßbergschule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -2854,7 +2856,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Rotenburg Rotenburg Jakob-Grimm-Schule",
      "nach": "Rotenburg Seifertshausen Seifertshausen",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2863,7 +2865,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Borken Borken Schule",
      "nach": "Borken Stolzenbach Stolzenbach",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2872,7 +2874,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hofgeismar Hofgeismar Töpfermarkt",
      "nach": "Hofgeismar Friedrichsdorf Friedrichsdorf",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2881,7 +2883,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Wildeck Obersuhl Gesamtschule",
      "nach": "Bebra Bebra Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -2890,7 +2892,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Hersfeld Bad Hersfeld Obersberg Schulen",
      "nach": "Eiterfeld Eiterfeld Schule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -2908,7 +2910,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Frankenberg Bremer Str. / Taxistand",
      "nach": "Frankenberg-Rengershausen Alte Schule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2917,7 +2919,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Treffurt Treffurt Bahnhof",
      "nach": "Eschwege Eschwege Stadtbahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2926,7 +2928,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Kassel Mitte Königsplatz/Mauerstraße",
      "nach": "Söhrewald Eiterhagen Haus des Gastes",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -2935,7 +2937,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Arolsen Mengeringhausen Berufsbildungswerk",
      "nach": "Bad Arolsen Helsen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2944,7 +2946,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Witzenhausen Neuseesen Neuseesen",
      "nach": "Witzenhausen Witzenhausen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2953,7 +2955,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Frankenberg Frankenberg Bahnhof",
      "nach": "Gemünden Schiffelbach Mitte",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -2971,7 +2973,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Guxhagen Guxhagen Grundschule",
      "nach": "Edermünde Grifte Mitte",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2980,7 +2982,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Großalmerode Großalmerode Gesamtschule",
      "nach": "Hessisch Lichtenau Hessisch Lichtenau Gesamtschule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2989,7 +2991,7 @@
      "betreiber": "KVG M",
      "von": "Fraunhoferinstitut Ri.HBA St.3",
      "nach": "Kassel Oberzwehren Schulzentrum Brückenhof",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -3007,7 +3009,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Baunatal Rengershausen Guntershäuser Straße",
      "nach": "Baunatal Guntershausen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3016,7 +3018,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Frielendorf Verna Schule",
      "nach": "Frielendorf Lenderscheid Lenderscheid",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -3034,7 +3036,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Dsee-Adorf MPS",
      "nach": "Korbach-Rhena",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3043,7 +3045,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Medebach Medebach Park Hochsauerland",
      "nach": "Korbach Korbach Kreisberufsschule",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3052,7 +3054,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Frankenberg Friedrichshausen Mitte",
      "nach": "Frankenberg Frankenberg Regenbogenschule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3070,7 +3072,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Homberg Homberg Busbahnhof",
      "nach": "Schwarzenborn Schwarzenborn Hof Richberg",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -3079,7 +3081,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Wildungen Bad Wildungen Breiter Hagen",
      "nach": "Bad Wildungen Hundsdorf Hundsdorf",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -3088,7 +3090,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Heringen Herfa Eisenacher Straße",
      "nach": "Bad Hersfeld Bad Hersfeld Busbahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3097,7 +3099,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Hersfeld Bad Hersfeld Busbahnhof",
      "nach": "Bad Hersfeld Johannesberg Schlehenweg",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3106,7 +3108,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Hersfeld Bad Hersfeld Busbahnhof",
      "nach": "Kirchheim Willingshain Willingshain",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3115,7 +3117,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Nentershausen Süß Gerstunger Straße",
      "nach": "Sontra Sontra Gesamtschule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3133,7 +3135,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Gemünden Cornelia-Funke-Schule",
      "nach": "BWil-Armsfeld Friedhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3142,7 +3144,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Melsungen Melsungen Krankenhaus",
      "nach": "Melsungen Günsterode Günsterode",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -3151,7 +3153,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hofgeismar Bahnhof",
      "nach": "Hofgeismar Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3160,7 +3162,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Waldeck-Nieder-Werbe",
      "nach": "Vöhl-Schmittlotheim Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3169,7 +3171,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Witzenhausen Witzenhausen Bahnhof",
      "nach": "Neu-Eichenberg Eichenberg Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3178,7 +3180,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Edertal-Bringhausen Denkmal",
      "nach": "Edertal-Affoldern Tolles Haus",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3187,7 +3189,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Wolfhagen Wolfhagen Walter-Lübcke-Schule",
      "nach": "Wolfhagen Nothfelden Mitte",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -3196,7 +3198,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Frankenberg Frankenberg Schulzentrum",
      "nach": "Allendorf Somplar Somplar",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -3205,7 +3207,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hessisch Lichtenau Hessisch Lichtenau Bürgerhaus",
      "nach": "Fritzlar Fritzlar Allee",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -3214,7 +3216,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Twistetal-Twiste, Rocklinghausen",
      "nach": "Bad Arolsen Am Tannenkopf",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3223,7 +3225,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Waldkappel Rodebach Rodebach",
      "nach": "Waldkappel Waldkappel Wehrgasse",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 5,
      "gesehen": "2026-11-16"
     },
@@ -3232,7 +3234,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Dsee-Adorf MPS",
      "nach": "Bad Arolsen Am Tannenkopf",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3241,7 +3243,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Hersfeld Bad Hersfeld Breitenstraße",
      "nach": "Ludwigsau Hainrode Hainrode",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3250,7 +3252,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Fbr-Dörnhagen, Siedlung  Ri. Mitte",
      "nach": "Guxhagen Guxhagen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3268,7 +3270,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Tw-Nieder-Waroldern Am Hasenberg",
      "nach": "Wald-Sachsenhsn Grundschule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -3277,7 +3279,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Fritzlar Haddamar Am Steinweg",
      "nach": "Fritzlar Züschen Grundschule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -3286,7 +3288,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Lichtenfels-Sachsenberg Mitte",
      "nach": "Korbach Ziegelfeld",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -4447,7 +4449,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Wildeck Obersuhl Zum Dönges",
      "nach": "Wildeck Obersuhl Zum Dönges",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -5166,17 +5168,12 @@
    "ersetzt": {
     "283": "216",
     "284": "216",
-    "504": "W4",
     "A": "283",
     "B": "284"
    },
    "abgleich": {
-    "verschwunden": [
-     "533"
-    ],
-    "neu": [
-     "95"
-    ],
+    "verschwunden": [],
+    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
@@ -5199,13 +5196,10 @@
      "2",
      "3",
      "7",
-     "62",
-     "71",
      "90",
      "92",
      "97",
      "113",
-     "116",
      "118",
      "122",
      "130",
@@ -5216,8 +5210,6 @@
      "155",
      "157",
      "183",
-     "186",
-     "187",
      "192",
      "194",
      "197",
@@ -5225,8 +5217,6 @@
      "204",
      "206",
      "221",
-     "224",
-     "232",
      "236",
      "237",
      "241",
@@ -5235,49 +5225,35 @@
      "252",
      "253",
      "254",
-     "261",
      "265",
      "266",
      "267",
      "269",
      "291",
-     "293",
-     "294",
      "297",
      "298",
-     "301",
      "304",
      "308",
-     "310",
      "311",
      "315",
      "320",
-     "329",
-     "339",
      "358",
-     "359",
      "370",
      "376",
      "379",
      "383",
      "385",
-     "389",
      "391",
      "401",
-     "404",
      "405",
      "407",
      "411",
-     "415",
      "416",
      "423",
      "425",
      "428",
      "432",
      "441",
-     "444",
-     "446",
-     "448",
      "449",
      "454",
      "456",
@@ -5305,21 +5281,15 @@
      "522",
      "523",
      "526",
-     "528",
      "543",
      "544",
      "563",
-     "572",
-     "573",
      "596",
      "800",
      "801",
-     "804",
      "806",
      "810",
-     "811",
      "812",
-     "820",
      "822",
      "824",
      "825",
@@ -5327,19 +5297,14 @@
      "827",
      "830",
      "831",
-     "832",
      "834",
      "835",
-     "837",
-     "842",
      "843",
-     "844",
      "845",
      "852",
      "855",
      "862",
      "863",
-     "870",
      "872",
      "874",
      "875",
@@ -5348,23 +5313,22 @@
      "890",
      "892",
      "893",
-     "894",
      "N32",
-     "N37",
      "N40",
      "N49",
      "N53"
     ]
    },
    "osm": "ok (Auszug)",
-   "verlauf_vorwoche": 3
+   "verlauf_vorwoche": 1
   },
   "vrb": {
    "linien": 309,
    "verlauf": {
     "haltestellen": 73,
-    "osm+haltestellen": 116,
-    "osm": 120
+    "osm+haltestellen": 113,
+    "osm": 120,
+    "osm+skizze": 3
    },
    "aus_vorwoche": 2,
    "betreiber": {
@@ -6751,7 +6715,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Braunlage, Schulzentrum A",
      "nach": "Bad Sachsa, Am Kurpark",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -6922,7 +6886,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Osterode, Hohe Straße",
      "nach": "Clausthal-Zellerfeld, ZOB",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 7,
      "gesehen": "2026-11-16"
     },
@@ -7345,7 +7309,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Clausthal-Zellerfeld, ZOB",
      "nach": "Osterode, Mitte/Stadthalle",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -8258,7 +8222,7 @@
     ]
    },
    "osm": "ok (Auszug)",
-   "verlauf_vorwoche": 5
+   "verlauf_vorwoche": 4
   },
   "rosa": {
    "linien": 82,

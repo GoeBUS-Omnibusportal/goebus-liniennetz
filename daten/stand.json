@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-16T20:56:43Z",
+ "erzeugt": "2026-11-16T22:04:13Z",
  "version": "2.9",
  "linienwege": false,
  "verbuende": {
@@ -11,8 +11,8 @@
    "osm_verlauf": 133,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
-   "aus_vorwoche": 11,
-   "gleiche_nummer_entfernt": 10,
+   "aus_vorwoche": 9,
+   "gleiche_nummer_entfernt": 8,
    "osm": "ok (Auszug)"
   },
   "nvv": {
@@ -22,9 +22,9 @@
    "liste_neu": 0,
    "osm_verlauf": 158,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 3,
-   "aus_vorwoche": 4,
-   "gleiche_nummer_entfernt": 13,
+   "verlauf_vorwoche": 1,
+   "aus_vorwoche": 2,
+   "gleiche_nummer_entfernt": 11,
    "osm": "ok (Auszug)"
   },
   "vrb": {
@@ -34,7 +34,7 @@
    "liste_neu": 0,
    "osm_verlauf": 235,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 5,
+   "verlauf_vorwoche": 4,
    "aus_vorwoche": 2,
    "gleiche_nummer_entfernt": 4,
    "osm": "ok (Auszug)"
@@ -78,18 +78,18 @@
  },
  "regeln": true,
  "dauer": {
-  "fahrplandaten_laden": 8,
-  "fahrplandaten_auswerten": 192,
+  "fahrplandaten_laden": 16,
+  "fahrplandaten_auswerten": 189,
   "osm_auszug_lesen": 6,
   "verbuende": {
-   "vsn": 26,
-   "nvv": 362,
+   "vsn": 595,
+   "nvv": 636,
    "vrb": 43,
    "rosa": 18,
-   "rvhi": 18,
+   "rvhi": 17,
    "oeffis": 17
   },
-  "gesamt": 690
+  "gesamt": 1539
  },
  "osm_quelle": "geofabrik",
  "overpass": [

@@ -1,12 +1,12 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-16T20:56:43Z · Skript 2.9 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-16T22:04:13Z · Skript 2.9 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
 Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## VSN – 160 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 51 OpenStreetMap, 83 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 51 OpenStreetMap, 5 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 800
 - **Weniger als drei Halte:** 800
 - **Gleiche Nummer, mehrere Betreiber:** 33 (Göttinger Verkehrsbetriebe, NVV - Faisy), 34 (Göttinger Verkehrsbetriebe, NVV - Faisy), 41 (Göttinger Verkehrsbetriebe, Hildesheim), 42 (Göttinger Verkehrsbetriebe, NVV - Faisy), 61 (Göttinger Verkehrsbetriebe, Hildesheim), 62 (Göttinger Verkehrsbetriebe, Hildesheim)
@@ -19,11 +19,11 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## NVV – 405 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 51 OpenStreetMap, 103 teilweise, 158 nur Haltestellen (3 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 51 OpenStreetMap, 57 teilweise, 124 nur Haltestellen (1 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
 - **Gleiche Nummer, mehrere Betreiber:** 1 (KVG M, NVV - Faisy), 186 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 2 (KVG M, NVV - Faisy), 3 (KVG M, NVV - Faisy), 4 (KVG M, NVV - Faisy), 5 (KVG M, NVV - Faisy), 6 (KVG M, NVV - Faisy), 7 (KVG M, NVV - Faisy)
-- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 2, 3, 7, 62, 71, 90, 92, 97, 113, 116, 118, 122, 130, 134, 136, 142, 153, 155, 157, 183, 186, 187, 192, 194, 197, 201, 204, 206, 221, 224, 232, 236, 237, 241, 243, 250, 252, 253, 254, 261, 265, 266, 267, 269, 291, 293, 294, 297, 298, 301, 304, 308, 310, 311, 315, 320, 329, 339, 358, 359
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 533
-- **Neu in den Fahrplandaten:** 95
+- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 2, 3, 7, 90, 92, 97, 113, 118, 122, 130, 134, 136, 142, 153, 155, 157, 183, 192, 194, 197, 201, 204, 206, 221, 236, 237, 241, 243, 250, 252, 253, 254, 265, 266, 267, 269, 291, 297, 298, 304, 308, 311, 315, 320, 358, 370, 376, 379, 383, 385, 391, 401, 405, 407, 411, 416, 423, 425, 428, 432
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
+- **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
@@ -31,7 +31,7 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## VRB – 309 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 120 OpenStreetMap, 116 teilweise, 73 nur Haltestellen (5 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 120 OpenStreetMap, 113 teilweise, 73 nur Haltestellen (4 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
 - **Gleiche Nummer, mehrere Betreiber:** 262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 803 (PVG Salzwedel, Tarifverb Region Braunschweig)
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 107, 108, 114, 115, 116, 136, 138, 139, 143, 144, 147, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 161, 165, 174, 175, 182, 183, 184, 185, 186, 187, 194, 197, 221, 222, 223, 224, 225, 226, 227, 263, 264, 265, 266, 268, 269, 335, 373, 382, 394, 614, 653, 658, 659, 666, 733, 734, 736, 741, 742
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine

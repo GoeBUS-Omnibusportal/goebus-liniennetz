@@ -29,6 +29,12 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 58 (Skript 2.9, Ergänzung)
+
+- **Lücken skizzieren:** Auch gemischte Verläufe („osm+haltestellen“, „fahrplan+haltestellen“) werden vervollständigt: Die geraden Verbindungen stehen am Ende der Geometrie (Anzahl in `properties.luecken`) und werden über die Straßen gelegt → „osm+skizze“ bzw. „fahrplan+skizze“. Alle Teile einer Linie, nicht mehr höchstens vier. Eine Linie wird erst umgestellt, wenn alle Lücken berechnet sind; Berechnetes liegt in `daten/skizzen.json`.
+- Zeitbudget für Skizzen jetzt **20 Minuten** je Lauf (`GOEBUS_SKIZZE_MINUTEN`), der Schritt „Fahrplandaten und OpenStreetMap verarbeiten“ bleibt damit unter seinen 35 Minuten. Bei einem Fehler des Servers (z. B. 429) hört das Skript für diesen Lauf auf.
+- Gerade bleibt nur: kein Weg gefunden, Weg länger als das 2,5-Fache plus 2 km, Stück kürzer als 150 m, oder in der Verwaltung verworfen.
+
 ## Neu in Fassung 57 (Skript 2.9)
 
 - **Gleiche Nummer, anderes Unternehmen:** Steht eine Nummer in der offiziellen Linienliste und passt mindestens ein Eintrag zu deren Linienweg, fallen die übrigen Einträge mit dieser Nummer weg – wenn sie zu mehr als 25 % außerhalb des Verbunds fahren oder ihr Betreiber einen anderen Verbund nennt. Beispiele: Wartburgmobil 100/172/180/186 im NVV, Paderborn/Höxter 502/504/523, „NVV - Faisy“ 33/42/71/72 im VSN. Linien im Verbund mit gleicher Nummer bleiben (KVG-Tram 4 und StadtBus Eschwege 4). Die Prüfung läuft vor dem Sammeln der Haltestellen und noch einmal nach dem Übernehmen aus der Vorwoche; `stand.json` nennt je Verbund `gleiche_nummer_entfernt`.

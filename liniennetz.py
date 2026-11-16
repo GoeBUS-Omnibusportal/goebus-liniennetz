@@ -200,54 +200,70 @@ def weg_aus_folge(namen, hoechstens=7):
 SKIZZE_URL = os.environ.get('GOEBUS_SKIZZE_URL', 'https://router.project-osrm.org/route/v1/driving/')
 
 
+def skizze_teil(t, cache, ende):
+    """Eine gerade Verbindung (Haltestellen in Fahrtreihenfolge) über die Straßen legen. Rückgabe: Liste der Punkte,
+    [] = bleibt gerade (Umweg über 2,5-fach oder kein Weg), None = Zeitbudget aufgebraucht oder Server nicht erreichbar."""
+    schluessel = ';'.join('%.5f,%.5f' % (x, y) for x, y in t)
+    if schluessel in cache:
+        return cache[schluessel]
+    if time.time() > ende or SKIZZE.get('abbruch'):
+        return None
+    weg = []
+    for i in range(0, len(t) - 1, 24):
+        stueck = t[i:i + 25]
+        url = SKIZZE_URL + ';'.join('%.6f,%.6f' % (x, y) for x, y in stueck) + '?overview=full&geometries=geojson&continue_straight=false'
+        try:
+            time.sleep(1.05)
+            req = urllib.request.Request(url, headers={'User-Agent': 'GoeBUS-Liniennetz/%s (+https://goebus.de)' % VERSION})
+            with urllib.request.urlopen(req, timeout=20) as r:
+                antwort = json.load(r)
+            c = antwort['routes'][0]['geometry']['coordinates']
+        except Exception as e:    # Server nicht erreichbar oder Rate-Limit: für diesen Lauf aufhören
+            log('Skizze: Abbruch –', type(e).__name__, str(e)[:80])
+            SKIZZE['abbruch'] = True
+            return None
+        weg.extend(c if not weg else c[1:])
+    gerade = sum(_m(a, b) for a, b in zip(t, t[1:]))
+    strasse = sum(_m(a, b) for a, b in zip(weg, weg[1:]))
+    if not weg or strasse > 2.5 * gerade + 2000:
+        weg = []
+    cache[schluessel] = [[round(x, 6), round(y, 6)] for x, y in vereinfachen([tuple(c) for c in weg])] if weg else []
+    return cache[schluessel]
+
+
 def skizzen(feats, cache, ende):
     """2.8: Linien, deren Verlauf nur die Verbindung der Haltestellen ist (gerade Striche), über die Straßen zwischen den
     Haltestellen skizzieren (OSRM, öffentlicher Server; höchstens eine Anfrage je Sekunde, Zeitbudget, Zwischenspeicher
-    daten/skizzen.json). Verworfen, wenn der Weg mehr als das 2,5-Fache der geraden Strecke misst. → Anzahl skizziert"""
+    daten/skizzen.json). Verworfen, wenn der Weg mehr als das 2,5-Fache der geraden Strecke misst.
+    2.9: auch die geraden Lücken gemischter Verläufe („osm+haltestellen“, „fahrplan+haltestellen“ → „osm+skizze“ …) und alle
+    Teile (bisher höchstens vier). Eine Linie wird erst umgestellt, wenn alle ihre Lücken berechnet sind; was schon berechnet ist,
+    liegt im Zwischenspeicher, der nächste Lauf macht dort weiter. → Anzahl skizzierter Linien"""
     n = 0
     for f in feats:
         p, g = f['properties'], f.get('geometry') or {}
-        if p.get('verlauf') != 'haltestellen' or g.get('type') not in ('LineString', 'MultiLineString'):
+        v = str(p.get('verlauf', ''))
+        if not v.endswith('haltestellen') or g.get('type') not in ('LineString', 'MultiLineString'):
             continue
-        teile = [g['coordinates']] if g['type'] == 'LineString' else g['coordinates']
-        neu, ok = [], True
-        for t in teile[:4]:
-            if len(t) < 2:
+        teile = [g['coordinates']] if g['type'] == 'LineString' else list(g['coordinates'])
+        k = len(teile) if v == 'haltestellen' else int(p.get('luecken') or 0)
+        if k <= 0 or k > len(teile):
+            continue
+        neu, fertig, skizziert = list(teile[:len(teile) - k]), True, 0
+        for t in teile[len(teile) - k:]:
+            if len(t) < 2 or sum(_m(a, b) for a, b in zip(t, t[1:])) < 150:    # sehr kurze Stücke bleiben, wie sie sind
+                neu.append(t)
                 continue
-            schluessel = ';'.join('%.5f,%.5f' % (x, y) for x, y in t)
-            weg = cache.get(schluessel)
+            weg = skizze_teil([tuple(c) for c in t], cache, ende)
             if weg is None:
-                if time.time() > ende:
-                    ok = False
-                    break
-                weg = []
-                for i in range(0, len(t) - 1, 24):
-                    stueck = t[i:i + 25]
-                    url = SKIZZE_URL + ';'.join('%.6f,%.6f' % (x, y) for x, y in stueck) + '?overview=full&geometries=geojson&continue_straight=false'
-                    try:
-                        time.sleep(1.05)
-                        req = urllib.request.Request(url, headers={'User-Agent': 'GoeBUS-Liniennetz/%s (+https://goebus.de)' % VERSION})
-                        with urllib.request.urlopen(req, timeout=20) as r:
-                            antwort = json.load(r)
-                        c = antwort['routes'][0]['geometry']['coordinates']
-                    except Exception as e:    # Server nicht erreichbar oder Rate-Limit: für diesen Lauf aufhören
-                        log('Skizze: Abbruch –', type(e).__name__, str(e)[:80])
-                        return n
-                    weg.extend(c if not weg else c[1:])
-                gerade = sum(_m(a, b) for a, b in zip(t, t[1:]))
-                strasse = sum(_m(a, b) for a, b in zip(weg, weg[1:]))
-                if not weg or strasse > 2.5 * gerade + 2000:
-                    weg = []
-                cache[schluessel] = [[round(x, 6), round(y, 6)] for x, y in vereinfachen([tuple(c) for c in weg])] if weg else []
-                weg = cache[schluessel]
-            if not weg:
-                ok = False
+                fertig = False
                 break
-            neu.append(weg)
-        if ok and neu:
-            f['geometry'] = {'type': 'LineString', 'coordinates': neu[0]} if len(neu) == 1 else {'type': 'MultiLineString', 'coordinates': neu}
-            p['verlauf'] = 'skizze'
-            n += 1
+            neu.append(weg if weg else t)
+            skizziert += 1 if weg else 0
+        if not fertig or not skizziert:
+            continue
+        f['geometry'] = {'type': 'LineString', 'coordinates': neu[0]} if len(neu) == 1 else {'type': 'MultiLineString', 'coordinates': neu}
+        p['verlauf'] = 'skizze' if v == 'haltestellen' else v[:-len('haltestellen')] + 'skizze'
+        n += 1
     return n
 
 
@@ -506,6 +522,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
                         'ref': ref, 'name': '%s: %s => %s' % (ref, von, nach), 'from': von, 'to': nach,
                         'operator': op, 'network': v['kurz'], 'route': art,
                         'gtfs:route_id': rid, 'quelle': 'gtfs', 'verlauf': verlauf, 'muster': len(seqs), 'halte': len(haupt),
+                        'luecken': sum(1 for x in fo if not x),    # 2.9: gerade Verbindungen am Ende der Geometrie
                         'description': (r.get('route_long_name') or '').strip(),
                         'weg_fp': weg_aus_folge([n for _, _, n in seqs[0]]),    # 2.8: Linienweg aus dem Fahrplan (häufigste Fahrt)
                     },
@@ -551,7 +568,8 @@ def vereinfachen(pts, toleranz=0.00004):
 def geometrie(muster, formen):
     """Geometrie und Art des Verlaufs: Linienweg aus den Fahrplandaten, wo vorhanden, sonst Verbindung der Haltestellen."""
     formen = formen or [None] * len(muster)
-    linien = [fo if fo else m for m, fo in zip(muster, formen)]
+    # 2.9: erst die Linienwege, dann die geraden Verbindungen – die stehen am Ende (Anzahl in properties.luecken, für skizzen())
+    linien = [fo for fo in formen if fo] + [m for m, fo in zip(muster, formen) if not fo]
     n = sum(1 for fo in formen if fo)
     verlauf = 'fahrplan' if n == len(muster) else ('fahrplan+haltestellen' if n else 'haltestellen')
     coords = [[[round(x, 6), round(y, 6)] for x, y in l] for l in linien]
@@ -584,7 +602,8 @@ def zusammenfassen(feats):
         laengste = max(gruppe, key=lambda g: len(g['_muster'][0]))
         p = dict(f['properties'])
         p.update({'from': laengste['properties']['from'], 'to': laengste['properties']['to'], 'name': laengste['properties']['name'], 'weg_fp': laengste['properties'].get('weg_fp', ''),
-                  'gtfs:route_id': ';'.join(dict.fromkeys(g['properties']['gtfs:route_id'] for g in gruppe)), 'muster': len(behalten), 'verlauf': verlauf})
+                  'gtfs:route_id': ';'.join(dict.fromkeys(g['properties']['gtfs:route_id'] for g in gruppe)), 'muster': len(behalten), 'verlauf': verlauf,
+                  'luecken': sum(1 for _, fo in paare if not fo)})
         out.append({'type': 'Feature', 'properties': p, 'geometry': geom,
                     '_halte': list(dict.fromkeys(q for m in behalten for q in m)), '_muster': behalten, '_formen': [fo for _, fo in paare],
                     # 2.7: Haltestellen aller Einträge behalten – bis 2.6 fehlten zusammengeführte Linien in haltestellen.json
@@ -915,6 +934,7 @@ def verlauf_aus_osm(features, osm, nah=350, mindestens=0.6, variante=0.75):
                 luecken.append(lauf)
         f['geometry'] = {'type': 'MultiLineString', 'coordinates': [[[round(x, 6), round(y, 6)] for x, y in l] for l in linien + luecken]}
         f['properties']['verlauf'] = 'osm+haltestellen' if luecken else 'osm'
+        f['properties']['luecken'] = len(luecken)    # 2.9: Lücken stehen am Ende der Geometrie
         f['properties']['@id'] = ';'.join('relation/%d' % k['id'] for k in gewaehlt[:6])
         n += 1
     return n
@@ -1333,6 +1353,7 @@ def verlauf_vorwoche(feats, alt_pfad, nah=350):
             continue
         f['geometry'] = g
         p['verlauf'] = a['properties']['verlauf']
+        p['luecken'] = a['properties'].get('luecken', 0)
         p['verlauf_vorwoche'] = True
         if a['properties'].get('@id'):
             p['@id'] = a['properties']['@id']
@@ -1583,7 +1604,7 @@ def main():
                         SKIZZE['cache'] = json.load(fh)
                 except (OSError, ValueError):
                     SKIZZE['cache'] = {}
-                SKIZZE['ende'] = time.time() + 60 * float(os.environ.get('GOEBUS_SKIZZE_MINUTEN', '6'))
+                SKIZZE['ende'] = time.time() + 60 * float(os.environ.get('GOEBUS_SKIZZE_MINUTEN', '20'))
             verworfen = {str(x).strip() for x in ((regeln or {}).get('skizze_aus') or {}).get(v['slug'], [])}    # Fassung 56: in der Verwaltung verworfen
             sk_n = skizzen([f for f in feats if f['properties'].get('ref', '').strip() not in verworfen], SKIZZE['cache'], SKIZZE['ende'])
             if sk_n:

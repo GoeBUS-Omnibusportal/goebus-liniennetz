@@ -1,6 +1,6 @@
 {
  "version": "1.1",
- "stand": "2026-11-15T18:03:49Z",
+ "stand": "2026-11-16T05:04:26Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "Geofabrik-Auszug",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
@@ -1739,7 +1739,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (The read operation timed out)"
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n6996939579",
@@ -4055,8 +4056,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "",
-   "pschein": false
+   "grund": "Website nicht erreichbar (HTTP Error 403: Forbidden)"
   },
   {
    "id": "n6139115473",

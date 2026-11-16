@@ -29,6 +29,12 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 55 (Skript 2.8): Linienweg aus dem Fahrplan, Skizzen, keine Fernbusse
+
+- `weg_fp` je Linie: Linienweg aus der häufigsten Fahrt mit Zwischenorten (höchstens sieben Glieder; bei Stadtlinien die Haltestellen).
+- Verläufe, die nur die Haltestellen gerade verbinden, werden über die Straßen skizziert (`verlauf: skizze`): öffentlicher OSRM-Server (`router.project-osrm.org`), höchstens eine Anfrage je Sekunde, Zeitbudget `GOEBUS_SKIZZE_MINUTEN` (Vorgabe 6), Zwischenspeicher `daten/skizzen.json`, Umwege über das 2,5-Fache verworfen. Abschalten mit `GOEBUS_SKIZZE=0`; anderer Server mit `GOEBUS_SKIZZE_URL`.
+- Fernbusse (route_type 200–209, FlixBus u. a.) werden nicht mehr aufgenommen.
+
 ## Neu in Fassung 54 (Skript 2.7): Takt, Nachtverkehr, Steigplan, Haltestellenfolge
 
 - `haltestellen.json`: `tag[4]` = je Linie [erste, letzte Abfahrt, Takt in Minuten] (Takt = Median der Abstände zwischen 6 und 19 Uhr, 0 bei weniger als drei Fahrten), `tag[5]` = Abfahrten zwischen 0 und 5 Uhr, `steige` = Linien je Steig (Spalte `platform_code` der Fahrplandaten; nur bei mindestens zwei Steigen).

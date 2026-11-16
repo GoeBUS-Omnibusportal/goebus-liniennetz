@@ -42,7 +42,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '2.7'
+VERSION = '2.8'
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
@@ -53,6 +53,7 @@ HALTE_REGION = []  # Version 2.3: (lon, lat, Name, Suchname) aller Haltestellen 
 EIN = {'5/43'}     # Version 2.3: zusammengesetzte Nummern, die trotzdem aufgenommen werden (ROSA 5/43; weitere aus den Regeln „ein“)
 LISTEN = {}        # Version 2.3: slug → {Nummer (Schlüssel): (Nummer, Linienweg, Hinweis)} aus der Website
 TAGESFAHRTEN = {}  # Version 2.5: {'stichtag': 'JJJJ-MM-TT', 'zeiten': {stop_id: [Minuten]}, 'je': {stop_id: Counter(Nummer)}, 'name': {stop_id: Name}}
+SKIZZE = {'an': os.environ.get('GOEBUS_SKIZZE', '1') != '0', 'cache': None, 'ende': 0}   # Version 2.8: Skizzen über die Straßen
 FOLGEN = {}        # Version 2.7: Verbund (Kurzname) → Nummer → [Haltestellennamen in Fahrtrichtung des häufigsten Musters]
 HALTESTELLEN = {}  # Version 2.4: Name → {'p': [(lon, lat) der Steige], 'l': {(Nummer, Verbund)}} – für daten/haltestellen.json
 HALTE_ALLE = []   # (lon, lat, Name) aller Haltestellen der ausgewählten Fahrten – für „von → nach“, wenn der Linienweg fehlt
@@ -161,6 +162,93 @@ def linie_zeiten(ms, uhr):
     luecken = sorted(b - a for a, b in zip(tags, tags[1:]) if b > a)
     takt = luecken[len(luecken) // 2] if len(tags) >= 3 and luecken else 0
     return [uhr(ms[0]), uhr(ms[-1]), takt]
+
+
+def weg_aus_folge(namen, hoechstens=7):
+    """2.8: Linienweg aus der Haltestellenfolge der häufigsten Fahrt – Orte statt Haltestellen („Wolfsburg – Fallersleben –
+    Gifhorn“). Bleibt die Linie in einem Ort, die Haltestellen ohne Ortsnamen („Bahnhof – Weende – Nikolausberg“).
+    Höchstens sieben Glieder, Anfang und Ende immer dabei."""
+    namen = [str(n or '').strip() for n in namen if str(n or '').strip()]
+    if len(namen) < 2:
+        return ''
+    def ort(n):
+        return re.split(r'\s*,\s*', n, 1)[0].strip()
+    def halt(n):
+        t = re.split(r'\s*,\s*', n, 1)
+        return (t[1] if len(t) > 1 else t[0]).strip()
+    orte = []
+    for n in namen:
+        o = ort(n)
+        if not orte or orte[-1] != o:
+            orte.append(o)
+    glieder = orte if len(orte) >= 3 or (len(orte) == 2 and len(namen) <= 3) else None
+    if glieder is None:    # Stadtlinie (oder nur zwei Orte): Haltestellen zeigen
+        glieder = []
+        for n in namen:
+            h = halt(n)
+            if not glieder or glieder[-1] != h:
+                glieder.append(h)
+        if len(orte) == 2:
+            glieder[0], glieder[-1] = namen[0], namen[-1]
+    if len(glieder) > hoechstens:
+        schritt = (len(glieder) - 1) / (hoechstens - 1)
+        glieder = [glieder[round(i * schritt)] for i in range(hoechstens)]
+    glieder = [g for i, g in enumerate(glieder) if i == 0 or g != glieder[i - 1]]
+    return ' – '.join(glieder) if len(glieder) >= 2 else ''
+
+
+SKIZZE_URL = os.environ.get('GOEBUS_SKIZZE_URL', 'https://router.project-osrm.org/route/v1/driving/')
+
+
+def skizzen(feats, cache, ende):
+    """2.8: Linien, deren Verlauf nur die Verbindung der Haltestellen ist (gerade Striche), über die Straßen zwischen den
+    Haltestellen skizzieren (OSRM, öffentlicher Server; höchstens eine Anfrage je Sekunde, Zeitbudget, Zwischenspeicher
+    daten/skizzen.json). Verworfen, wenn der Weg mehr als das 2,5-Fache der geraden Strecke misst. → Anzahl skizziert"""
+    n = 0
+    for f in feats:
+        p, g = f['properties'], f.get('geometry') or {}
+        if p.get('verlauf') != 'haltestellen' or g.get('type') not in ('LineString', 'MultiLineString'):
+            continue
+        teile = [g['coordinates']] if g['type'] == 'LineString' else g['coordinates']
+        neu, ok = [], True
+        for t in teile[:4]:
+            if len(t) < 2:
+                continue
+            schluessel = ';'.join('%.5f,%.5f' % (x, y) for x, y in t)
+            weg = cache.get(schluessel)
+            if weg is None:
+                if time.time() > ende:
+                    ok = False
+                    break
+                weg = []
+                for i in range(0, len(t) - 1, 24):
+                    stueck = t[i:i + 25]
+                    url = SKIZZE_URL + ';'.join('%.6f,%.6f' % (x, y) for x, y in stueck) + '?overview=full&geometries=geojson&continue_straight=false'
+                    try:
+                        time.sleep(1.05)
+                        req = urllib.request.Request(url, headers={'User-Agent': 'GoeBUS-Liniennetz/%s (+https://goebus.de)' % VERSION})
+                        with urllib.request.urlopen(req, timeout=20) as r:
+                            antwort = json.load(r)
+                        c = antwort['routes'][0]['geometry']['coordinates']
+                    except Exception as e:    # Server nicht erreichbar oder Rate-Limit: für diesen Lauf aufhören
+                        log('Skizze: Abbruch –', type(e).__name__, str(e)[:80])
+                        return n
+                    weg.extend(c if not weg else c[1:])
+                gerade = sum(_m(a, b) for a, b in zip(t, t[1:]))
+                strasse = sum(_m(a, b) for a, b in zip(weg, weg[1:]))
+                if not weg or strasse > 2.5 * gerade + 2000:
+                    weg = []
+                cache[schluessel] = [[round(x, 6), round(y, 6)] for x, y in vereinfachen([tuple(c) for c in weg])] if weg else []
+                weg = cache[schluessel]
+            if not weg:
+                ok = False
+                break
+            neu.append(weg)
+        if ok and neu:
+            f['geometry'] = {'type': 'LineString', 'coordinates': neu[0]} if len(neu) == 1 else {'type': 'MultiLineString', 'coordinates': neu}
+            p['verlauf'] = 'skizze'
+            n += 1
+    return n
 
 
 def stichtag(heute=None):
@@ -396,6 +484,9 @@ def gtfs_auswerten(pfad, kreise, verbuende):
         # Version 2.2: keine Züge (RB, RE, S-Bahn: 2, 100–199), keine Taxis und Anruf-Linien-Taxis (1500–1599, ALT/AST im Namen)
         if rt == 2 or 100 <= rt < 200 or 1500 <= rt < 1600 or keine_linie(ref, '', '', ' '.join([r.get('route_long_name', ''), r.get('route_desc', ''), r.get('route_short_name', '')]), art):
             continue
+        # 2.8: keine Fernbusse (route_type 200–209, FlixBus u. a.) – „N66: Budapest Airport => Hamburg“ stand im VRB-Netz
+        if 200 <= rt < 210 or re.search(r'flix|blablabus|eurolines', op, re.I):
+            continue
         for v in verbuende:
             im_verbund = sum(zaehler[k] for k in v['kreise'])
             anteil = im_verbund / summe if summe else 0
@@ -416,6 +507,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
                         'operator': op, 'network': v['kurz'], 'route': art,
                         'gtfs:route_id': rid, 'quelle': 'gtfs', 'verlauf': verlauf, 'muster': len(seqs), 'halte': len(haupt),
                         'description': (r.get('route_long_name') or '').strip(),
+                        'weg_fp': weg_aus_folge([n for _, _, n in seqs[0]]),    # 2.8: Linienweg aus dem Fahrplan (häufigste Fahrt)
                     },
                     'geometry': geom,
                     '_halte': list(dict.fromkeys((x, y) for q in seqs for x, y, _ in q)),
@@ -491,7 +583,7 @@ def zusammenfassen(feats):
         f = gruppe[0]
         laengste = max(gruppe, key=lambda g: len(g['_muster'][0]))
         p = dict(f['properties'])
-        p.update({'from': laengste['properties']['from'], 'to': laengste['properties']['to'], 'name': laengste['properties']['name'],
+        p.update({'from': laengste['properties']['from'], 'to': laengste['properties']['to'], 'name': laengste['properties']['name'], 'weg_fp': laengste['properties'].get('weg_fp', ''),
                   'gtfs:route_id': ';'.join(dict.fromkeys(g['properties']['gtfs:route_id'] for g in gruppe)), 'muster': len(behalten), 'verlauf': verlauf})
         out.append({'type': 'Feature', 'properties': p, 'geometry': geom,
                     '_halte': list(dict.fromkeys(q for m in behalten for q in m)), '_muster': behalten, '_formen': [fo for _, fo in paare],
@@ -1431,6 +1523,18 @@ def main():
         feats[:] = [f for f in feats if not keine_linie(f['properties'].get('ref', ''), f['properties'].get('from'), f['properties'].get('to'), f['properties'].get('name', ''), f['properties'].get('route', ''))]
         if reg_n or weg_n:
             log(v['slug'], reg_n, 'Verläufe nach Regeln übertragen,', weg_n, 'Linienwege („von → nach“) ergänzt')
+        # 2.8: gerade Verbindungen der Haltestellen über die Straßen skizzieren (Zwischenspeicher, Zeitbudget je Lauf)
+        if SKIZZE['an']:
+            if SKIZZE['cache'] is None:
+                try:
+                    with open(os.path.join(a.ausgabe, 'skizzen.json'), encoding='utf-8') as fh:
+                        SKIZZE['cache'] = json.load(fh)
+                except (OSError, ValueError):
+                    SKIZZE['cache'] = {}
+                SKIZZE['ende'] = time.time() + 60 * float(os.environ.get('GOEBUS_SKIZZE_MINUTEN', '6'))
+            sk_n = skizzen(feats, SKIZZE['cache'], SKIZZE['ende'])
+            if sk_n:
+                log(v['slug'], sk_n, 'Linienverläufe über die Straßen skizziert')
         if not feats:
             log(v['slug'], 'keine Linien – Datei wird nicht geschrieben')
             continue
@@ -1492,6 +1596,9 @@ def main():
                            'stichtag': TAGESFAHRTEN.get('stichtag', ''), 'netze': {v['kurz']: v['slug'] for v in verbuende}, 'haltestellen': hl}, fh, ensure_ascii=False, separators=(',', ':'))
             stand['haltestellen'] = len(hl)
             log(len(hl), 'Haltestellen → haltestellen.json')
+            if SKIZZE['cache']:    # 2.8: Zwischenspeicher der Skizzen (nur noch genutzte Einträge wären schöner – Größe bleibt klein)
+                with open(os.path.join(a.ausgabe, 'skizzen.json'), 'w', encoding='utf-8') as fh:
+                    json.dump(SKIZZE['cache'], fh, ensure_ascii=False, separators=(',', ':'))
             if FOLGEN:    # 2.7: Haltestellenfolge je Linie
                 with open(os.path.join(a.ausgabe, 'linienfolgen.json'), 'w', encoding='utf-8') as fh:
                     json.dump({'erzeugt': stand['erzeugt'], 'version': VERSION, 'attribution': 'Fahrplandaten: DELFI e.V. über GTFS.DE (CC BY 4.0)', 'netze': FOLGEN},

@@ -1,42 +1,41 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-16T04:59:30Z · Skript 2.7 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-16T20:30:48Z · Skript 2.8 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
 Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## VSN – 164 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 51 OpenStreetMap, 85 teilweise, 28 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 51 OpenStreetMap, 85 teilweise, 1 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 800
 - **Weniger als drei Halte:** 800
 - **Gleiche Nummer, mehrere Betreiber:** 1 (Bus GmbH, VSN-Direkt), 33 (Göttinger Verkehrsbetriebe, NVV - Faisy), 34 (Göttinger Verkehrsbetriebe, NVV - Faisy), 41 (Göttinger Verkehrsbetriebe, Hildesheim), 42 (Göttinger Verkehrsbetriebe, NVV - Faisy), 61 (Göttinger Verkehrsbetriebe, Hildesheim), 62 (Göttinger Verkehrsbetriebe, Hildesheim), 63 (Göttinger Verkehrsbetriebe, Hildesheim), 71 (Göttinger Verkehrsbetriebe, NVV - Faisy), 72 (Göttinger Verkehrsbetriebe, NVV - Faisy)
-- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 25, 30, 51, 71, 72, 123, 194, 242, 260, 262, 275, 452, 457, 509, 515, 521, 522, 526, 533, 642, 721, 800, 836, 9115, 9120, 9510, 9520, 9530
+- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 71
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** keine
+- **Neu in den Fahrplandaten:** 800
 - **Nur in OpenStreetMap (network passt zum Verbund):** 837
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## NVV – 438 Linien
+## NVV – 420 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 55 OpenStreetMap, 107 teilweise, 276 nur Haltestellen (3 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
-- **Weniger als drei Halte:** EVRT5
-- **Gleiche Nummer, mehrere Betreiber:** 1 (KVG M, NVV - Faisy), 100 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 13 (Bus GmbH, KVG M), 172 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 180 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 186 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 2 (KVG M, NVV - Faisy), 214 (NVV - Faisy, VSN-Direkt), 3 (KVG M, NVV - Faisy), 382 (NVV - Faisy, VGM/VRL), 396 (RMV, VGO), 4 (KVG M, NVV - Faisy), 5 (KVG M, NVV - Faisy), 502 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter), 504 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter), 523 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter), 6 (KVG M, NVV - Faisy), 62 (IGDB - RNV MRB direkt, NVV - Faisy), 7 (KVG M, NVV - Faisy), ev (800523 DB RegioNetz Verkehrs GmbH Kurhessenbahn, Hessische Landesbahn)
-- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 0, 2, 3, 5, 6, 7, 13, 24, 30, 36, 38, 41, 43, 45, 58, 62, 70, 71, 72, 90, 91, 92, 93, 94, 96, 97, EV, 023, 100, 113, 116, 118, 121, 122, 123, 130, 134, 136, 142, 143, 153, 155, 156, 157, 158, 172, 181, 182, 183, 186, 187, 188, 192, 194, 196, 197, 201, 204, 206, 207
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** keine
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 52 OpenStreetMap, 106 teilweise, 226 nur Haltestellen (3 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
+- **Gleiche Nummer, mehrere Betreiber:** 1 (KVG M, NVV - Faisy), 100 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 13 (Bus GmbH, KVG M), 172 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 180 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 186 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör), 2 (KVG M, NVV - Faisy), 214 (NVV - Faisy, VSN-Direkt), 3 (KVG M, NVV - Faisy), 382 (NVV - Faisy, VGM/VRL), 4 (KVG M, NVV - Faisy), 5 (KVG M, NVV - Faisy), 502 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter), 504 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter), 523 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter), 6 (KVG M, NVV - Faisy), 62 (IGDB - RNV MRB direkt, NVV - Faisy), 7 (KVG M, NVV - Faisy)
+- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 2, 3, 5, 6, 7, 13, 24, 43, 45, 62, 71, 90, 91, 92, 93, 96, 97, 023, 100, 113, 116, 118, 121, 122, 123, 130, 134, 136, 142, 143, 153, 155, 156, 157, 172, 183, 186, 187, 192, 194, 197, 201, 204, 206, 219, 221, 222, 224, 229, 232, 236, 237, 238, 239, 241, 242, 243, 250, 251, 252
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 0, A, B, 58, 70, EV, 023, 188, 246, 264, 364, 396, 397, 409, EV5, N69, N73, EVRT1, EVRT4, EVRT5, N1335, N1360B
+- **Neu in den Fahrplandaten:** 283, 284
 - **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## VRB – 319 Linien
+## VRB – 316 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 121 OpenStreetMap, 123 teilweise, 75 nur Haltestellen (7 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
-- **Gleiche Nummer, mehrere Betreiber:** 182 (Flixbus, Tarifverb Region Braunschweig), 211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 460 (Stade, VSN-Direkt), 470 (Stade, VSN-Direkt), 803 (PVG Salzwedel, Tarifverb Region Braunschweig)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 121 OpenStreetMap, 121 teilweise, 74 nur Haltestellen (5 aus der Vorwoche übernommen) · OpenStreetMap: ok (Auszug)
+- **Gleiche Nummer, mehrere Betreiber:** 211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig), 460 (Stade, VSN-Direkt), 470 (Stade, VSN-Direkt), 803 (PVG Salzwedel, Tarifverb Region Braunschweig)
 - **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 107, 108, 114, 115, 116, 136, 138, 139, 143, 144, 147, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 161, 165, 174, 175, 182, 183, 184, 185, 186, 187, 194, 197, 221, 222, 223, 224, 225, 226, 227, 263, 264, 265, 266, 268, 269, 335, 373, 382, 394, 614, 653, 658, 659, 666, 733, 734, 736, 741, 742
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 167, N66, N881, Tiguan, Touran
 - **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** 166, 837, 166 - 1040
 - **Nur in der Linienübersicht des Verbunds:** keine
@@ -45,12 +44,12 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## ROSA – 83 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 25 OpenStreetMap, 29 teilweise, 29 nur Haltestellen · OpenStreetMap: ok (Auszug)
-- **Ohne Betreiber in den Fahrplandaten:** 43
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 25 OpenStreetMap, 29 teilweise, 27 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Ohne Betreiber in den Fahrplandaten:** 43, 5
 - **Weniger als drei Halte:** 43
-- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 35, 43, 51, N1, N2, N3, N4, N5, N6, N7, N8, N9, 105, 106, 201, 212, 341, 522, 642, 661, 2024, 2031, 2032, 2033, 2041, 2341, 5/43, N881, SalzeBus
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** keine
+- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 35, 43, 51, N1, N2, N3, N4, N5, N6, N7, N8, N9, 105, 106, 201, 212, 341, 522, 661, 2024, 2031, 2032, 2033, 2041, 2341, N881, SalzeBus
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** N881
+- **Neu in den Fahrplandaten:** 43
 - **Nur in OpenStreetMap (network passt zum Verbund):** 52/22, 52/23, 52/25, 52/53, 501/52, 52/501, 201/202, 641/501/52
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
@@ -58,12 +57,12 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## RVHI – 83 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 25 OpenStreetMap, 29 teilweise, 29 nur Haltestellen · OpenStreetMap: ok (Auszug)
-- **Ohne Betreiber in den Fahrplandaten:** 43
-- **Weniger als drei Halte:** 43
-- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 35, 43, 51, N1, N2, N3, N4, N5, N6, N7, N8, N9, 105, 106, 201, 212, 341, 522, 642, 661, 2024, 2031, 2032, 2033, 2041, 2341, 5/43, N881, SalzeBus
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** keine
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 24 OpenStreetMap, 29 teilweise, 28 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Ohne Betreiber in den Fahrplandaten:** 43, 5
+- **Weniger als drei Halte:** 43, 5
+- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 5, 35, 43, 51, N1, N2, N3, N4, N5, N6, N7, N8, N9, 105, 106, 201, 212, 341, 522, 661, 2024, 2031, 2032, 2033, 2041, 2341, N881, SalzeBus
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** N881
+- **Neu in den Fahrplandaten:** 43
 - **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
@@ -71,13 +70,13 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## OEFFIS – 75 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 15 OpenStreetMap, 18 teilweise, 42 nur Haltestellen · OpenStreetMap: ok (Auszug)
-- **Ohne Betreiber in den Fahrplandaten:** 39, 525, 59, 79
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 16 OpenStreetMap, 18 teilweise, 40 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Ohne Betreiber in den Fahrplandaten:** 39, 521, 522, 524, 525, 59, 79
 - **Weniger als drei Halte:** 39, 79
 - **Gleiche Nummer, mehrere Betreiber:** 812 (LK Schaumburg, Ostwestfalen-Lippe)
-- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 17, 21, 22, 23, 24, 25, 27, 28, 34, 39, 43, 44, 45, 51, 52, 54, 59, 64, 71, 72, 79, 94, 521, 522, 524, 525, 726, 789, 792, B16, B52, B54, B71, B72, R15, R24, R27, R28, R44, 2014, 2022, 2024
+- **Ohne straßengenauen Verlauf (in OpenStreetMap ergänzen):** 17, 21, 22, 23, 24, 25, 27, 28, 34, 39, 43, 44, 45, 52, 54, 59, 64, 71, 72, 79, 94, 522, 524, 525, 726, 789, 792, B16, B52, B54, B71, B72, R15, R24, R27, R28, R44, 2014, 2022, 2024
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** keine
+- **Neu in den Fahrplandaten:** 525
 - **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine

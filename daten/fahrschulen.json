@@ -1,11 +1,11 @@
 {
  "version": "1.1",
- "stand": "2026-11-16T05:04:26Z",
+ "stand": "2026-11-16T20:41:13Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "Geofabrik-Auszug",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
  "anzahl": 513,
- "mit_bus": 46,
+ "mit_bus": 45,
  "schulen": [
   {
    "id": "n1571201710",
@@ -89,23 +89,6 @@
    "beleg": "OpenStreetMap: Klassen A, A1, B, B1, C, C1, D, D1, BE, CE, C1E, DE, D1E",
    "azav": false,
    "grund": ""
-  },
-  {
-   "id": "n1663020354",
-   "name": "Fahrschule Heinz Tesmer",
-   "web": "https://www.fahrschule-tesmer-bunte.de/",
-   "tel": "+49 172 9946665;+49 5292 9316825",
-   "mail": "mail@fahrschule-tesmer-bunte.de",
-   "ort": "",
-   "plz": "",
-   "strasse": "",
-   "lage": "51.71271,8.76931",
-   "klassen": "D, C",
-   "bus": true,
-   "beleg": "der Klasse C. BUS-FÜHRERSCHEIN D1, D1E, D und DE Nächste Station:",
-   "azav": false,
-   "grund": "",
-   "pschein": false
   },
   {
    "id": "n12168251766",
@@ -1463,7 +1446,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certi)"
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n2645288158",
@@ -1594,6 +1578,22 @@
    "azav": false,
    "grund": "",
    "pschein": false
+  },
+  {
+   "id": "n1663020354",
+   "name": "Fahrschule Heinz Tesmer",
+   "web": "https://www.fahrschule-tesmer-bunte.de/",
+   "tel": "+49 172 9946665;+49 5292 9316825",
+   "mail": "mail@fahrschule-tesmer-bunte.de",
+   "ort": "",
+   "plz": "",
+   "strasse": "",
+   "lage": "51.71271,8.76931",
+   "klassen": "",
+   "bus": false,
+   "beleg": "",
+   "azav": false,
+   "grund": "Website nicht erreichbar (<urlopen error [Errno -3] Temporary failure in name resolution>)"
   },
   {
    "id": "n6169379613",
@@ -4677,7 +4677,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failur)"
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3472000585",
@@ -7456,7 +7457,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certi)"
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n4115147797",

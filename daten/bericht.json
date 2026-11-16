@@ -1,27 +1,26 @@
 {
- "erzeugt": "2026-11-16T20:30:48Z",
- "version": "2.8",
+ "erzeugt": "2026-11-16T20:56:43Z",
+ "version": "2.9",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {
-   "linien": 164,
+   "linien": 160,
    "verlauf": {
-    "skizze": 27,
+    "skizze": 26,
     "osm": 51,
-    "osm+haltestellen": 85,
-    "haltestellen": 1
+    "osm+haltestellen": 83
    },
-   "aus_vorwoche": 4,
+   "aus_vorwoche": 8,
    "betreiber": {
     "VSN-Direkt": 65,
     "Regionalbus Braunschweig": 45,
     "Göttinger Verkehrsbetriebe": 31,
-    "NVV - Faisy": 9,
-    "Hildesheim": 5,
+    "NVV - Faisy": 7,
+    "Hildesheim": 4,
     "Verkehrsgesellschaft Paderborn/Höxter": 3,
-    "Bus GmbH": 2,
     "LK Hameln-Pyrmont": 1,
     "Tarifverb Region Braunschweig": 1,
+    "Bus GmbH": 1,
     "Ostwestfalen-Lippe": 1,
     "(ohne Angabe)": 1
    },
@@ -51,15 +50,6 @@
      "nach": "Northeim, Gewerbegebiet Süd",
      "verlauf": "osm+haltestellen",
      "muster": 6,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "41",
-     "betreiber": "Hildesheim",
-     "von": "Bad Gandersheim/Domänenhof",
-     "nach": "Bodenburg/Bahnhof",
-     "verlauf": "osm+haltestellen",
-     "muster": 8,
      "gesehen": "2026-11-16"
     },
     {
@@ -132,15 +122,6 @@
      "nach": "Weender Straße-Ost",
      "verlauf": "osm",
      "muster": 2,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "71",
-     "betreiber": "NVV - Faisy",
-     "von": "Niestetal Heiligenrode Schule",
-     "nach": "Staufenberg Speele Auf der Bilze",
-     "verlauf": "haltestellen",
-     "muster": 8,
      "gesehen": "2026-11-16"
     },
     {
@@ -288,15 +269,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "34",
-     "betreiber": "NVV - Faisy",
-     "von": "Kaufungen Oberkaufungen Kaufungen Gesamtschule",
-     "nach": "Staufenberg Speele Auf der Bilze",
-     "verlauf": "osm+haltestellen",
-     "muster": 6,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "190",
      "betreiber": "NVV - Faisy",
      "von": "Hann. Münden, Göttinger Straße",
@@ -432,15 +404,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "33",
-     "betreiber": "NVV - Faisy",
-     "von": "Kassel Bettenhausen Salzmannshausen",
-     "nach": "Staufenberg Uschlag Zum Sportplatz",
-     "verlauf": "osm+haltestellen",
-     "muster": 6,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "523",
      "betreiber": "Regionalbus Braunschweig",
      "von": "Stadtoldendorf Bahnhof, Mast 1 S",
@@ -465,24 +428,6 @@
      "nach": "Lödingsen Bahnhof, Mast 1 S",
      "verlauf": "osm+haltestellen",
      "muster": 8,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "1",
-     "betreiber": "Bus GmbH",
-     "von": "Dingelstädt, Kerbscher Berg",
-     "nach": "Duderstadt, ZOB 4",
-     "verlauf": "osm+haltestellen",
-     "muster": 8,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "72",
-     "betreiber": "NVV - Faisy",
-     "von": "Niestetal Heiligenrode Schule",
-     "nach": "Niestetal Heiligenrode Schule",
-     "verlauf": "skizze",
-     "muster": 7,
      "gesehen": "2026-11-16"
     },
     {
@@ -864,15 +809,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "62",
-     "betreiber": "Hildesheim",
-     "von": "Ammensen",
-     "nach": "Alfeld/Bahnhof-ZOB",
-     "verlauf": "osm+haltestellen",
-     "muster": 3,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "460",
      "betreiber": "VSN-Direkt",
      "von": "Osterode, Hohe Straße",
@@ -1140,15 +1076,6 @@
      "nach": "Friedhof Junkerberg",
      "verlauf": "osm",
      "muster": 8,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "63",
-     "betreiber": "Hildesheim",
-     "von": "Alfeld/Bahnhof-ZOB",
-     "nach": "Eschershausen(Ith) Mitte",
-     "verlauf": "osm+haltestellen",
-     "muster": 6,
      "gesehen": "2026-11-16"
     },
     {
@@ -1458,6 +1385,33 @@
      "gesehen": "2026-11-16"
     },
     {
+     "ref": "33",
+     "betreiber": "NVV - Faisy",
+     "von": "Kassel Bettenhausen Salzmannshausen",
+     "nach": "Staufenberg Uschlag Zum Sportplatz",
+     "verlauf": "osm+haltestellen",
+     "muster": 6,
+     "gesehen": "2026-11-16"
+    },
+    {
+     "ref": "34",
+     "betreiber": "NVV - Faisy",
+     "von": "Kaufungen Oberkaufungen Kaufungen Gesamtschule",
+     "nach": "Staufenberg Speele Auf der Bilze",
+     "verlauf": "osm+haltestellen",
+     "muster": 6,
+     "gesehen": "2026-11-16"
+    },
+    {
+     "ref": "41",
+     "betreiber": "Hildesheim",
+     "von": "Bad Gandersheim/Domänenhof",
+     "nach": "Bodenburg/Bahnhof",
+     "verlauf": "osm+haltestellen",
+     "muster": 8,
+     "gesehen": "2026-11-16"
+    },
+    {
      "ref": "42",
      "betreiber": "NVV - Faisy",
      "von": "Hann. Münden Hann. Münden Bahnhof",
@@ -1474,6 +1428,15 @@
      "verlauf": "osm",
      "muster": 1,
      "gesehen": "2026-11-02"
+    },
+    {
+     "ref": "62",
+     "betreiber": "Hildesheim",
+     "von": "Ammensen",
+     "nach": "Alfeld/Bahnhof-ZOB",
+     "verlauf": "osm+haltestellen",
+     "muster": 3,
+     "gesehen": "2026-11-16"
     },
     {
      "ref": "110",
@@ -1505,9 +1468,7 @@
    ],
    "abgleich": {
     "verschwunden": [],
-    "neu": [
-     "800"
-    ],
+    "neu": [],
     "nur_osm": [
      "837"
     ],
@@ -1523,47 +1484,37 @@
      "800"
     ],
     "mehrere_betreiber": [
-     "1 (Bus GmbH, VSN-Direkt)",
      "33 (Göttinger Verkehrsbetriebe, NVV - Faisy)",
      "34 (Göttinger Verkehrsbetriebe, NVV - Faisy)",
      "41 (Göttinger Verkehrsbetriebe, Hildesheim)",
      "42 (Göttinger Verkehrsbetriebe, NVV - Faisy)",
      "61 (Göttinger Verkehrsbetriebe, Hildesheim)",
-     "62 (Göttinger Verkehrsbetriebe, Hildesheim)",
-     "63 (Göttinger Verkehrsbetriebe, Hildesheim)",
-     "71 (Göttinger Verkehrsbetriebe, NVV - Faisy)",
-     "72 (Göttinger Verkehrsbetriebe, NVV - Faisy)"
+     "62 (Göttinger Verkehrsbetriebe, Hildesheim)"
     ],
-    "ohne_verlauf": [
-     "71"
-    ]
+    "ohne_verlauf": []
    },
    "osm": "ok (Auszug)",
    "verlauf_vorwoche": 0
   },
   "nvv": {
-   "linien": 420,
+   "linien": 405,
    "verlauf": {
-    "skizze": 34,
-    "osm": 52,
-    "osm+haltestellen": 106,
-    "haltestellen": 226,
+    "skizze": 91,
+    "osm": 51,
+    "osm+haltestellen": 103,
+    "haltestellen": 158,
     "uebernommen": 2
    },
-   "aus_vorwoche": 6,
+   "aus_vorwoche": 2,
    "betreiber": {
     "NVV - Faisy": 306,
     "NVV ESM AST": 56,
-    "KVG M": 32,
-    "Verkehrsgesellschaft Paderborn/Höxter": 7,
-    "Verkehrsunternehmen Wartburgmobil VUW gkAör": 5,
-    "Flixbus": 5,
+    "KVG M": 33,
+    "Verkehrsgesellschaft Paderborn/Höxter": 3,
     "RMV": 3,
-    "VGM/VRL": 2,
-    "VSN-Direkt": 1,
-    "Bus GmbH": 1,
-    "Verkehrsgemeinschaft Westfalen-Süd": 1,
-    "IGDB - RNV MRB direkt": 1
+    "Verkehrsunternehmen Wartburgmobil VUW gkAör": 2,
+    "VGM/VRL": 1,
+    "Verkehrsgemeinschaft Westfalen-Süd": 1
    },
    "liste": [
     {
@@ -1873,6 +1824,15 @@
      "gesehen": "2026-11-16"
     },
     {
+     "ref": "95",
+     "betreiber": "KVG M",
+     "von": "Lindenberg  Endhaltestelle",
+     "nach": "Alt Waldau Diakoniewohnheim",
+     "verlauf": "skizze",
+     "muster": 4,
+     "gesehen": "2026-11-16"
+    },
+    {
      "ref": "498",
      "betreiber": "NVV - Faisy",
      "von": "Schwalmstadt Treysa Bahnhof",
@@ -2030,17 +1990,8 @@
      "betreiber": "NVV ESM AST",
      "von": "Frankenau Frankenberger Str",
      "nach": "Bad Wildungen Bad Wildungen Stadtblick",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "523",
-     "betreiber": "Verkehrsgesellschaft Paderborn/Höxter",
-     "von": "Helmarshausen, Bürgerhaus",
-     "nach": "Beverungen, Schulzentrum",
-     "verlauf": "haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-16"
     },
     {
@@ -2048,7 +1999,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Eschwege Albungen Auf der Grube",
      "nach": "Eschwege Eschwege Post",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2057,7 +2008,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Kassel Vorderer Westen Bismarckstraße",
      "nach": "Fuldatal Rothwesten Neue Straße",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2066,7 +2017,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Niederaula Niederaula Grundschule",
      "nach": "Haunetal Neukirchen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2129,7 +2080,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Witzenhausen Witzenhausen Bürgerhaus Siedlung",
      "nach": "Witzenhausen Ziegenhagen Heegenweg",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2174,7 +2125,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Willingen Alte Post",
      "nach": "Dsee-Adorf Arolser Straße",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2183,7 +2134,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Frankenberg Frankenberg Bahnhof",
      "nach": "Hatzfeld Hatzfeld Binzer",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2192,7 +2143,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Fritzlar Fritzlar Allee",
      "nach": "Edermünde Besse Großenritter Straße",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2201,7 +2152,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Fritzlar Fritzlar Allee",
      "nach": "Borken Borken Schule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2210,7 +2161,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Haunetal Holzheim Holzheim",
      "nach": "Bad Hersfeld Bad Hersfeld Busbahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2219,7 +2170,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Frankenberg Bremer Str. / Taxistand",
      "nach": "Rosenthal-Willershausen",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2246,7 +2197,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Homberg Homberg Busbahnhof",
      "nach": "Borken Borken Schule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2264,7 +2215,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Willingen Alte Post",
      "nach": "Korbach Ziegelfeld",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2273,7 +2224,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Sontra Sontra Gesamtschule",
      "nach": "Sontra Sontra Mühlbergstraße",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2282,7 +2233,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Battenberg Battenberg Gesamtschule",
      "nach": "Hatzfeld Hatzfeld Schule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -2291,7 +2242,7 @@
      "betreiber": "KVG M",
      "von": "Helsa Helsa Bahnhof",
      "nach": "Hessisch Lichtenau, Bürgerhaus  (Bushaltestelle)",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2300,7 +2251,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Fkb-Geismar Mitte",
      "nach": "Frankenberg Frankenberg Ederpromenade",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2309,7 +2260,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Hersfeld Bad Hersfeld Geistalschule",
      "nach": "Ludwigsau Hainrode Hainrode",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2327,7 +2278,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Bad Wildungen Biedensteg",
      "nach": "Edertal-Affoldern Tolles Haus",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2345,7 +2296,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Bad Wildungen Biedensteg",
      "nach": "Edertal Giflitz Schulbushaltestelle",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2354,7 +2305,7 @@
      "betreiber": "KVG M",
      "von": "Schloss Wilhelmshöhe  Ri. Wilhelmshöhe (Park)",
      "nach": "Bf. Wilhelmshöhe Steig B Ri. Bundessozialgericht",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2363,7 +2314,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Fritzlar Fritzlar Allee",
      "nach": "Fritzlar Fritzlar Allee",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2372,7 +2323,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Dsee-Adorf MPS",
      "nach": "Korbach Ziegelfeld",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2390,7 +2341,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Bad Arolsen Krankenhaus",
      "nach": "Dsta-Wrexen Orpethaler Straße",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2399,7 +2350,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Frankenberg Bremer Str. / Taxistand",
      "nach": "Gemünden Im Wiesengrund",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2444,7 +2395,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Eschwege Niddawitzhausen Mitte",
      "nach": "Eschwege Eschwege Stadtbahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2453,7 +2404,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Ringgau Röhrda Schule",
      "nach": "Herleshausen Herleshausen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -2462,7 +2413,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Vellmar. Stadtmitte  Ri. Nordstraße",
      "nach": "Vel-Niedervellmar, Dörnbergstraße  Ri. alle",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2489,17 +2440,8 @@
      "betreiber": "NVV - Faisy",
      "von": "Guxhagen Guxhagen Grundschule",
      "nach": "Körle Empfershausen Oberempfershausen",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 7,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "186",
-     "betreiber": "Verkehrsunternehmen Wartburgmobil VUW gkAör",
-     "von": "Berka/Werra Berka/W.Mitte",
-     "nach": "Gerstg.Gymn.",
-     "verlauf": "osm+haltestellen",
-     "muster": 5,
      "gesehen": "2026-11-16"
     },
     {
@@ -2507,7 +2449,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Gerstungen Gerstungen Gymnasium",
      "nach": "Sontra Sontra Gesamtschule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2516,7 +2458,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Sooden-Allendorf Dudenrode Dudenrode",
      "nach": "Bad Sooden-Allendorf Bad Sooden-Allendorf Bahnhof/ZOB",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2525,7 +2467,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Battenberg Berghofener Straße",
      "nach": "Hatzfeld Schule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2561,7 +2503,7 @@
      "betreiber": "KVG M",
      "von": "Fuhrmannsbreite von Wolfsgraben",
      "nach": "Wolfsgraben von Am Fasanenhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2588,7 +2530,7 @@
      "betreiber": "KVG M",
      "von": "Platz der Deuschen Einheit Ri. Lossewerk AST93",
      "nach": "Lossewerk  (Ausstieg)",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2597,7 +2539,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Lichtenfels-Sachsenberg Mitte",
      "nach": "Korbach Ziegelfeld",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2615,7 +2557,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Korbach Korbach Kreisberufsschule",
      "nach": "Bad Wildungen Bad Wildungen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2624,7 +2566,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Hersfeld Bad Hersfeld Hainstraße",
      "nach": "Bad Hersfeld Bad Hersfeld Berliner Straße",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2642,7 +2584,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Wald-Sachsenhsn Marktplatz",
      "nach": "Edertal-Affoldern Tolles Haus",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2651,7 +2593,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Kirchheim Willingshain Willingshain",
      "nach": "Niederaula Niederaula Rathaus",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2660,7 +2602,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hofgeismar-Hümme Bahnhof",
      "nach": "Hofgeismar-Hümme Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2678,7 +2620,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Arolsen Helsen Schule",
      "nach": "Volkmarsen Volkmarsen Kugelsburgschule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 6,
      "gesehen": "2026-11-16"
     },
@@ -2687,7 +2629,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Warburg Warburg ZOB Warburg",
      "nach": "Wolfhagen Wolfhagen Walter-Lübcke-Schule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2705,7 +2647,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Eschwege Eschwege Brüder-Grimm-Schule",
      "nach": "Meißner Wolfterode Wolfterode",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2714,7 +2656,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Haina Haina Grauhecke",
      "nach": "Haina Oberholzhausen Oberholzhausen",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2732,7 +2674,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Sooden-Allendorf Bad Sooden-Allendorf Grenzmuseum",
      "nach": "Bad Sooden-Allendorf Bad Sooden-Allendorf Städtersweg",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2741,7 +2683,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Münchhausen Münchhausen Bahnhof",
      "nach": "Battenberg Battenberg Grundschule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2755,20 +2697,11 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "533",
-     "betreiber": "Verkehrsgesellschaft Paderborn/Höxter",
-     "von": "Beverungen, ZOB An der Burg",
-     "nach": "Btr-Bühne, Post",
-     "verlauf": "osm+haltestellen",
-     "muster": 4,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "335",
      "betreiber": "NVV - Faisy",
      "von": "Philippsthal Philippsthal Weidenhain",
      "nach": "Heringen Heringen fritz kunze bad",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2795,7 +2728,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Spangenberg Spangenberg Stadtmitte",
      "nach": "Spangenberg Spangenberg Stadtmitte",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2804,7 +2737,7 @@
      "betreiber": "KVG M",
      "von": "Oberzwehren Mitte  (Bussteig)",
      "nach": "Oberzwehren Mitte  (Bussteig)",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -2813,7 +2746,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Eschwege Eschwege Stadtbahnhof",
      "nach": "Weißenborn Rambach Mitte",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2824,15 +2757,6 @@
      "nach": "Frankenberg Frankenberg Bahnhof",
      "verlauf": "osm+haltestellen",
      "muster": 8,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "502",
-     "betreiber": "Verkehrsgesellschaft Paderborn/Höxter",
-     "von": "Warburg, Falkschule",
-     "nach": "Li-Kleinenberg, Kindergarten",
-     "verlauf": "haltestellen",
-     "muster": 4,
      "gesehen": "2026-11-16"
     },
     {
@@ -2858,7 +2782,7 @@
      "betreiber": "NVV ESM AST",
      "von": "Frankenberg Bremer Str. / Taxistand",
      "nach": "Battenberg Grundschule",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-16"
     },
@@ -2867,7 +2791,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Bad Emstal Sand Gesamtschule",
      "nach": "Wolfhagen Gasterfeld Pommernanlage",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -2885,7 +2809,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Wehretal Vierbach Mitte",
      "nach": "Eschwege Eschwege Stadtbahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2894,7 +2818,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Breitenbach Hatterode Kirche",
      "nach": "Bad Hersfeld Bad Hersfeld Busbahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -2912,7 +2836,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Malsfeld Malsfeld Kindergarten",
      "nach": "Malsfeld Mosheim Mosheim",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 4,
      "gesehen": "2026-11-16"
     },
@@ -2921,7 +2845,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Breuna Breuna Kirchweg",
      "nach": "Volkmarsen Volkmarsen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 3,
      "gesehen": "2026-11-16"
     },
@@ -3205,24 +3129,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "504",
-     "betreiber": "Verkehrsgesellschaft Paderborn/Höxter",
-     "von": "Di-Rhoden, Schloßbergschule",
-     "nach": "Warburg, ZOB Warburg",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "214",
-     "betreiber": "VSN-Direkt",
-     "von": "Uslar, Neustädter Platz",
-     "nach": "Schönhagen, In der Spitze",
-     "verlauf": "osm+haltestellen",
-     "muster": 8,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "894",
      "betreiber": "NVV ESM AST",
      "von": "Gemünden Cornelia-Funke-Schule",
@@ -3472,15 +3378,6 @@
      "nach": "Oberaula Oberaula Abzw Hausen",
      "verlauf": "haltestellen",
      "muster": 6,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "172",
-     "betreiber": "Verkehrsunternehmen Wartburgmobil VUW gkAör",
-     "von": "Großburschla M",
-     "nach": "Treffurt Treffurt Bahnhof",
-     "verlauf": "haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-16"
     },
     {
@@ -4141,15 +4038,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "13",
-     "betreiber": "Bus GmbH",
-     "von": "Heilbad Heiligenstadt, Schwarzer Adler",
-     "nach": "Bad Sooden-A., ZOB",
-     "verlauf": "haltestellen",
-     "muster": 8,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "510",
      "betreiber": "NVV - Faisy",
      "von": "Korbach Korbach Hauptbahnhof",
@@ -4519,15 +4407,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "100",
-     "betreiber": "Verkehrsunternehmen Wartburgmobil VUW gkAör",
-     "von": "Bad Salzungen Gymnasium Haus II",
-     "nach": "Bad Hersfeld HEF, Bahnhof",
-     "verlauf": "haltestellen",
-     "muster": 4,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "863",
      "betreiber": "NVV ESM AST",
      "von": "Frankenau-Louisendorf",
@@ -4669,15 +4548,6 @@
      "nach": "Bad Wildungen Bad Wildungen Treffpunkt",
      "verlauf": "osm",
      "muster": 8,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "382",
-     "betreiber": "VGM/VRL",
-     "von": "Willingen, Schulen",
-     "nach": "Brilon, Markt",
-     "verlauf": "osm",
-     "muster": 2,
      "gesehen": "2026-11-16"
     },
     {
@@ -4987,15 +4857,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "62",
-     "betreiber": "IGDB - RNV MRB direkt",
-     "von": "Münchhausen Grundschule Nxxx",
-     "nach": "Münchhausen Grundschule Nxxx",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "267",
      "betreiber": "NVV - Faisy",
      "von": "Söhrewald Eiterhagen Eiterhagen",
@@ -5167,15 +5028,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "180",
-     "betreiber": "Verkehrsunternehmen Wartburgmobil VUW gkAör",
-     "von": "Großensee",
-     "nach": "Eisenach Eis.ZOB Ausstieg",
-     "verlauf": "osm+haltestellen",
-     "muster": 5,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "478",
      "betreiber": "NVV - Faisy",
      "von": "Oberaula Ibra Ringelsmühle",
@@ -5275,12 +5127,12 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "023",
-     "betreiber": "Flixbus",
-     "von": "Dresden central station (Bayrische Straße)",
-     "nach": "The Hague (Central Station)",
-     "verlauf": "haltestellen",
-     "muster": 1,
+     "ref": "186",
+     "betreiber": "Verkehrsunternehmen Wartburgmobil VUW gkAör",
+     "von": "Berka/Werra Berka/W.Mitte",
+     "nach": "Gerstg.Gymn.",
+     "verlauf": "osm+haltestellen",
+     "muster": 5,
      "gesehen": "2026-11-16"
     },
     {
@@ -5291,42 +5143,6 @@
      "verlauf": "haltestellen",
      "muster": 2,
      "gesehen": "2026-11-02"
-    },
-    {
-     "ref": "N69",
-     "betreiber": "Flixbus",
-     "von": "Prague (Central Bus Station Florenc)",
-     "nach": "Amsterdam Schiphol Airport",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "N73",
-     "betreiber": "Flixbus",
-     "von": "Zagreb (Bus Station)",
-     "nach": "Lund (Centralen)",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "N1335",
-     "betreiber": "Flixbus",
-     "von": "Torun, Bus Station",
-     "nach": "Troyes (McArthurGlen)",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "N1360B",
-     "betreiber": "Flixbus",
-     "von": "Bruges (Station Brugge)",
-     "nach": "Medyka, Border Crossing",
-     "verlauf": "haltestellen",
-     "muster": 1,
-     "gesehen": "2026-11-16"
     },
     {
      "ref": "283",
@@ -5348,37 +5164,18 @@
     }
    ],
    "ersetzt": {
+    "283": "216",
+    "284": "216",
+    "504": "W4",
     "A": "283",
     "B": "284"
    },
    "abgleich": {
     "verschwunden": [
-     "0",
-     "A",
-     "B",
-     "58",
-     "70",
-     "EV",
-     "023",
-     "188",
-     "246",
-     "264",
-     "364",
-     "396",
-     "397",
-     "409",
-     "EV5",
-     "N69",
-     "N73",
-     "EVRT1",
-     "EVRT4",
-     "EVRT5",
-     "N1335",
-     "N1360B"
+     "533"
     ],
     "neu": [
-     "283",
-     "284"
+     "95"
     ],
     "nur_osm": [],
     "nur_quelle": [],
@@ -5390,60 +5187,34 @@
     "wenige_halte": [],
     "mehrere_betreiber": [
      "1 (KVG M, NVV - Faisy)",
-     "100 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör)",
-     "13 (Bus GmbH, KVG M)",
-     "172 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör)",
-     "180 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör)",
      "186 (NVV - Faisy, Verkehrsunternehmen Wartburgmobil VUW gkAör)",
      "2 (KVG M, NVV - Faisy)",
-     "214 (NVV - Faisy, VSN-Direkt)",
      "3 (KVG M, NVV - Faisy)",
-     "382 (NVV - Faisy, VGM/VRL)",
      "4 (KVG M, NVV - Faisy)",
      "5 (KVG M, NVV - Faisy)",
-     "502 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter)",
-     "504 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter)",
-     "523 (NVV - Faisy, Verkehrsgesellschaft Paderborn/Höxter)",
      "6 (KVG M, NVV - Faisy)",
-     "62 (IGDB - RNV MRB direkt, NVV - Faisy)",
      "7 (KVG M, NVV - Faisy)"
     ],
     "ohne_verlauf": [
      "2",
      "3",
-     "5",
-     "6",
      "7",
-     "13",
-     "24",
-     "43",
-     "45",
      "62",
      "71",
      "90",
-     "91",
      "92",
-     "93",
-     "96",
      "97",
-     "023",
-     "100",
      "113",
      "116",
      "118",
-     "121",
      "122",
-     "123",
      "130",
      "134",
      "136",
      "142",
-     "143",
      "153",
      "155",
-     "156",
      "157",
-     "172",
      "183",
      "186",
      "187",
@@ -5453,25 +5224,17 @@
      "201",
      "204",
      "206",
-     "219",
      "221",
-     "222",
      "224",
-     "229",
      "232",
      "236",
      "237",
-     "238",
-     "239",
      "241",
-     "242",
      "243",
      "250",
-     "251",
      "252",
      "253",
      "254",
-     "260",
      "261",
      "265",
      "266",
@@ -5480,8 +5243,6 @@
      "291",
      "293",
      "294",
-     "295",
-     "296",
      "297",
      "298",
      "301",
@@ -5491,46 +5252,33 @@
      "311",
      "315",
      "320",
-     "325",
      "329",
-     "335",
      "339",
      "358",
      "359",
-     "369",
      "370",
      "376",
      "379",
-     "381",
-     "382",
      "383",
      "385",
      "389",
      "391",
-     "399",
      "401",
-     "402",
      "404",
      "405",
      "407",
      "411",
-     "413",
      "415",
      "416",
-     "417",
      "423",
      "425",
      "428",
      "432",
-     "436",
-     "440",
      "441",
-     "443",
      "444",
      "446",
      "448",
      "449",
-     "452",
      "454",
      "456",
      "460",
@@ -5542,13 +5290,10 @@
      "481",
      "482",
      "483",
-     "502",
      "503",
-     "504",
      "505",
      "506",
      "507",
-     "511",
      "513",
      "514",
      "515",
@@ -5561,29 +5306,20 @@
      "523",
      "526",
      "528",
-     "542",
      "543",
      "544",
-     "547",
-     "548",
      "563",
-     "564",
-     "571",
      "572",
      "573",
      "596",
      "800",
      "801",
-     "802",
-     "803",
      "804",
      "806",
-     "807",
      "810",
      "811",
      "812",
      "820",
-     "821",
      "822",
      "824",
      "825",
@@ -5592,34 +5328,24 @@
      "830",
      "831",
      "832",
-     "833",
      "834",
      "835",
      "837",
-     "841",
      "842",
      "843",
      "844",
      "845",
-     "850",
      "852",
-     "853",
-     "854",
      "855",
-     "861",
      "862",
      "863",
      "870",
-     "871",
      "872",
-     "873",
      "874",
      "875",
      "876",
-     "880",
      "881",
      "890",
-     "891",
      "892",
      "893",
      "894",
@@ -5627,33 +5353,26 @@
      "N37",
      "N40",
      "N49",
-     "N53",
-     "N69",
-     "N73",
-     "N200",
-     "N1335",
-     "N1360B"
+     "N53"
     ]
    },
    "osm": "ok (Auszug)",
    "verlauf_vorwoche": 3
   },
   "vrb": {
-   "linien": 316,
+   "linien": 309,
    "verlauf": {
-    "haltestellen": 74,
-    "osm+haltestellen": 121,
-    "osm": 121
+    "haltestellen": 73,
+    "osm+haltestellen": 116,
+    "osm": 120
    },
-   "aus_vorwoche": 5,
+   "aus_vorwoche": 2,
    "betreiber": {
     "Tarifverb Region Braunschweig": 290,
-    "Harzer Verkehrsbetriebe GmbH": 6,
-    "Flixbus": 4,
+    "Harzer Verkehrsbetriebe GmbH": 5,
     "BördeBus Verkehrsgesellschaft": 3,
     "Großraumverkehr Hannover": 3,
     "VSN-Direkt": 3,
-    "Stade": 2,
     "PVG Salzwedel": 2,
     "Regionalbus Braunschweig": 2,
     "Hildesheim": 1
@@ -5674,15 +5393,6 @@
      "von": "Oebisfelde, Bahnhof",
      "nach": "Tor FE Haupteingang, Mast 1",
      "verlauf": "haltestellen",
-     "muster": 8,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "460",
-     "betreiber": "Stade",
-     "von": "Lachendorf Ortsmitte",
-     "nach": "Steinhorst Ortsmitte",
-     "verlauf": "osm+haltestellen",
      "muster": 8,
      "gesehen": "2026-11-16"
     },
@@ -6416,15 +6126,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "470",
-     "betreiber": "Stade",
-     "von": "Ummern Ortsmitte",
-     "nach": "Lachendorf Ortsmitte",
-     "verlauf": "osm+haltestellen",
-     "muster": 3,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "830",
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Cl-Z., ZOB",
@@ -6695,15 +6396,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "803",
-     "betreiber": "PVG Salzwedel",
-     "von": "Diesdorf Kirche",
-     "nach": "Wittingen Bahnhof",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "146",
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Leiferde GF, Kampweg",
@@ -6809,15 +6501,6 @@
      "nach": "Brome, Schule",
      "verlauf": "haltestellen",
      "muster": 5,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "211",
-     "betreiber": "Harzer Verkehrsbetriebe GmbH",
-     "von": "Osterwieck Busbf.",
-     "nach": "Schladen Bf.",
-     "verlauf": "osm+haltestellen",
-     "muster": 2,
      "gesehen": "2026-11-16"
     },
     {
@@ -8459,11 +8142,11 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "167",
-     "betreiber": "Flixbus",
-     "von": "Hanover central bus station",
-     "nach": "Vienna International Airport",
-     "verlauf": "osm+haltestellen",
+     "ref": "803",
+     "betreiber": "PVG Salzwedel",
+     "von": "Diesdorf Kirche",
+     "nach": "Wittingen Bahnhof",
+     "verlauf": "haltestellen",
      "muster": 2,
      "gesehen": "2026-11-16"
     },
@@ -8475,43 +8158,10 @@
      "verlauf": "osm",
      "muster": 1,
      "gesehen": "2026-11-02"
-    },
-    {
-     "ref": "N66",
-     "betreiber": "Flixbus",
-     "von": "Budapest Airport",
-     "nach": "Hamburg central bus station",
-     "verlauf": "osm+haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-16"
-    },
-    {
-     "ref": "N67",
-     "betreiber": "Flixbus",
-     "von": "Amsterdam Sloterdijk",
-     "nach": "Prague (Central Bus Station Florenc)",
-     "verlauf": "osm",
-     "muster": 1,
-     "gesehen": "2026-11-02"
-    },
-    {
-     "ref": "N881",
-     "betreiber": "Flixbus",
-     "von": "Hamburg central bus station",
-     "nach": "Zagreb (Bus Station)",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-16"
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "167",
-     "N66",
-     "N881",
-     "Tiguan",
-     "Touran"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [
      "166",
@@ -8526,12 +8176,9 @@
     "ohne_betreiber": [],
     "wenige_halte": [],
     "mehrere_betreiber": [
-     "211 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "262 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "264 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
      "265 (Harzer Verkehrsbetriebe GmbH, Tarifverb Region Braunschweig)",
-     "460 (Stade, VSN-Direkt)",
-     "470 (Stade, VSN-Direkt)",
      "803 (PVG Salzwedel, Tarifverb Region Braunschweig)"
     ],
     "ohne_verlauf": [
@@ -8607,7 +8254,6 @@
      "834",
      "858",
      "Golf",
-     "N881",
      "Flexo"
     ]
    },
@@ -8615,20 +8261,19 @@
    "verlauf_vorwoche": 5
   },
   "rosa": {
-   "linien": 83,
+   "linien": 82,
    "verlauf": {
     "osm": 25,
     "osm+haltestellen": 29,
-    "haltestellen": 27,
+    "haltestellen": 26,
     "skizze": 1,
     "uebernommen": 1
    },
-   "aus_vorwoche": 1,
+   "aus_vorwoche": 0,
    "betreiber": {
     "Hildesheim": 78,
     "Großraumverkehr Hannover": 2,
-    "(ohne Angabe)": 2,
-    "Flixbus": 1
+    "(ohne Angabe)": 2
    },
    "liste": [
     {
@@ -9352,15 +8997,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "N881",
-     "betreiber": "Flixbus",
-     "von": "Hamburg central bus station",
-     "nach": "Zagreb (Bus Station)",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "5",
      "betreiber": "",
      "von": "Hauptbahnhof-ZOB",
@@ -9384,12 +9020,8 @@
     "43": "5/43"
    },
    "abgleich": {
-    "verschwunden": [
-     "N881"
-    ],
-    "neu": [
-     "43"
-    ],
+    "verschwunden": [],
+    "neu": [],
     "nur_osm": [
      "52/22",
      "52/23",
@@ -9439,7 +9071,6 @@
      "2033",
      "2041",
      "2341",
-     "N881",
      "SalzeBus"
     ]
    },
@@ -9447,20 +9078,19 @@
    "verlauf_vorwoche": 0
   },
   "rvhi": {
-   "linien": 83,
+   "linien": 82,
    "verlauf": {
     "osm": 24,
     "osm+haltestellen": 29,
-    "haltestellen": 28,
+    "haltestellen": 27,
     "skizze": 1,
     "uebernommen": 1
    },
-   "aus_vorwoche": 1,
+   "aus_vorwoche": 0,
    "betreiber": {
     "Hildesheim": 78,
     "Großraumverkehr Hannover": 2,
-    "(ohne Angabe)": 2,
-    "Flixbus": 1
+    "(ohne Angabe)": 2
    },
    "liste": [
     {
@@ -10184,15 +9814,6 @@
      "gesehen": "2026-11-16"
     },
     {
-     "ref": "N881",
-     "betreiber": "Flixbus",
-     "von": "Hamburg central bus station",
-     "nach": "Zagreb (Bus Station)",
-     "verlauf": "haltestellen",
-     "muster": 2,
-     "gesehen": "2026-11-16"
-    },
-    {
      "ref": "5",
      "betreiber": "",
      "von": "Diekholzen",
@@ -10216,12 +9837,8 @@
     "43": "5/43"
    },
    "abgleich": {
-    "verschwunden": [
-     "N881"
-    ],
-    "neu": [
-     "43"
-    ],
+    "verschwunden": [],
+    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
@@ -10264,7 +9881,6 @@
      "2033",
      "2041",
      "2341",
-     "N881",
      "SalzeBus"
     ]
    },
@@ -10964,11 +10580,12 @@
      "gesehen": ""
     }
    ],
+   "ersetzt": {
+    "522": "522"
+   },
    "abgleich": {
     "verschwunden": [],
-    "neu": [
-     "525"
-    ],
+    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],

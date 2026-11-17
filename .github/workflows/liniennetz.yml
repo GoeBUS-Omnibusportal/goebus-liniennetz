@@ -59,7 +59,7 @@ jobs:
 
   liniennetz:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 110    # Fassung 59: Skizzen über die Straßen bis zu 45 Minuten je Lauf
     steps:
       - name: Dateien holen
         uses: actions/checkout@v5
@@ -83,6 +83,8 @@ jobs:
             # Fassung 49: ein fehlendes Bundesland bricht den Schritt nicht ab – die übrigen werden trotzdem genutzt
             if curl -fsSL --retry 3 --retry-delay 15 --connect-timeout 30 -o "osm/$n.osm.pbf" "https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf" \
                && osmium tags-filter "osm/$n.osm.pbf" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school -o "osm/$n-teil.osm.pbf" --overwrite; then
+              # Fassung 59: Gemeindegrenzen für AST-Gebiete („Gemeinde Rosdorf“) – Fehler hier bremsen nichts
+              osmium tags-filter "osm/$n.osm.pbf" r/boundary=administrative -o "osm/$n-grenzen.osm.pbf" --overwrite || echo "::warning::Grenzen $land nicht gefiltert"
               echo "$(date +%T) $land fertig"
             else
               echo "::warning::OpenStreetMap-Auszug $land nicht geladen – weiter ohne dieses Gebiet"
@@ -95,15 +97,23 @@ jobs:
           osmium cat osm/routen.osm.pbf -f opl,add_metadata=false -o osm/auszug.opl --overwrite
           osmium tags-filter osm/alles.osm.pbf nwr/amenity=driving_school -o osm/fahrschulen.osm.pbf --overwrite
           osmium cat osm/fahrschulen.osm.pbf -f opl,add_metadata=false -o osm/fahrschulen.opl --overwrite
+          # Fassung 59: Gemeinden und Samtgemeinden (admin_level 7 und 8) als Flächen für AST-Gebiete
+          if ls osm/*-grenzen.osm.pbf >/dev/null 2>&1; then
+            ( osmium merge osm/*-grenzen.osm.pbf -o osm/grenzen.osm.pbf --overwrite \
+              && osmium tags-filter osm/grenzen.osm.pbf r/admin_level=7,8 -o osm/gemeinden.osm.pbf --overwrite \
+              && osmium export osm/gemeinden.osm.pbf -f geojsonseq --geometry-types=polygon -o osm/gemeinden.geojsonseq --overwrite \
+              && rm -f osm/*-grenzen.osm.pbf osm/grenzen.osm.pbf ) || echo "::warning::Gemeindegrenzen nicht erstellt – AST-Gebiete bleiben ohne Fläche"
+          fi
           ls -la osm
 
       - name: Fahrplandaten und OpenStreetMap verarbeiten
         # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE
         # (Settings → Secrets and variables → Actions → Variables); ohne Variable läuft alles wie bisher.
-        timeout-minutes: 35
+        timeout-minutes: 70    # Fassung 59: Verarbeitung gut 6 Minuten + Skizzen bis 45 Minuten (Variable GOEBUS_SKIZZE_MINUTEN)
         env:
+          GOEBUS_SKIZZE_MINUTEN: ${{ vars.GOEBUS_SKIZZE_MINUTEN || '45' }}
           GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
-        run: python liniennetz.py --ausgabe daten --osm-auszug osm/auszug.opl
+        run: python liniennetz.py --ausgabe daten --osm-auszug osm/auszug.opl --gemeinden osm/gemeinden.geojsonseq
 
       - name: Fahrschulen mit Busführerschein suchen
         # Fassung 42: OpenStreetMap (Fassung 48: aus dem Auszug) und Websites der Fahrschulen. Schlägt dieser Schritt fehl,

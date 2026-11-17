@@ -1,42 +1,48 @@
 {
- "erzeugt": "2026-11-16T22:04:13Z",
- "version": "2.9",
+ "erzeugt": "2026-11-17T05:57:57Z",
+ "version": "3.0",
  "linienwege": false,
  "verbuende": {
   "vsn": {
    "datei": "vsn_linien.json",
-   "linien": 160,
+   "linien": 155,
    "liste_wege": 140,
    "liste_neu": 1,
    "osm_verlauf": 133,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
    "aus_vorwoche": 9,
-   "gleiche_nummer_entfernt": 8,
+   "gleiche_nummer_entfernt": 13,
+   "stadtbus_zugeordnet": 0,
+   "gebiete": 0,
    "osm": "ok (Auszug)"
   },
   "nvv": {
    "datei": "nvv_linien.json",
-   "linien": 405,
-   "liste_wege": 386,
-   "liste_neu": 0,
+   "linien": 420,
+   "liste_wege": 393,
+   "liste_neu": 16,
    "osm_verlauf": 158,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 1,
    "aus_vorwoche": 2,
-   "gleiche_nummer_entfernt": 11,
+   "gleiche_nummer_entfernt": 12,
+   "stadtbus_zugeordnet": 9,
+   "gebiete": 0,
    "osm": "ok (Auszug)"
   },
   "vrb": {
    "datei": "vrb_linien.json",
-   "linien": 309,
+   "linien": 305,
    "liste_wege": 293,
    "liste_neu": 0,
-   "osm_verlauf": 235,
+   "osm_verlauf": 233,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 4,
    "aus_vorwoche": 2,
-   "gleiche_nummer_entfernt": 4,
+   "gleiche_nummer_entfernt": 7,
+   "stadtbus_zugeordnet": 0,
+   "gebiete": 0,
    "osm": "ok (Auszug)"
   },
   "rosa": {
@@ -49,6 +55,8 @@
    "verlauf_vorwoche": 0,
    "aus_vorwoche": 1,
    "gleiche_nummer_entfernt": 0,
+   "stadtbus_zugeordnet": 0,
+   "gebiete": 0,
    "osm": "ok (Auszug)"
   },
   "rvhi": {
@@ -61,6 +69,8 @@
    "verlauf_vorwoche": 0,
    "aus_vorwoche": 2,
    "gleiche_nummer_entfernt": 0,
+   "stadtbus_zugeordnet": 0,
+   "gebiete": 0,
    "osm": "ok (Auszug)"
   },
   "oeffis": {
@@ -73,27 +83,29 @@
    "verlauf_vorwoche": 0,
    "aus_vorwoche": 7,
    "gleiche_nummer_entfernt": 0,
+   "stadtbus_zugeordnet": 0,
+   "gebiete": 0,
    "osm": "ok (Auszug)"
   }
  },
  "regeln": true,
  "dauer": {
-  "fahrplandaten_laden": 16,
-  "fahrplandaten_auswerten": 189,
-  "osm_auszug_lesen": 6,
+  "fahrplandaten_laden": 11,
+  "fahrplandaten_auswerten": 226,
+  "osm_auszug_lesen": 7,
   "verbuende": {
-   "vsn": 595,
-   "nvv": 636,
-   "vrb": 43,
-   "rosa": 18,
-   "rvhi": 17,
-   "oeffis": 17
+   "vsn": 32,
+   "nvv": 575,
+   "vrb": 570,
+   "rosa": 375,
+   "rvhi": 22,
+   "oeffis": 479
   },
-  "gesamt": 1539
+  "gesamt": 2299
  },
  "osm_quelle": "geofabrik",
  "overpass": [
   "Geofabrik-Auszug (ohne Overpass)"
  ],
- "haltestellen": 12559
+ "haltestellen": 12509
 }

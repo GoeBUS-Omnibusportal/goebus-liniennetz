@@ -42,7 +42,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '2.9'
+VERSION = '3.0'
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
@@ -576,6 +576,64 @@ def geometrie(muster, formen):
     return ({'type': 'LineString', 'coordinates': coords[0]} if len(coords) == 1 else {'type': 'MultiLineString', 'coordinates': coords}), verlauf
 
 
+def orte_trennen(gruppe, abstand_m=4000):
+    """3.0 (Fassung 59): Gleiche Nummer und gleicher Betreiber heißt nicht gleiche Linie – „NVV - Faisy“ fährt die Linie 1 in
+    Bad Wildungen, Eschwege, Witzenhausen, Bad Hersfeld und Korbach. Bisher wurden alle zu einer Linie zusammengeführt
+    (wilde Striche quer durch Nordhessen). Jetzt: nur Einträge zusammenführen, deren Haltestellen höchstens 4 km
+    auseinanderliegen (über die Rahmen der Haltestellen); sonst eigene Linien je Ort."""
+    if len(gruppe) < 2:
+        return [gruppe]
+    def rahmen(f):
+        pts = [q for m in f.get('_muster') or [] for q in m] or [tuple(c) for c in koordinaten(f.get('geometry'))]
+        if not pts:
+            return None
+        return (min(x for x, _ in pts), min(y for _, y in pts), max(x for x, _ in pts), max(y for _, y in pts))
+    r = [rahmen(f) for f in gruppe]
+    dx, dy = abstand_m / 70000.0, abstand_m / 111000.0
+    eltern = list(range(len(gruppe)))
+    def wurzel(i):
+        while eltern[i] != i:
+            eltern[i] = eltern[eltern[i]]
+            i = eltern[i]
+        return i
+    for i in range(len(gruppe)):
+        for j in range(i + 1, len(gruppe)):
+            a, b = r[i], r[j]
+            if a is None or b is None or (a[0] - dx <= b[2] and b[0] - dx <= a[2] and a[1] - dy <= b[3] and b[1] - dy <= a[3]):
+                eltern[wurzel(i)] = wurzel(j)
+    teile = {}
+    for i, f in enumerate(gruppe):
+        teile.setdefault(wurzel(i), []).append(f)
+    return list(teile.values())
+
+
+STADTBUS_RX = re.compile(r'Stadt\s*[Bb]us(?:se)?\s+(.+?)\s*[·•|,]\s*Linie\s+([A-Za-z0-9]+)')
+
+
+def stadtbus_zuordnen(feats, liste, slug=''):
+    """3.0 (Fassung 59): Die offizielle Liste des NVV nennt Stadtbusse anders als die Fahrplandaten: 271 = „StadtBus Eschwege ·
+    Linie 1“, 351 = „StadtBus Bad Hersfeld · Linie 1“. Die Linie mit der Fahrplan-Nummer im genannten Ort bekommt die Nummer
+    der Liste (ref_fahrplan behält die alte). Ohne diese Zuordnung blieben 271–275, 281–284, 351–357, 581–585, 591–594 ohne
+    Verlauf. Rückgabe: Zahl umbenannter Linien."""
+    n = 0
+    for k, (ref, weg, hinweis) in (liste or {}).items():
+        m = STADTBUS_RX.search(hinweis or '')
+        if not m or any(ref_norm(f['properties'].get('ref', '')) == k for f in feats):
+            continue
+        ort, nr = halt_norm(m.group(1)), ref_norm(m.group(2))
+        for f in feats:
+            p = f['properties']
+            if ref_norm(p.get('ref', '')) != nr or p.get('ref_fahrplan'):
+                continue
+            text = halt_norm(' '.join(str(p.get(x, '') or '') for x in ('name', 'from', 'to')))
+            if ort and (' ' + ort + ' ') in (' ' + text + ' '):
+                p['ref_fahrplan'], p['ref'] = p.get('ref', ''), ref
+                p['name'] = re.sub(r'^[^:]*:', ref + ':', str(p.get('name', '')), count=1)
+                n += 1
+                log(slug, 'Stadtbus', m.group(1), 'Linie', m.group(2), '→', ref)
+    return n
+
+
 def zusammenfassen(feats):
     """Dieselbe Linie (Nummer und Betreiber) steht in den Fahrplandaten oft mehrfach (mehrere route_id, etwa je
     Fahrplanperiode oder Linienvariante). Diese Einträge werden zu einer Linie mit allen Fahrtmustern zusammengeführt."""
@@ -584,7 +642,7 @@ def zusammenfassen(feats):
         p = f['properties']
         gruppen.setdefault((p['ref'].strip().lower(), p['operator'].strip().lower()), []).append(f)
     out = []
-    for gruppe in gruppen.values():
+    for gruppe in [g for gr in gruppen.values() for g in orte_trennen(gr)]:
         if len(gruppe) == 1:
             out.append(gruppe[0])
             continue
@@ -635,36 +693,42 @@ def gleiche_nummer(feats, liste, v, verbuende, kreise, slug=''):
     Eintrag zum Linienweg der offiziellen Liste, fallen die übrigen weg, wenn sie überwiegend (über 25 %) außerhalb des Verbunds
     fahren oder ihr Betreiber einen anderen Verbund nennt („NVV - Faisy“ im VSN). Kasseler Tram 4 neben StadtBus Eschwege 4 bleibt.
     Verglichen werden Haltestellennamen, Start und Ziel – nicht der angehängte Linienweg der Liste. Rückgabe: Zahl entfernter Einträge."""
-    if not liste:
-        return 0
     ids = [k for k in v['kreise'] if k in kreise]
     andere = [str(x.get('kurz', '')).lower() for x in verbuende if x.get('slug') != v['slug'] and x.get('kurz')]
     gruppen = {}
     for f in feats:
         gruppen.setdefault(ref_norm(f['properties'].get('ref', '')), []).append(f)
     raus = set()
+    def anteil(f):
+        pts = list(koordinaten(f.get('geometry')))
+        pts = pts[::max(1, len(pts) // 60)]
+        return (sum(1 for x, y in pts if kreis_von(x, y, kreise, ids) is not None) / len(pts)) if pts and ids else 1.0
+    def namen(f):
+        p = f['properties']
+        return [[(0, 0, n) for n, _, _ in (f.get('_namen') or [])] + [(0, 0, str(p.get(k, '') or '')) for k in ('from', 'to', 'name', 'description')]]
     for r, fs in gruppen.items():
-        if len(fs) < 2 or r not in liste or not weg_woerter(liste[r][1]):
+        if len(fs) < 2:
             continue
-        def namen(f):
-            p = f['properties']
-            return [[(0, 0, n) for n, _, _ in (f.get('_namen') or [])] + [(0, 0, str(p.get(k, '') or '')) for k in ('from', 'to', 'name', 'description')]]
-        passt = [f for f in fs if weg_passt(liste[r][1], namen(f))]
-        if not passt or len(passt) == len(fs):
+        weg = liste[r][1] if r in liste else ''
+        passt = [f for f in fs if weg_passt(weg, namen(f))] if weg_woerter(weg) else []
+        if passt and len(passt) == len(fs):
             continue
+        drin = {id(f): anteil(f) for f in fs}
         for f in fs:
             if any(f is x for x in passt):
                 continue
             p = f['properties']
             op = str(p.get('operator', '') or '').lower()
             fremd_op = any(re.search(r'(^|[^a-z])' + re.escape(re.sub(r'[^a-z0-9]', '', k)) + r'([^a-z]|$)', op) for k in andere if re.sub(r'[^a-z0-9]', '', k))
-            pts = list(koordinaten(f.get('geometry')))
-            pts = pts[::max(1, len(pts) // 60)]
-            drin = (sum(1 for x, y in pts if kreis_von(x, y, kreise, ids) is not None) / len(pts)) if pts and ids else 1.0
-            if fremd_op or drin < 0.75:
+            if passt:
+                weg_damit = fremd_op or drin[id(f)] < 0.75
+            else:    # 3.0 (Fassung 59): kein passender Linienweg (VRB 264 „Velstove – VW-Werk“) – fährt ein Eintrag ganz im Verbund (≥ 90 %),
+                     # fallen die überwiegend außerhalb fahrenden (< 60 %) weg: Harzer 264/265 ab Braunlage, PVG 803 ab Wittingen
+                weg_damit = drin[id(f)] < 0.6 and any(drin[id(x)] >= 0.9 for x in fs if x is not f)
+            if weg_damit:
                 raus.add(id(f))
                 log(slug, 'Linie', p.get('ref'), '(%s, %s → %s) nicht übernommen – gleiche Nummer, anderer Linienweg, %d %% im Verbund'
-                    % (p.get('operator', ''), p.get('from', ''), p.get('to', ''), round(drin * 100)))
+                    % (p.get('operator', ''), p.get('from', ''), p.get('to', ''), round(drin[id(f)] * 100)))
     if raus:
         feats[:] = [f for f in feats if id(f) not in raus]
     return len(raus)
@@ -945,6 +1009,9 @@ ZUG_RX = re.compile(r'^(?:RB|RE|RS|S|IRE|ME|MEX|ERB|HLB|NWB|STB|IC|ICE|EC|EN|FLX
 ALT_RX = re.compile(r'\b(?:ALT|AST)\b|\b(?:[Aa]nruf-?[Ll]inien-?[Tt]axi|AnrufLinienTaxi|Anruflinientaxi|[Aa]nruf-?[Ss]ammel-?[Tt]axi|Anrufsammeltaxi|Linientaxi|[Aa]nruf-?[Bb]us)\b')
 
 
+MODELL_RX = re.compile(r'^(?:golf|polo|passat|tigua?n?|toura?n?|tora|turan|arteon|caddy|crafter|amarok|sharan|scirocco|touareg|taigo|t-?roc|t-?cross|jetta|multivan|transporter|id\.?\s?\d|id\.?\s?buzz|up!?)$', re.I)
+
+
 def keine_linie(ref, von='', nach='', name='', art=''):
     """Version 2.2: Linien, die nicht ins Liniennetz gehören – zusammengesetzte Nummern („31, 32“, „501/52“, „31+32“),
     Sonderkennungen ohne Fahrgastbetrieb („E“, „E80“, „F“, „S“), Züge (RB, RE, S-Bahn …), Anruf-Linien-Taxis
@@ -955,6 +1022,8 @@ def keine_linie(ref, von='', nach='', name='', art=''):
     if not ref or re.search(r'[,;/+&]|\s(?:und|u\.)\s', ref, re.I):
         return True
     if re.match(r'^(?:E|F|S)$', ref, re.I) or re.match(r'^E\d{1,3}$', ref, re.I):
+        return True
+    if MODELL_RX.match(ref):    # 3.0: Werksverkehre mit Modellnamen (VRB „Golf“, „Tiguan“, „Touran“, gekürzt „Tigua“, „Toura“)
         return True
     if ZUG_RX.match(ref) or str(art or '').lower() in ('train', 'subway', 'rail', 'monorail', 'funicular', 'aerialway', 'taxi'):
         return True
@@ -1001,6 +1070,8 @@ def gedaechtnis(feats, alt_pfad, heute, tage=28, slug='', fremd=None):
         return 0
     schl = lambda p: (str(p.get('ref', '')).strip().lower(), str(p.get('operator', '')).strip().lower())
     vorhanden = {schl(f['properties']) for f in feats}
+    # 3.0: umbenannte Stadtbusse (Eschwege „4“ → 274) – die alte Nummer nicht aus der Vorwoche zurückholen
+    vorhanden |= {(str(f['properties']['ref_fahrplan']).strip().lower(), str(f['properties'].get('operator', '')).strip().lower()) for f in feats if f['properties'].get('ref_fahrplan')}
     grenze = time.strftime('%Y-%m-%d', time.gmtime(time.time() - tage * 86400))
     n = 0
     for f in alt.get('features', []):
@@ -1221,10 +1292,15 @@ def _m(a, b):
     return math.hypot((a[0] - b[0]) * 111320 * math.cos(math.radians(a[1])), (a[1] - b[1]) * 110540)
 
 
+def weg_teile(weg):
+    """3.0: Linienweg in Haltestellen teilen – Listen schreiben „A – B“, „A <> B“, „A > B“ oder „A → B“ (NVV)."""
+    return [t.strip() for t in re.split(r'\s+(?:[–—-]|<>|<->|>|→|↔)\s+', str(weg or '')) if t.strip()]
+
+
 def halte_aus_weg(weg, index):
     """2.3: Linienweg „Hameln – Groß Berkel – Aerzen / Reinerbeck“ → Koordinaten der passenden Haltestellen (lon, lat, Name).
     Erst eindeutige Namen, dann die übrigen nahe an den Nachbarn (z. B. „Bahnhof“ bei Hameln)."""
-    teile = [t.strip() for t in re.split(r'\s+[–—-]\s+', str(weg or '')) if t.strip()]
+    teile = weg_teile(weg)
     namen = [halt_norm(re.split(r'\s*/\s*|\(', t)[0]) for t in teile]
     kand = []
     for n in namen:
@@ -1254,6 +1330,75 @@ def halte_aus_weg(weg, index):
         if not out or _m(out[-1], w) > 30:
             out.append(w)
     return out
+
+
+GEBIET_RX = re.compile(r'^\s*(Samtgemeinde|Gemeinde|Flecken|Stadt|Einheitsgemeinde)\s+(.+?)\s*$', re.I)
+GEMEINDEN = {'datei': None, 'flaechen': None}
+
+
+def gemeinden_laden(datei, namen):
+    """3.0: Flächen der gesuchten Gemeinden aus osmium export (eine GeoJSON-Zeile je Fläche, Eigenschaften name, admin_level).
+    Nur die gesuchten Namen werden behalten. Rückgabe {name_norm: [(admin_level, polygone, (lon, lat) Mitte)]}."""
+    if GEMEINDEN['datei'] == datei and GEMEINDEN['flaechen'] is not None:
+        return GEMEINDEN['flaechen']
+    out = {}
+    try:
+        with open(datei, encoding='utf-8') as fh:
+            for zeile in fh:
+                zeile = zeile.strip().lstrip('\x1e')
+                if not zeile or '"admin_level"' not in zeile:
+                    continue
+                try:
+                    f = json.loads(zeile)
+                except ValueError:
+                    continue
+                p, g = f.get('properties') or {}, f.get('geometry') or {}
+                n = halt_norm(p.get('name', ''))
+                if n not in namen or g.get('type') not in ('Polygon', 'MultiPolygon'):
+                    continue
+                polys = [g['coordinates']] if g['type'] == 'Polygon' else g['coordinates']
+                ring = max((pl[0] for pl in polys), key=len)
+                mitte = (sum(c[0] for c in ring) / len(ring), sum(c[1] for c in ring) / len(ring))
+                out.setdefault(n, []).append((str(p.get('admin_level', '')), polys, mitte))
+    except OSError:
+        out = {}
+    GEMEINDEN.update(datei=datei, flaechen=out)
+    return out
+
+
+def gebiete_ergaenzen(feats, liste, v, kreise, datei):
+    """3.0 (Fassung 59): AST-Linien, die nur ein Gebiet nennen („9130 Gemeinde Rosdorf“, „9173 Samtgemeinde Radolfshausen“),
+    haben weder Fahrplandaten noch Haltestellen – sie fahren nach Anmeldung in der Gemeinde. Sie bekommen die Gemeindefläche
+    aus OpenStreetMap (verlauf „gebiet“), die Karte zeigt sie als Bediengebiet. Rückgabe: Zahl ergänzter Gebiete."""
+    if not liste or not datei or not os.path.exists(datei):
+        return 0
+    da = {ref_norm(f['properties'].get('ref', '')) for f in feats}
+    gesucht = {}
+    for k, (ref, weg, hinweis) in liste.items():
+        m = GEBIET_RX.match(weg or '')
+        if m and k not in da and not keine_linie(ref):
+            gesucht[k] = (ref, weg, hinweis, m.group(1).lower(), halt_norm(m.group(2)))
+    if not gesucht:
+        return 0
+    flaechen = gemeinden_laden(datei, {x[4] for x in gesucht.values()})
+    ids = [k for k in v['kreise'] if k in kreise]
+    n = 0
+    for k, (ref, weg, hinweis, art, name) in gesucht.items():
+        kand = [x for x in flaechen.get(name, []) if not ids or kreis_von(x[2][0], x[2][1], kreise, ids) is not None]
+        if not kand:
+            log(v['slug'], 'Gebiet', weg, 'nicht gefunden')
+            continue
+        stufe = '7' if art == 'samtgemeinde' else '8'
+        _, polys, _ = sorted(kand, key=lambda x: (x[0] != stufe, -len(x[1][0][0])))[0]
+        neu = [[[[round(x, 5), round(y, 5)] for x, y in vereinfachen([tuple(c) for c in ring], 0.0003)] for ring in pl[:1]] for pl in polys]
+        geom = {'type': 'Polygon', 'coordinates': neu[0]} if len(neu) == 1 else {'type': 'MultiPolygon', 'coordinates': neu}
+        feats.append({'type': 'Feature', 'properties': {
+            'ref': ref, 'name': '%s: %s' % (ref, weg), 'from': weg, 'to': '', 'operator': '', 'network': v.get('kurz', ''), 'route': 'bus',
+            'quelle': 'liste', 'verlauf': 'gebiet', 'weg': weg, 'hinweis': hinweis, 'description': weg}, 'geometry': geom})
+        n += 1
+    if n:
+        log(v['slug'], n, 'Bediengebiete (Gemeindeflächen) ergänzt')
+    return n
 
 
 def liste_anwenden(feats, liste, index, osm_idx, v):
@@ -1292,7 +1437,7 @@ def liste_anwenden(feats, liste, index, osm_idx, v):
             verlauf = 'haltestellen'
         if not geom:
             continue
-        teile = [t.strip() for t in re.split(r'\s+[–—-]\s+', weg) if t.strip()]
+        teile = weg_teile(weg)
         feats.append({'type': 'Feature', 'properties': {
             'ref': ref, 'name': '%s: %s => %s' % (ref, teile[0], teile[-1]) if len(teile) > 1 else 'Linie ' + ref,
             'from': teile[0] if teile else '', 'to': teile[-1] if len(teile) > 1 else '', 'operator': '', 'network': v.get('kurz', ''), 'route': 'bus',
@@ -1480,6 +1625,7 @@ def main():
     ap.add_argument('--overpass-url', default=OVERPASS_URL)
     ap.add_argument('--verbuende', default=os.path.join(HIER, 'verbuende.json'), help='Verbünde (Vorgabe: verbuende.json neben dem Skript)')
     ap.add_argument('--behalten-tage', type=int, default=28, help='fehlende Linien so viele Tage aus der Vorwoche behalten (0 = aus); ersetzte Linien nie')
+    ap.add_argument('--gemeinden', default=os.path.join(HIER, 'osm', 'gemeinden.geojsonseq'), help='3.0: Gemeindegrenzen (osmium export, GeoJSON-Zeilen) für AST-Gebiete')
     ap.add_argument('--osm-auszug', default=os.path.join(HIER, 'osm', 'auszug.opl'), help='OpenStreetMap-Auszug (OPL), Vorgabe osm/auszug.opl; fehlt er, wird Overpass gefragt')
     ap.add_argument('--osm-json', help='vorbereitete Overpass-Antworten statt Abfrage, z. B. osm/{slug}.json (für Tests)')
     ap.add_argument('--regeln', default=os.environ.get('GOEBUS_REGELN', ''), help='Regeln der Website (ersetzte Linien), Adresse oder Datei; Vorgabe: Umgebungsvariable GOEBUS_REGELN')
@@ -1557,6 +1703,7 @@ def main():
                 osm_alle = osm_refs_im_netz(overpass_holen(overpass_alle_abfrage(v), a.overpass_url), v)
         quelle = quellen_refs(v) if v.get('quellen') else (set(), [])
         feats[:] = [f for f in feats if not fernbus(f['properties'])]                                   # 2.9
+        stadt_n = stadtbus_zuordnen(feats, LISTEN.get(v['slug'], {}), v['slug'])                         # 3.0: 271 = StadtBus Eschwege · Linie 1
         gleich_n = gleiche_nummer(feats, LISTEN.get(v['slug'], {}), v, verbuende, kreise, v['slug'])     # 2.9: vor Haltestellen und Folgen
         for f in feats:    # 2.4: Haltestellen mit ihren Linien sammeln (vor dem Aufräumen)
             for n, x, y in f.get('_namen') or []:
@@ -1593,6 +1740,7 @@ def main():
         reg_n = regeln_anwenden(feats, regeln, v['slug'], ziel, archiv) if regeln else 0
         weg_n = wege_ergaenzen(feats, HALTE_ALLE, osm_idx)
         li_weg, li_neu = liste_anwenden(feats, LISTEN.get(v['slug'], {}), HALTE_REGION, osm_idx, v)    # 2.3
+        geb_n = gebiete_ergaenzen(feats, LISTEN.get(v['slug'], {}), v, kreise, a.gemeinden)              # 3.0: AST „Gemeinde Rosdorf“ als Fläche
         feats[:] = [f for f in feats if not keine_linie(f['properties'].get('ref', ''), f['properties'].get('from'), f['properties'].get('to'), f['properties'].get('name', ''), f['properties'].get('route', ''))]
         if reg_n or weg_n:
             log(v['slug'], reg_n, 'Verläufe nach Regeln übertragen,', weg_n, 'Linienwege („von → nach“) ergänzt')
@@ -1604,9 +1752,13 @@ def main():
                         SKIZZE['cache'] = json.load(fh)
                 except (OSError, ValueError):
                     SKIZZE['cache'] = {}
-                SKIZZE['ende'] = time.time() + 60 * float(os.environ.get('GOEBUS_SKIZZE_MINUTEN', '20'))
+                SKIZZE['ende'] = time.time() + 60 * float(os.environ.get('GOEBUS_SKIZZE_MINUTEN', '') or '45')
             verworfen = {str(x).strip() for x in ((regeln or {}).get('skizze_aus') or {}).get(v['slug'], [])}    # Fassung 56: in der Verwaltung verworfen
-            sk_n = skizzen([f for f in feats if f['properties'].get('ref', '').strip() not in verworfen], SKIZZE['cache'], SKIZZE['ende'])
+            # 2.9 (Fassung 59): Zeitbudget gerecht verteilen – jeder Verbund bekommt seinen Anteil der Restzeit (Öffis kam als letzter sonst nie dran);
+            # was ein Verbund nicht braucht, geht an die folgenden.
+            uebrig = max(1, len(verbuende) - verbuende.index(v))
+            ende_v = time.time() + max(0.0, SKIZZE['ende'] - time.time()) / uebrig
+            sk_n = skizzen([f for f in feats if f['properties'].get('ref', '').strip() not in verworfen], SKIZZE['cache'], ende_v)
             if sk_n:
                 log(v['slug'], sk_n, 'Linienverläufe über die Straßen skizziert')
         if not feats:
@@ -1619,7 +1771,7 @@ def main():
             json.dump(geo, fh, ensure_ascii=False, separators=(',', ':'))
         os.replace(ziel + '.neu', ziel)
         dauer['verbuende'][v['slug']] = round(time.time() - tv)
-        stand['verbuende'][v['slug']] = {'datei': v['datei'], 'linien': len(feats), 'liste_wege': li_weg, 'liste_neu': li_neu, 'osm_verlauf': osm_n, 'fahrplan_verlauf': fp_n, 'verlauf_vorwoche': vw_n, 'aus_vorwoche': alt_n, 'gleiche_nummer_entfernt': gleich_n, 'osm': osm_status}
+        stand['verbuende'][v['slug']] = {'datei': v['datei'], 'linien': len(feats), 'liste_wege': li_weg, 'liste_neu': li_neu, 'osm_verlauf': osm_n, 'fahrplan_verlauf': fp_n, 'verlauf_vorwoche': vw_n, 'aus_vorwoche': alt_n, 'gleiche_nummer_entfernt': gleich_n, 'stadtbus_zugeordnet': stadt_n, 'gebiete': geb_n, 'osm': osm_status}
         bericht['verbuende'][v['slug']] = bericht_verbund(v, feats)
         if ERSETZT.get(v['slug']):
             bericht['verbuende'][v['slug']]['ersetzt'] = ERSETZT[v['slug']]

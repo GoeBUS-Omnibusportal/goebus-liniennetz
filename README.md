@@ -29,6 +29,16 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 59 (Skript 3.0)
+
+- **Orte trennen:** Gleiche Nummer und gleicher Betreiber heißt nicht gleiche Linie („NVV - Faisy“ fährt die 1 in Bad Wildungen, Eschwege, Witzenhausen, Bad Hersfeld und Korbach). Zusammengeführt wird nur, was höchstens 4 km auseinanderliegt.
+- **Stadtbusse:** Nennt die offizielle Liste „StadtBus Eschwege · Linie 1“ (NVV 271), bekommt die Linie 1 in Eschwege die Nummer 271 (`ref_fahrplan` behält die alte). Aus der Vorwoche kommt die alte Nummer nicht zurück.
+- **Linienwege der Listen** mit „<>“, „>“ oder „→“ werden jetzt in Haltestellen zerlegt (bisher nur „–“).
+- **AST-Gebiete:** „Gemeinde Rosdorf“, „Samtgemeinde Radolfshausen“, „Flecken Bovenden“ … bekommen die Gemeindefläche aus OpenStreetMap (`--gemeinden osm/gemeinden.geojsonseq`, im Workflow aus den Geofabrik-Auszügen; verlauf „gebiet“). Fehlt die Datei, läuft alles wie bisher.
+- **Gleiche Nummer ohne passenden Linienweg:** Fährt ein Eintrag ganz im Verbund (mind. 90 %), fallen Einträge mit derselben Nummer weg, die überwiegend außerhalb fahren (unter 60 %) – VRB 264/265 (Harzer ab Braunlage), 803 (PVG ab Wittingen).
+- **Werksverkehre** mit Modellnamen (Golf, Tiguan/Tigua, Touran/Toura, Tora …) sind keine Linien.
+- **Skizzen:** bis zu 45 Minuten je Lauf (`GOEBUS_SKIZZE_MINUTEN`, als Variable in GitHub änderbar), gerecht auf die Verbünde verteilt. Zeitlimit des Schritts 70, des Auftrags 110 Minuten (`.github/workflows/liniennetz.yml`).
+
 ## Neu in Fassung 58 (Skript 2.9, Ergänzung)
 
 - **Lücken skizzieren:** Auch gemischte Verläufe („osm+haltestellen“, „fahrplan+haltestellen“) werden vervollständigt: Die geraden Verbindungen stehen am Ende der Geometrie (Anzahl in `properties.luecken`) und werden über die Straßen gelegt → „osm+skizze“ bzw. „fahrplan+skizze“. Alle Teile einer Linie, nicht mehr höchstens vier. Eine Linie wird erst umgestellt, wenn alle Lücken berechnet sind; Berechnetes liegt in `daten/skizzen.json`.

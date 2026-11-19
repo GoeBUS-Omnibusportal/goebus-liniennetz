@@ -1,111 +1,113 @@
 {
- "erzeugt": "2026-11-17T05:57:57Z",
+ "erzeugt": "2026-11-19T04:19:56Z",
  "version": "3.0",
  "linienwege": false,
  "verbuende": {
   "vsn": {
    "datei": "vsn_linien.json",
-   "linien": 155,
+   "linien": 152,
    "liste_wege": 140,
    "liste_neu": 1,
-   "osm_verlauf": 133,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
-   "aus_vorwoche": 9,
-   "gleiche_nummer_entfernt": 13,
+   "verlauf_vorwoche": 50,
+   "aus_vorwoche": 4,
+   "gleiche_nummer_entfernt": 8,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "nvv": {
    "datei": "nvv_linien.json",
    "linien": 420,
-   "liste_wege": 393,
-   "liste_neu": 16,
-   "osm_verlauf": 158,
+   "liste_wege": 401,
+   "liste_neu": 8,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 1,
-   "aus_vorwoche": 2,
-   "gleiche_nummer_entfernt": 12,
+   "verlauf_vorwoche": 82,
+   "aus_vorwoche": 9,
+   "gleiche_nummer_entfernt": 11,
    "stadtbus_zugeordnet": 9,
    "gebiete": 0,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "vrb": {
    "datei": "vrb_linien.json",
-   "linien": 305,
-   "liste_wege": 293,
-   "liste_neu": 0,
-   "osm_verlauf": 233,
+   "linien": 296,
+   "liste_wege": 290,
+   "liste_neu": 1,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 4,
-   "aus_vorwoche": 2,
-   "gleiche_nummer_entfernt": 7,
+   "verlauf_vorwoche": 187,
+   "aus_vorwoche": 1,
+   "gleiche_nummer_entfernt": 6,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "rosa": {
    "datei": "svhi_rvhi_linien.json",
-   "linien": 82,
+   "linien": 80,
    "liste_wege": 62,
    "liste_neu": 2,
-   "osm_verlauf": 54,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
+   "verlauf_vorwoche": 24,
    "aus_vorwoche": 1,
    "gleiche_nummer_entfernt": 0,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "rvhi": {
    "datei": "rvhi_linien.json",
-   "linien": 82,
+   "linien": 80,
    "liste_wege": 41,
    "liste_neu": 2,
-   "osm_verlauf": 54,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
+   "verlauf_vorwoche": 24,
    "aus_vorwoche": 2,
    "gleiche_nummer_entfernt": 0,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   },
   "oeffis": {
    "datei": "vhp_linien.json",
    "linien": 75,
-   "liste_wege": 64,
-   "liste_neu": 4,
-   "osm_verlauf": 33,
+   "liste_wege": 62,
+   "liste_neu": 6,
+   "osm_verlauf": 0,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 0,
-   "aus_vorwoche": 7,
+   "verlauf_vorwoche": 15,
+   "aus_vorwoche": 5,
    "gleiche_nummer_entfernt": 0,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "ok (Auszug)"
+   "osm": "nicht erreichbar"
   }
  },
  "regeln": true,
  "dauer": {
-  "fahrplandaten_laden": 11,
-  "fahrplandaten_auswerten": 226,
-  "osm_auszug_lesen": 7,
+  "fahrplandaten_laden": 14,
+  "fahrplandaten_auswerten": 159,
+  "osm_auszug_lesen": 0,
   "verbuende": {
-   "vsn": 32,
-   "nvv": 575,
-   "vrb": 570,
-   "rosa": 375,
-   "rvhi": 22,
-   "oeffis": 479
+   "vsn": 688,
+   "nvv": 454,
+   "vrb": 455,
+   "rosa": 345,
+   "rvhi": 1,
+   "oeffis": 331
   },
-  "gesamt": 2299
+  "gesamt": 2448
  },
- "osm_quelle": "geofabrik",
+ "osm_quelle": "overpass",
  "overpass": [
-  "Geofabrik-Auszug (ohne Overpass)"
+  "Fehler: https://overpass-api.de/api/interpreter (<urlopen error [Errno 101] Network is unreachable>)",
+  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
+  "Fehler: https://overpass.private.coffee/api/interpreter (HTTP Error 504: Gateway Timeout)"
  ],
  "haltestellen": 12509
 }

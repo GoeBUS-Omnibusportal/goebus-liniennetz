@@ -73,7 +73,7 @@ jobs:
       - name: Letzten OpenStreetMap-Auszug bereitlegen
         # Fassung 60: Am 19.11. lud Geofabrik für alle vier Gebiete nicht (und Overpass antwortete nicht) – der Lauf hatte dann
         # gar keine Linienwege aus OpenStreetMap. Jetzt liegt der letzte gute Auszug im Zwischenspeicher von GitHub bereit.
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5   # Fassung 63: Node 24 (v4 lief noch mit Node 20)
         with:
           path: osm-vorrat
           key: osm-${{ github.run_id }}
@@ -85,11 +85,11 @@ jobs:
 
       - name: Routenplaner-Daten bereitlegen
         id: osrmcache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5   # Fassung 63: Node 24 (v4 lief noch mit Node 20)
         with:
           path: osrm
-          key: osrm-bus-v1-${{ env.WOCHE }}
-          restore-keys: osrm-bus-v1-
+          key: osrm-bus-v2-${{ env.WOCHE }}
+          restore-keys: osrm-bus-v2-
 
       - name: Routenplaner neu bauen?
         if: ${{ steps.osrmcache.outputs.cache-hit != 'true' }}
@@ -121,11 +121,25 @@ jobs:
           pruefe osrm-oeffentlich "https://router.project-osrm.org/route/v1/driving/9.926800,51.536500;9.935900,51.533200?overview=false" || true
           pruefe gtfs.de "https://download.gtfs.de/germany/free/latest.zip" || true
           pruefe ghcr.io "https://ghcr.io/v2/" || true
-          # Fassung 62: die Website so prüfen, wie das Skript sie abruft (Python, gleiche Kennung) – curl bekam am 22.11. 404, Python die Regeln
+          # Fassung 62/63: die Website so prüfen, wie das Skript sie abruft (Python, gleiche Kennung, gleiche Adresse). Am 22.11. stand in
+          # GOEBUS_ADRESSE die Adresse der Verwaltung („…/_admin/“) – das Skript macht daraus die Website, die Prüfung bisher nicht
+          # (…/_admin//_data/… → 404, angezeigt als „keine Verbindung“). Jetzt gleiche Umrechnung und der echte HTTP-Code.
           if [ -n "${{ vars.GOEBUS_ADRESSE }}" ]; then
-            u="${{ vars.GOEBUS_ADRESSE }}/_data/verbund-tarife/linien-regeln.json"; t0=$(date +%s%3N)
-            code=$(python3 -c "import sys,urllib.request as u;r=u.Request(sys.argv[1],headers={'User-Agent':'GoeBUS-Liniennetz/3.2 (+https://www.goebus.de)'});print(u.urlopen(r,timeout=30).status)" "$u" 2>/dev/null || echo 000)
-            ms=$(( $(date +%s%3N) - t0 )); printf '%-28s %s  %5d ms  %s\n' goebus.de "$code" "$ms" "$u"
+            t0=$(date +%s%3N)
+            read -r code u < <(python3 - "${{ vars.GOEBUS_ADRESSE }}" <<'PY'
+          import re, sys, urllib.error, urllib.request as ur
+          a = re.sub(r'/_admin/*$', '', sys.argv[1].strip().rstrip('/'))
+          u = a + '/_data/verbund-tarife/linien-regeln.json'
+          try:
+              c = ur.urlopen(ur.Request(u, headers={'User-Agent': 'GoeBUS-Liniennetz/3.3 (+https://www.goebus.de)'}), timeout=30).status
+          except urllib.error.HTTPError as e:
+              c = e.code
+          except Exception:
+              c = '000'
+          print(c, u)
+          PY
+            )
+            ms=$(( $(date +%s%3N) - t0 )); printf '%-28s %s  %5d ms  %s\n' goebus.de "${code:-000}" "$ms" "$u"
             printf '{"name":"%s","url":"%s","code":"%s","ms":%d}\n' goebus.de "$u" "$code" "$ms" >> osm/quellen.jsonl
           fi
           { echo '['; paste -sd, osm/quellen.jsonl; echo ']'; } > osm/quellen.json
@@ -206,7 +220,7 @@ jobs:
       - name: OpenStreetMap-Auszug für spätere Läufe speichern
         if: ${{ hashFiles('osm-vorrat/stand.txt') != '' }}
         continue-on-error: true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5   # Fassung 63: Node 24
         with:
           path: osm-vorrat
           key: osm-${{ github.run_id }}
@@ -230,12 +244,15 @@ jobs:
             # Bus-Teil vor dem abschließenden „return {“ der Kopie von car.lua einfügen
             awk 'FNR==NR { z[++n] = $0; next } { b[++m] = $0 } END { for (i = m; i > 0; i--) if (b[i] ~ /^return[ ]*\{/) { r = i; break }
                  for (i = 1; i <= m; i++) { if (i == r) for (j = 1; j <= n; j++) print z[j]; print b[i] } }' osrm-bus.lua osm/car.lua > osm/bus.lua
-            grep -q "GöBUS Fassung 61" osm/bus.lua || { echo "::warning::Bus-Profil nicht eingefügt – Auto-Profil"; cp osm/car.lua osm/bus.lua; }
+            grep -q "GöBUS Fassung 61" osm/bus.lua && grep -q "Fassung 63" osm/bus.lua || { echo "::warning::Bus-Profil nicht eingefügt – Auto-Profil"; cp osm/car.lua osm/bus.lua; }
             rm -rf osrm-neu && mkdir osrm-neu && mv osm/region.osm.pbf osrm-neu/
             echo "$(date +%T) osrm-extract"
             docker run --rm -v "$PWD/osrm-neu:/data" -v "$PWD/osm/bus.lua:/opt/bus.lua:ro" "$IMG" osrm-extract -p /opt/bus.lua /data/region.osm.pbf
             docker run --rm -v "$PWD/osrm-neu:/data" "$IMG" osrm-partition /data/region.osrm
             docker run --rm -v "$PWD/osrm-neu:/data" "$IMG" osrm-customize /data/region.osrm
+            # Fassung 63: Docker legt die Dateien als root an (region.osrm.fileIndex nur für root lesbar) – am 22.11. scheiterte
+            # deshalb das Speichern im Zwischenspeicher („Permission denied“). Dateien dem Lauf übergeben.
+            sudo chown -R "$(id -u):$(id -g)" osrm-neu && chmod -R u+rwX,go+rX osrm-neu
             rm -f osrm-neu/region.osm.pbf && date -u +%F > osrm-neu/stand.txt
             rm -rf osrm && mv osrm-neu osrm && echo "OSRM_NEU=1" >> "$GITHUB_ENV"
             echo "$(date +%T) Routenplaner gebaut"; du -sh osrm
@@ -257,10 +274,10 @@ jobs:
       - name: Routenplaner-Daten für spätere Läufe speichern
         if: ${{ env.OSRM_NEU == '1' }}
         continue-on-error: true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5   # Fassung 63: Node 24
         with:
           path: osrm
-          key: osrm-bus-v1-${{ env.WOCHE }}
+          key: osrm-bus-v2-${{ env.WOCHE }}
 
       - name: Fahrplandaten und OpenStreetMap verarbeiten
         # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE

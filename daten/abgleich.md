@@ -1,10 +1,10 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-22T19:22:12Z · Skript 3.5 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-22T19:38:35Z · Skript 3.6 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
 Overpass: Geofabrik-Auszug (ohne Overpass)
 
-## VSN – 155 Linien
+## VSN – 153 Linien
 
 - **Verlauf:** 0 Linienweg aus den Fahrplandaten, 46 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 800
@@ -52,9 +52,9 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## RVHI – 71 Linien
+## RVHI – 59 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 17 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 8 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 43, 5
 - **Weniger als drei Halte:** 43, 5
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
@@ -64,7 +64,7 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## OEFFIS – 74 Linien
+## OEFFIS – 73 Linien
 
 - **Verlauf:** 0 Linienweg aus den Fahrplandaten, 15 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 39, 521, 522, 524, 525, 59, 79

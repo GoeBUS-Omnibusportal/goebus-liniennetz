@@ -1,24 +1,22 @@
 {
- "erzeugt": "2026-11-22T19:22:12Z",
- "version": "3.5",
+ "erzeugt": "2026-11-22T19:38:35Z",
+ "version": "3.6",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {
-   "linien": 155,
+   "linien": 153,
    "verlauf": {
-    "skizze": 29,
+    "skizze": 27,
     "osm": 46,
     "osm+skizze": 80
    },
-   "aus_vorwoche": 3,
+   "aus_vorwoche": 1,
    "betreiber": {
     "VSN-Direkt": 65,
     "Regionalbus Braunschweig": 52,
     "Göttinger Verkehrsbetriebe": 31,
     "Verkehrsgesellschaft Paderborn/Höxter": 3,
     "Tarifverb Region Braunschweig": 1,
-    "LK Hameln-Pyrmont": 1,
-    "Hildesheim": 1,
     "(ohne Angabe)": 1
    },
    "liste": [
@@ -1382,15 +1380,6 @@
      "gesehen": "2026-11-22"
     },
     {
-     "ref": "51",
-     "betreiber": "LK Hameln-Pyrmont",
-     "von": "Bodenwerder, Im Hagen",
-     "nach": "Ostertorwall",
-     "verlauf": "skizze",
-     "muster": 9,
-     "gesehen": "2026-11-22"
-    },
-    {
      "ref": "110",
      "betreiber": "VSN-Direkt",
      "von": "Adelebsen Schule, Mast 1 N",
@@ -1398,15 +1387,6 @@
      "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-13"
-    },
-    {
-     "ref": "642",
-     "betreiber": "Hildesheim",
-     "von": "Delligsen/Schulzentrum",
-     "nach": "Hoyershausen",
-     "verlauf": "skizze",
-     "muster": 8,
-     "gesehen": "2026-11-22"
     },
     {
      "ref": "800",
@@ -8819,15 +8799,15 @@
    "verlauf_vorwoche": 0
   },
   "rvhi": {
-   "linien": 71,
+   "linien": 59,
    "verlauf": {
-    "osm+skizze": 27,
+    "osm+skizze": 24,
     "skizze": 27,
-    "osm": 17
+    "osm": 8
    },
-   "aus_vorwoche": 12,
+   "aus_vorwoche": 0,
    "betreiber": {
-    "Hildesheim": 69,
+    "Hildesheim": 57,
     "(ohne Angabe)": 2
    },
    "liste": [
@@ -9345,114 +9325,6 @@
      "gesehen": "2026-11-22"
     },
     {
-     "ref": "1",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Scharfe Ecke",
-     "nach": "Hildesheim Himmelsthür",
-     "verlauf": "osm+skizze",
-     "muster": 5,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "2",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Im Mittelfeld",
-     "nach": "Hildesheim Nordstadt",
-     "verlauf": "osm",
-     "muster": 2,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "3",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Hildesheimer Wald",
-     "nach": "Hildesheim Einum Schmiede",
-     "verlauf": "osm",
-     "muster": 4,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "4",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Itzum",
-     "nach": "Hildesheim Bavenstedt",
-     "verlauf": "osm",
-     "muster": 4,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "6",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Im Koken-Hof",
-     "nach": "Hildesheim Stadtfeld Ost",
-     "verlauf": "osm",
-     "muster": 2,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "9",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Scharfe Ecke",
-     "nach": "Hildesheim Renataschule",
-     "verlauf": "osm",
-     "muster": 2,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "13",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Drispenstedt",
-     "nach": "Hildesheim Hildesheimer Wald",
-     "verlauf": "osm",
-     "muster": 1,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "17",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Hauptbahnhof-ZOB",
-     "nach": "Hildesheim Hauptbahnhof-ZOB",
-     "verlauf": "osm",
-     "muster": 2,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "101",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Himmelsthür",
-     "nach": "Hildesheim Bavenstedt",
-     "verlauf": "osm+skizze",
-     "muster": 3,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "103",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Hildesheimer Wald",
-     "nach": "Hildesheim Am Burghof",
-     "verlauf": "osm",
-     "muster": 2,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "104",
-     "betreiber": "Hildesheim",
-     "von": "Egenstedt",
-     "nach": "Hildesheim Bockfeld",
-     "verlauf": "osm+skizze",
-     "muster": 3,
-     "gesehen": "2026-11-22"
-    },
-    {
-     "ref": "108",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Theodor-Storm-Str.",
-     "nach": "Hildesheim Schuhstraße",
-     "verlauf": "osm",
-     "muster": 2,
-     "gesehen": "2026-11-22"
-    },
-    {
      "ref": "5",
      "betreiber": "",
      "von": "Diekholzen",
@@ -9495,16 +9367,16 @@
    "verlauf_vorwoche": 0
   },
   "oeffis": {
-   "linien": 74,
+   "linien": 73,
    "verlauf": {
     "osm": 15,
-    "skizze": 41,
+    "skizze": 40,
     "osm+skizze": 18
    },
-   "aus_vorwoche": 2,
+   "aus_vorwoche": 1,
    "betreiber": {
     "LK Hameln-Pyrmont": 53,
-    "Ostwestfalen-Lippe": 10,
+    "Ostwestfalen-Lippe": 9,
     "(ohne Angabe)": 7,
     "LK Schaumburg": 4
    },
@@ -10111,15 +9983,6 @@
      "verlauf": "skizze",
      "muster": 1,
      "gesehen": "2026-11-15"
-    },
-    {
-     "ref": "792",
-     "betreiber": "Ostwestfalen-Lippe",
-     "von": "Bad Pyrmont, Europaplatz",
-     "nach": "Detmold, Bahnhof",
-     "verlauf": "skizze",
-     "muster": 2,
-     "gesehen": "2026-11-02"
     },
     {
      "ref": "39",

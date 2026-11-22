@@ -43,7 +43,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '3.2'
+VERSION = '3.3'
 
 # 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
 import socket as _socket
@@ -175,23 +175,244 @@ def linie_zeiten(ms, uhr):
     return [uhr(ms[0]), uhr(ms[-1]), takt]
 
 
+# 3.3 (Fassung 63): Ortsnamen für Haltestellen ohne Ort („Bahnhof Pause“ → „Göttingen, Bahnhof/ZOB“, „Ostertorwall“ → „Hameln,
+# Ostertorwall“). Der Ort kommt von den Haltestellen der Umgebung, deren Name ihn nennt („Göttingen, Bahnhof/ZOB C“).
+_ORTE = {'n': -1, 'raster': {}, 'alle': set(), 'praefix': set(), 'datei': '', 'flaechen': None}
+_KEIN_ORT = {'bahnhof', 'hauptbahnhof', 'hbf', 'zob', 'bf', 'am', 'an', 'auf', 'im', 'in', 'zum', 'zur', 'bei', 'markt', 'kirche',
+             'rathaus', 'post', 'schule', 'friedhof', 'ortsmitte', 'mitte', 'dorfplatz', 'abzw', 'abzweig', 'kreuzung', 'gasthaus', 'linie',
+             'platz', 'weg', 'straße', 'str', 'haus', 'hof', 'klinikum', 'krankenhaus', 'schulzentrum', 'sportplatz', 'neues', 'neue',
+             'neuer', 'alte', 'alter', 'altes', 'hinter', 'vor', 'unter', 'über', 'nord', 'süd', 'ost', 'west', 'busbahnhof',
+             'gewerbegebiet', 'industriegebiet', 'siedlung', 'wendeplatz', 'wendeschleife', 'universität', 'uni', 'campus', 'der',
+             'die', 'das', 'den', 'dem', 'zentrum', 'stadion', 'freibad', 'hallenbad', 'kaserne', 'parkplatz', 'polizei', 'feuerwehr'}
+_STRASSE = re.compile(r'(?:straße|strasse|str\.?|weg|platz|allee|ring|gasse|damm|wall|tor|markt|brücke|ufer|chaussee|steg|pfad|kamp|stieg|höhe|garten|park)$|^(?:am|an|auf|im|in|zum|zur|hinter|vor|unter|über|bei)\b', re.I)
+_STEIG = re.compile(r'^(?:Mast|Steig|Bstg\.?|Bussteig|Gleis|Bahnsteig|Pos\.?)\b', re.I)
+
+
+def halt_sauber(n):
+    """Zusätze ohne Bedeutung für Fahrgäste entfernen: „(Ausstieg)“, „Pause“, „(AST)“, „, Mast 1 W“, Steigbuchstabe „ C“"""
+    n = re.sub(r'\s+', ' ', str(n or '')).strip()
+    for _ in range(3):
+        n0 = n
+        n = re.sub(r'\s*\((?:Ausstieg|nur Ausstieg|Ankunft|Pause|AST|ALT|Bedarf)\)\s*$', '', n, flags=re.I)
+        n = re.sub(r'\s+(?:Pause|Ausstieg|Ankunft)$', '', n, flags=re.I)
+        n = re.sub(r',?\s+(?:Mast|Steig|Bstg\.?|Bussteig|Pos\.?)\s*\d+[a-z]?(?:\s+[NOSW])?$', '', n, flags=re.I)
+        n = re.sub(r'(?<=[A-Za-zäöüÄÖÜß/.)])\s+[A-L]$', '', n)
+        if n == n0:
+            break
+    return n.strip(' ,')
+
+
+def _orte_raster():
+    if _ORTE['n'] == len(HALTE_ALLE):
+        return _ORTE
+    raster, alle, vorn, erst = {}, set(), defaultdict(set), defaultdict(set)
+    for x, y, n in HALTE_ALLE:
+        w = str(n or '').split()
+        if ',' not in str(n or '') and len(w) >= 3:
+            vorn[(w[0] + ' ' + w[1]).lower()].add(str(n))
+        t0 = re.split(r'[\s/(]', str(n or '').strip(), 1)[0].lower().rstrip('.')
+        if len(w) >= 2 or '/' in str(n or ''):
+            erst[t0].add(str(n))
+        t = [a.strip() for a in str(n or '').split(',', 1)]
+        if len(t) < 2 or not t[0] or not t[1] or _STEIG.match(t[1]) or len(t[0].split()) > 3 or len(t[0]) < 3 \
+                or t[0].split(' ', 1)[0].lower().rstrip('.') in _KEIN_ORT:    # „Hauptbahnhof, Korbach …“ ist kein Ort
+            continue
+        if t[0].split(' ', 1)[0].lower().rstrip('.') not in _KEIN_ORT:
+            alle.add(t[0].lower())
+            alle.add(t[0].split(' ', 1)[0].lower())
+        raster.setdefault((int(x * 100), int(y * 100)), []).append((x, y, t[0], halt_sauber(t[1])))
+    # Anfangswort von mindestens drei verschiedenen Haltestellennamen („Korbach Ziegelfeld“, „Korbach Bahnhof“, „Alfeld/…“) = Ort
+    for k, v in erst.items():
+        if len(v) >= 3 and len(k) >= 3 and k.rstrip('.') not in _KEIN_ORT and not _STRASSE.search(k) \
+                and sum(1 for x in v if _STRASSE.search(re.split(r'[\s/(]', x.strip())[1] if len(re.split(r'[\s/(]', x.strip())) > 1 else '')) * 2 < len(v):
+            alle.add(k)    # nicht „Liegnitzer Straße/Str. Nord/Weg“ (Straßennamen)
+    _ORTE.update(n=len(HALTE_ALLE), raster=raster, alle=alle, praefix={k for k, v in vorn.items() if len(v) >= 3})
+    return _ORTE
+
+
+def _gemeinde_flaechen():
+    """Gemeinden (admin_level 8) aus osmium export: [(name, (x0, y0, x1, y1), polygone)] – einmal je Lauf"""
+    if _ORTE['flaechen'] is not None:
+        return _ORTE['flaechen']
+    out = []
+    try:
+        with open(_ORTE.get('datei') or '', encoding='utf-8') as fh:
+            for zeile in fh:
+                zeile = zeile.strip().lstrip('\x1e')
+                if '"admin_level"' not in zeile:
+                    continue
+                try:
+                    f = json.loads(zeile)
+                except ValueError:
+                    continue
+                p, g = f.get('properties') or {}, f.get('geometry') or {}
+                if str(p.get('admin_level')) != '8' or not p.get('name') or g.get('type') not in ('Polygon', 'MultiPolygon'):
+                    continue
+                polys = [g['coordinates']] if g['type'] == 'Polygon' else g['coordinates']
+                xs = [c[0] for pl in polys for c in pl[0]]
+                ys = [c[1] for pl in polys for c in pl[0]]
+                out.append((str(p['name']), (min(xs), min(ys), max(xs), max(ys)), polys))
+    except OSError:
+        out = []
+    _ORTE['flaechen'] = out
+    _ORTE['gcache'] = {}
+    return out
+
+
+def _im_ring(x, y, ring):
+    innen, j = False, len(ring) - 1
+    for i in range(len(ring)):
+        xi, yi, xj, yj = ring[i][0], ring[i][1], ring[j][0], ring[j][1]
+        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / ((yj - yi) or 1e-12) + xi:
+            innen = not innen
+        j = i
+    return innen
+
+
+def gemeinde_von(x, y):
+    """3.3: Gemeinde (OpenStreetMap-Grenzen) einer Stelle; '' = keine Grenzen geladen oder außerhalb.
+    Raster je 0,1 Grad und Zwischenspeicher je Stelle – im Lauf Tausende Abfragen bei gut 2000 Gemeinden."""
+    fl = _gemeinde_flaechen()
+    if not fl:
+        return ''
+    k = (round(x, 4), round(y, 4))
+    zs = _ORTE.setdefault('gcache', {})
+    if k in zs:
+        return zs[k]
+    if _ORTE.get('graster_n') != len(fl):
+        r = defaultdict(list)
+        for i, (_n, (x0, y0, x1, y1), _p) in enumerate(fl):
+            for gx in range(int(x0 * 10), int(x1 * 10) + 1):
+                for gy in range(int(y0 * 10), int(y1 * 10) + 1):
+                    r[(gx, gy)].append(i)
+        _ORTE['graster'], _ORTE['graster_n'] = r, len(fl)
+    out = ''
+    for i in _ORTE['graster'].get((int(x * 10), int(y * 10)), ()):
+        name, (x0, y0, x1, y1), polys = fl[i]
+        if x0 <= x <= x1 and y0 <= y <= y1 and any(_im_ring(x, y, pl[0]) and not any(_im_ring(x, y, loch) for loch in pl[1:]) for pl in polys):
+            out = name
+            break
+    zs[k] = out
+    return out
+
+
+def ort_von(x, y, umkreis=1500):
+    """Ort einer Stelle: die Gemeinde aus den OpenStreetMap-Grenzen, sonst aus den Haltestellen der Umgebung, deren Name den
+    Ort nennt („Ort, Halt“, gewichtet nach Abstand); '' = unbekannt"""
+    g = gemeinde_von(x, y)
+    if g or _gemeinde_flaechen() or umkreis <= 0:
+        return g
+    o = _orte_raster()
+    stimmen = Counter()
+    for i in range(int(x * 100) - 2, int(x * 100) + 3):
+        for j in range(int(y * 100) - 2, int(y * 100) + 3):
+            for a, b, ort, _h in o['raster'].get((i, j), ()):
+                d = _m((x, y), (a, b))
+                if d <= umkreis:
+                    stimmen[ort] += 1.0 / (d + 100)
+    return stimmen.most_common(1)[0][0] if stimmen else ''
+
+
+def hat_ort(n):
+    """nennt der Name einen Ort? („Göttingen, …“, „Moringen Amtsfreiheit, Mast 1 W“, „Witzenhausen Wendershausen Mitte“,
+    „Klein Schneen Kirche“ – Anfang aus mindestens drei Haltestellennamen)"""
+    n = str(n or '').strip()
+    if ',' in n:
+        return True    # „Ort, Halt“ oder „Ort Halt, Mast 1“ (VSN)
+    o = _orte_raster()
+    w = n.split()
+    if not w or w[0].lower().rstrip('.') in _KEIN_ORT:
+        return False
+    t0 = re.split(r'[\s/(]', n, 1)[0].lower().rstrip('.')
+    if w[0].lower().rstrip('.') in o['alle'] or t0 in o['alle'] or (len(w) >= 3 and (w[0] + ' ' + w[1]).lower() in o['praefix']):
+        return True
+    kn = re.sub(r'[^a-zäöüß]', '', n.lower())
+    return any(len(g) >= 4 and kn.startswith(g) for g in _gemeinde_namen())
+
+
+def _gemeinde_namen():
+    if 'gnamen' not in _ORTE or _ORTE.get('gnamen_n') != len(_gemeinde_flaechen()):
+        _ORTE['gnamen'] = {re.sub(r'[^a-zäöüß]', '', nm.lower()) for nm, _b, _p in _gemeinde_flaechen()}
+        _ORTE['gnamen_n'] = len(_gemeinde_flaechen())
+    return _ORTE['gnamen']
+
+
+def strassenartig(n):
+    """3.3: Name wie eine Straße oder ein allgemeiner Halt („Ostertorwall“, „Kieler Straße“, „Bahnhof Pause“) – kein Ortsname"""
+    h = halt_sauber(n)
+    w = h.split()
+    return bool(w) and (w[0].lower().rstrip('.') in _KEIN_ORT or any(_STRASSE.search(x) for x in re.split(r'[\s/-]+', h) if x))
+
+
+def end_name(n, x=None, y=None, ersatz=''):
+    """Name einer Endhaltestelle für den Linienweg: mit Ort, ohne Zusätze. „Bahnhof Pause“ (Göttingen) → „Göttingen, Bahnhof/ZOB“"""
+    h = halt_sauber(n)
+    if x is None or hat_ort(n):
+        return h
+    ort = gemeinde_von(x, y) or ersatz
+    if not ort:
+        # ohne Gemeindegrenzen: nur die gleichnamige Haltestelle mit Ort daneben („Göttingen, Bahnhof/ZOB C“ neben „Bahnhof Pause“) –
+        # Ortsteile der Umgebung („Wilhelmshöhe“, „Bnt-Altenbauna“) wären geraten
+        for i in range(int(x * 100) - 1, int(x * 100) + 2):
+            for j in range(int(y * 100) - 1, int(y * 100) + 2):
+                for a, b, o2, h2 in _orte_raster()['raster'].get((i, j), ()):
+                    if _m((x, y), (a, b)) <= 300 and h and (h2.lower() == h.lower() or h2.lower().startswith(h.lower() + '/') or h2.lower().startswith(h.lower() + ' ')):
+                        return o2 + ', ' + h2
+        return h
+    kn, ko = re.sub(r'[^a-zäöüß]', '', h.lower()), re.sub(r'[^a-zäöüß]', '', ort.lower())
+    if kn.startswith(ko) or kn.startswith(ko.split('(')[0]):    # „Hohenhameln/Mehrzweckhalle“, „Allendorf(Eder) Bahnhof“ nennen den Ort
+        return h
+    # gleiche Haltestelle mit Ortsnamen ganz in der Nähe („Göttingen, Bahnhof/ZOB C“ 80 m neben „Bahnhof Pause“)
+    for i in range(int(x * 100) - 1, int(x * 100) + 2):
+        for j in range(int(y * 100) - 1, int(y * 100) + 2):
+            for a, b, o2, h2 in _orte_raster()['raster'].get((i, j), ()):
+                if o2 == ort and _m((x, y), (a, b)) <= 300 and h and (h2.lower() == h.lower() or h2.lower().startswith(h.lower() + '/') or h2.lower().startswith(h.lower() + ' ')):
+                    return ort + ', ' + h2
+    return ort + ', ' + h
+
+
 def weg_aus_folge(namen, hoechstens=7):
     """2.8: Linienweg aus der Haltestellenfolge der häufigsten Fahrt – Orte statt Haltestellen („Wolfsburg – Fallersleben –
     Gifhorn“). Bleibt die Linie in einem Ort, die Haltestellen ohne Ortsnamen („Bahnhof – Weende – Nikolausberg“).
-    Höchstens sieben Glieder, Anfang und Ende immer dabei."""
-    namen = [str(n or '').strip() for n in namen if str(n or '').strip()]
+    Höchstens sieben Glieder, Anfang und Ende immer dabei.
+    3.3 (Fassung 63): mit (x, y, Name) – Endhaltestellen ohne Ortsnamen bekommen den Ort („Hameln, Ostertorwall“,
+    „Göttingen, Bahnhof/ZOB“ statt „Bahnhof Pause“); Haltestellen ohne Ort am Anfang oder Ende einer Überlandlinie zählen
+    zum Ort ihrer Gemeinde (statt „Marienthaler Straße – Lohstraße“), eine Stadtlinie bleibt eine Stadtlinie."""
+    punkte = [tuple(n) if isinstance(n, (tuple, list)) else (None, None, n) for n in namen]
+    punkte = [(x, y, str(n or '').strip()) for x, y, n in punkte if str(n or '').strip()]
+    namen = [n for _, _, n in punkte]
     if len(namen) < 2:
         return ''
-    def ort(n):
+    mit = [x is not None and hat_ort(n) for x, _, n in punkte] if punkte[0][0] is not None else [True] * len(punkte)
+    gem = {n: gemeinde_von(x, y) for x, y, n in punkte if x is not None and not hat_ort(n)}
+    def ort0(n):
         return re.split(r'\s*,\s*', n, 1)[0].strip()
     def halt(n):
         t = re.split(r'\s*,\s*', n, 1)
-        return (t[1] if len(t) > 1 else t[0]).strip()
-    orte = []
-    for n in namen:
-        o = ort(n)
-        if not orte or orte[-1] != o:
-            orte.append(o)
+        return halt_sauber(t[1] if len(t) > 1 and not _STEIG.match(t[1]) else n)
+    # Stadtlinie: alle Haltestellen ohne Ort liegen in derselben Gemeinde (und die mit Ort nennen keinen anderen)
+    ohne_g = {gem.get(n, '') for n, m in zip(namen, mit) if not m} - {''}
+    stadt_g = next(iter(ohne_g)) if len(ohne_g) == 1 else ''
+    def anderer_ort(x, y, n):    # Haltestelle mit Ortsnamen außerhalb der Gemeinde („Roringen, …“ liegt in Göttingen)
+        g = gemeinde_von(x, y) if x is not None else ''
+        return g != stadt_g if g else (ort0(n) != stadt_g and not ort0(n).startswith(stadt_g + ' '))
+    if stadt_g and any(m and anderer_ort(x, y, n) for (x, y, n), m in zip(punkte, mit)):
+        stadt_g = ''
+    if stadt_g and sum(1 for m in mit if not m) >= len(namen) / 2:
+        orte = [stadt_g]
+    else:
+        # Überland: Haltestellen ohne Ort am Anfang und am Ende → ihre Gemeinde (sonst wie bisher der Name selbst)
+        rand = set()
+        for folge in (range(len(namen)), range(len(namen) - 1, -1, -1)):
+            for i in folge:
+                if mit[i]:
+                    break
+                rand.add(i)
+        orte = []
+        for i, n in enumerate(namen):
+            o = (gem.get(n) if i in rand and gem.get(n) else '') or (ort0(n) if ',' in n else halt_sauber(n))
+            if not orte or orte[-1] != o:
+                orte.append(o)
     glieder = orte if len(orte) >= 3 or (len(orte) == 2 and len(namen) <= 3) else None
     if glieder is None:    # Stadtlinie (oder nur zwei Orte): Haltestellen zeigen
         glieder = []
@@ -200,7 +421,23 @@ def weg_aus_folge(namen, hoechstens=7):
             if not glieder or glieder[-1] != h:
                 glieder.append(h)
         if len(orte) == 2:
-            glieder[0], glieder[-1] = namen[0], namen[-1]
+            glieder[0], glieder[-1] = halt_sauber(namen[0]), halt_sauber(namen[-1])
+    # Endhaltestelle ohne Ortsnamen („Bahnhof Pause“, „Ostertorwall“) mit Ort
+    for i in (0, -1):
+        if punkte[i][0] is not None and mit[i] and glieder is not orte and ',' in namen[i] and not _STEIG.match(namen[i].split(',', 1)[1].strip()):
+            glieder[i] = ort0(namen[i]) + ', ' + halt(namen[i])    # Stadtlinie: „Bad Pyrmont, Emmerstraße“ statt „Emmerstraße“
+            continue
+        if punkte[i][0] is not None and not mit[i]:
+            ersatz = stadt_g
+            for x2, y2, n2 in ([] if ersatz else (punkte[1:7] if i == 0 else punkte[-2:-8:-1])):
+                ersatz = gemeinde_von(x2, y2) if x2 is not None else ''
+                if ersatz:
+                    break
+            e = end_name(namen[i], punkte[i][0], punkte[i][1], ersatz)
+            nachbar = glieder[1] if i == 0 else glieder[-2]
+            glieder[i] = e
+            if len(glieder) > 2 and ', ' in e and nachbar == e.split(', ', 1)[0]:
+                del glieder[1 if i == 0 else -2]    # „… – Hameln – Hameln, Ostertorwall“
     if len(glieder) > hoechstens:
         schritt = (len(glieder) - 1) / (hoechstens - 1)
         glieder = [glieder[round(i * schritt)] for i in range(hoechstens)]
@@ -245,9 +482,10 @@ def skizze_teil(t, cache, ende):
         except urllib.error.HTTPError as e:
             if e.code == 400:    # 3.1 (Fassung 60): „NoRoute“/„NoSegment“ – nur dieses Stück bleibt gerade, die übrigen Skizzen laufen weiter
                 log('Skizze: kein Weg (HTTP 400) für', schluessel[:60])
-                cache[schluessel] = []
+                weg = skizze_abschnitte(t, ende) if lokal else []    # 3.3: Abschnitt für Abschnitt
+                cache[schluessel] = weg
                 SKIZZE_NEU.add(schluessel)
-                return []
+                return weg
             if lokal:
                 return skizze_wechsel(t, cache, ende, e)
             log('Skizze: Abbruch –', type(e).__name__, str(e)[:80])
@@ -263,11 +501,67 @@ def skizze_teil(t, cache, ende):
     gerade = sum(_m(a, b) for a, b in zip(t, t[1:]))
     strasse = sum(_m(a, b) for a, b in zip(weg, weg[1:]))
     if not weg or strasse > 2.5 * gerade + 2000:
+        # 3.3 (Fassung 63): verworfen – bisher blieb dann das ganze Stück gerade (Linie 222 Hardegsen–Ertinghausen–Hardegsen:
+        # der Bus-Router fand nur einen weiten Umweg). Jetzt Abschnitt für Abschnitt, notfalls über den öffentlichen Server.
+        if lokal:
+            SKIZZE_ZAHL['verworfen'] += 1
+            cache[schluessel] = skizze_abschnitte(t, ende)
+            SKIZZE_NEU.add(schluessel)
+            return cache[schluessel]
         weg = []
     cache[schluessel] = [[round(x, 6), round(y, 6)] for x, y in vereinfachen([tuple(c) for c in weg])] if weg else []
     if lokal:
         SKIZZE_NEU.add(schluessel)
     return cache[schluessel]
+
+
+def _skizze_weg(basis, punkte, lokal):
+    """3.3: ein Weg vom Routenplaner (Liste der Punkte) oder None"""
+    url = basis + ';'.join('%.6f,%.6f' % (x, y) for x, y in punkte) + '?overview=full&geometries=geojson&continue_straight=false'
+    if not lokal:
+        time.sleep(1.05)    # öffentlicher Server: höchstens eine Anfrage je Sekunde
+    SKIZZE_ZAHL['lokal' if lokal else 'oeffentlich'] += 1
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent': 'GoeBUS-Liniennetz/%s (+https://goebus.de)' % VERSION})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return json.load(r)['routes'][0]['geometry']['coordinates']
+    except Exception:
+        return None
+
+
+SKIZZE_OEFFENTLICH_MAX = int(os.environ.get('GOEBUS_SKIZZE_OEFFENTLICH_MAX', '400') or 400)
+
+
+def skizze_abschnitte(t, ende):
+    """3.3 (Fassung 63): Ein Stück, dessen Weg als Ganzes verworfen wurde (Umweg über das 2,5-Fache oder kein Weg), Abschnitt
+    für Abschnitt (Haltestelle zu Haltestelle) skizzieren: erst der eigene Routenplaner (Bus), sonst der öffentliche
+    (Auto-Profil, höchstens GOEBUS_SKIZZE_OEFFENTLICH_MAX Anfragen je Lauf), sonst bleibt nur dieser Abschnitt gerade.
+    Rückgabe: Punkte (mindestens ein Abschnitt über die Straße) oder []"""
+    weg, gut = [], 0
+    for a, b in zip(t, t[1:]):
+        d = _m(a, b)
+        stueck = None
+        if d >= 120 and time.time() < ende:
+            for basis, lokal in (((SKIZZE.get('url') or SKIZZE_URL), True), (SKIZZE_OEFFENTLICH, False)):
+                if not lokal and (SKIZZE_ZAHL['oeffentlich'] >= SKIZZE_OEFFENTLICH_MAX or SKIZZE.get('oeffentlich_aus')):
+                    continue
+                c = _skizze_weg(basis, [a, b], lokal)
+                if c is None and not lokal:
+                    SKIZZE['oeffentlich_aus'] = SKIZZE_ZAHL['oeffentlich'] > 20 and SKIZZE_ZAHL['oeffentlich_fehler'] > 10
+                    SKIZZE_ZAHL['oeffentlich_fehler'] += 1
+                if c and sum(_m(p, q) for p, q in zip(c, c[1:])) <= 3 * d + 1500:
+                    stueck = c
+                    SKIZZE_ZAHL['abschnitt_' + ('lokal' if lokal else 'oeffentlich')] += 1
+                    break
+        if stueck:
+            gut += 1
+        else:
+            stueck = [list(a), list(b)]
+            SKIZZE_ZAHL['abschnitt_gerade'] += 1
+        weg.extend(stueck if not weg else stueck[1:])
+    if not gut:
+        return []
+    return [[round(x, 6), round(y, 6)] for x, y in vereinfachen([tuple(c) for c in weg])]
 
 
 def skizze_wechsel(t, cache, ende, fehler):
@@ -624,7 +918,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
                         'gtfs:route_id': rid, 'quelle': 'gtfs', 'verlauf': verlauf, 'muster': len(seqs), 'halte': len(haupt),
                         'luecken': sum(1 for x in fo if not x),    # 2.9: gerade Verbindungen am Ende der Geometrie
                         'description': (r.get('route_long_name') or '').strip(),
-                        'weg_fp': weg_aus_folge([n for _, _, n in seqs[0]]),    # 2.8: Linienweg aus dem Fahrplan (häufigste Fahrt)
+                        'weg_fp': weg_aus_folge([(x, y, n) for x, y, n in seqs[0]]),    # 2.8: Linienweg aus dem Fahrplan (häufigste Fahrt); 3.3 mit Orten
                     },
                     'geometry': geom,
                     '_halte': list(dict.fromkeys((x, y) for q in seqs for x, y, _ in q)),
@@ -1840,6 +2134,7 @@ def main():
     regeln = regeln_laden(a.regeln)
     listen_laden(regeln)
     t = time.time()
+    _ORTE['datei'] = a.gemeinden    # 3.3: Gemeindegrenzen auch für die Ortsnamen der Endhaltestellen
     ergebnis = gtfs_auswerten(pfad, kreise, verbuende)
     dauer['fahrplandaten_auswerten'] = round(time.time() - t)
     t = time.time()

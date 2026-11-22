@@ -4,7 +4,10 @@
 --   * Zugangsregeln zuerst für Busse: bus, psv (öffentlicher Verkehr), dann motor_vehicle, vehicle, access –
 --     Busschleusen und Busspuren („motor_vehicle=no + bus=yes“) sind befahrbar, „bus=no“ ist gesperrt.
 --   * „psv“, „bus“ und „minibus“ stehen nicht mehr auf der Sperrliste (die übrigen Sperren von car.lua bleiben).
---   * Straßen mit Gewichts- unter 18 t oder Höhenbegrenzung unter 3,6 m sind gesperrt, außer sie sind für Busse freigegeben.
+--   * Fassung 63: Höhenbegrenzung unter 3,2 m ist gesperrt; Gewichtsbegrenzung unter 18 t und Höhe 3,2–3,6 m werden nur
+--     gemieden (vierfache Bewertung), außer sie sind für Busse freigegeben. Bis Fassung 62 waren sie gesperrt – Ortsdurchfahrten
+--     wie Ertinghausen (Linie 222) waren dann nur über weite Umwege erreichbar, die Skizze wurde verworfen und blieb gerade:
+--     „Linienverkehr frei“ steht an vielen Schildern, in OpenStreetMap aber selten.
 local goebus_setup, goebus_process_way = setup, process_way
 
 function setup()
@@ -27,8 +30,11 @@ function process_way(profile, way, result, relations)
   local bus = way:get_value_by_key('bus') or way:get_value_by_key('psv')
   if bus == 'yes' or bus == 'designated' then return end
   local w, h = goebus_zahl(way:get_value_by_key('maxweight')), goebus_zahl(way:get_value_by_key('maxheight'))
-  if (w and w < 18) or (h and h < 3.6) then
+  if h and h < 3.2 then
     result.forward_mode = mode.inaccessible
     result.backward_mode = mode.inaccessible
+  elseif (w and w < 18) or (h and h < 3.6) then
+    if result.forward_rate and result.forward_rate > 0 then result.forward_rate = result.forward_rate / 4 end
+    if result.backward_rate and result.backward_rate > 0 then result.backward_rate = result.backward_rate / 4 end
   end
 end

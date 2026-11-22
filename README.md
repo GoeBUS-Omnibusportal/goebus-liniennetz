@@ -29,6 +29,14 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 63 (Skript 3.3)
+
+- **Hochladen:** `liniennetz.py`, `osrm-bus.lua` und `.github/workflows/liniennetz.yml` ersetzen. Der erste Lauf baut den Routenplaner einmal neu (Schlüssel `osrm-bus-v2`, etwa 2 Minuten).
+- **Zwischenspeicher:** `actions/cache@v5` (Node 24 statt Node 20). Die Dateien des Routenplaners gehören nach dem Bau dem Lauf (`sudo chown`) – vorher scheiterte das Speichern an `region.osrm.fileIndex: Permission denied`.
+- **Skizzen:** Das Bus-Profil sperrt nur noch Durchfahrtshöhen unter 3,2 m; Gewichtsgrenzen unter 18 t und Höhen bis 3,6 m werden gemieden, nicht gesperrt (Ortsdurchfahrten wie Ertinghausen, VSN 222). Wird ein Stück als Umweg verworfen, rechnet das Skript es Haltestelle für Haltestelle neu – erst mit dem eigenen Routenplaner, sonst mit dem öffentlichen (höchstens `GOEBUS_SKIZZE_OEFFENTLICH_MAX` Anfragen, Vorgabe 400). Gerade bleibt nur ein Abschnitt ohne jeden Weg.
+- **Start und Ziel mit Ort:** Nennt der Name der Start- oder Endhaltestelle keinen Ort, steht die Gemeinde davor (Gemeindegrenzen aus OpenStreetMap, `osm/gemeinden.geojsonseq`). Liegt daneben eine gleichnamige Haltestelle mit Ort, gilt deren Name: „Göttingen, Bahnhof/ZOB“ statt „Bahnhof Pause“, „Hameln, Ostertorwall“. Stadtlinien zeigen Start und Ziel immer mit Ort. Ohne Gemeindegrenzen wird nichts geraten. Zusätze wie „Pause“, „(Ausstieg)“, „Mast 1 W“ fallen weg.
+- **Quellen prüfen:** Die Website wird unter derselben Adresse geprüft, die das Skript nutzt (auch wenn `GOEBUS_ADRESSE` auf `/_admin/` endet); gezeigt wird der echte HTTP-Code.
+
 ## Neu in Fassung 62 (Skript 3.2, Korrekturen nach dem ersten Lauf mit eigenem Routenplaner)
 
 - Die IPv4-Umhüllung der Namensauflösung wird nur einmal angelegt, auch wenn das Modul mehrfach geladen wird (Prüfumgebung). Im Lauf ändert sich nichts.

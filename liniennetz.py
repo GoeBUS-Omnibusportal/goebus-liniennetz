@@ -47,11 +47,13 @@ VERSION = '3.2'
 
 # 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
 import socket as _socket
-_gai = _socket.getaddrinfo
-def _gai_ipv4_zuerst(*args, **kw):
-    r = _gai(*args, **kw)
-    return sorted(r, key=lambda x: 0 if x[0] == _socket.AF_INET else 1)
-_socket.getaddrinfo = _gai_ipv4_zuerst
+if not getattr(_socket.getaddrinfo, '_goebus_ipv4', False):    # 3.2 (Fassung 62): nur einmal umhüllen (mehrfaches Laden des Moduls)
+    _gai = _socket.getaddrinfo
+    def _gai_ipv4_zuerst(*args, **kw):
+        r = _gai(*args, **kw)
+        return sorted(r, key=lambda x: 0 if x[0] == _socket.AF_INET else 1)
+    _gai_ipv4_zuerst._goebus_ipv4 = True
+    _socket.getaddrinfo = _gai_ipv4_zuerst
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
@@ -1517,7 +1519,11 @@ def gebiete_ergaenzen(feats, liste, v, kreise, datei):
     aus OpenStreetMap (verlauf „gebiet“), die Karte zeigt sie als Bediengebiet. Rückgabe: Zahl ergänzter Gebiete."""
     if not liste:
         return 0
-    da = {ref_norm(f['properties'].get('ref', '')) for f in feats}
+    # 3.2 (Fassung 62): Linien, die gleich danach als „keine Linie“ entfallen (z. B. AST-Rundkurs „Rosdorf X → Rosdorf X“ aus den
+    # Fahrplandaten), zählen nicht als vorhanden – sonst bekam 9130 „Gemeinde Rosdorf“ weder Fahrplan-Linie noch Gebiet
+    da = {ref_norm(f['properties'].get('ref', '')) for f in feats
+          if not keine_linie(f['properties'].get('ref', ''), f['properties'].get('from'), f['properties'].get('to'),
+                             '' if ref_norm(f['properties'].get('ref', '')) in liste else f['properties'].get('name', ''), f['properties'].get('route', ''))}
     gesucht = {}
     for k, (ref, weg, hinweis) in liste.items():
         m = GEBIET_RX.match(weg or '')
@@ -1932,7 +1938,11 @@ def main():
         weg_n = wege_ergaenzen(feats, HALTE_ALLE, osm_idx)
         li_weg, li_neu = liste_anwenden(feats, LISTEN.get(v['slug'], {}), HALTE_REGION, osm_idx, v)    # 2.3
         geb_n = gebiete_ergaenzen(feats, LISTEN.get(v['slug'], {}), v, kreise, a.gemeinden)              # 3.0: AST „Gemeinde Rosdorf“ als Fläche
-        feats[:] = [f for f in feats if not keine_linie(f['properties'].get('ref', ''), f['properties'].get('from'), f['properties'].get('to'), f['properties'].get('name', ''), f['properties'].get('route', ''))]
+        # 3.2 (Fassung 62): Steht die Nummer in der offiziellen Liste, entscheidet nicht ein „(AST)“ im Haltestellennamen – VSN 9130–9220
+        # fahren als AST über feste Haltestellen („Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)“) und fielen deshalb ganz heraus
+        gel = LISTEN.get(v['slug'], {})
+        feats[:] = [f for f in feats if not keine_linie(f['properties'].get('ref', ''), f['properties'].get('from'), f['properties'].get('to'),
+                                                        '' if ref_norm(f['properties'].get('ref', '')) in gel else f['properties'].get('name', ''), f['properties'].get('route', ''))]
         if reg_n or weg_n:
             log(v['slug'], reg_n, 'Verläufe nach Regeln übertragen,', weg_n, 'Linienwege („von → nach“) ergänzt')
         # 2.8: gerade Verbindungen der Haltestellen über die Straßen skizzieren (Zwischenspeicher, Zeitbudget je Lauf)

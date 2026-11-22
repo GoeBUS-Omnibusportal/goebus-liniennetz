@@ -29,6 +29,12 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 62 (Skript 3.2, Korrekturen nach dem ersten Lauf mit eigenem Routenplaner)
+
+- Die IPv4-Umhüllung der Namensauflösung wird nur einmal angelegt, auch wenn das Modul mehrfach geladen wird (Prüfumgebung). Im Lauf ändert sich nichts.
+- **AST mit festen Haltestellen (VSN 9130–9220):** Die Fahrplandaten führen sie über Haltestellen wie „Göttingen Bahnhof/ZOB Fernbusse, Mast 1 W (AST)“. Das „(AST)“ im Namen ließ die Linien beim Aufräumen ganz herausfallen, und weil es sie in den Fahrplandaten gab, bekamen sie auch kein Gebiet. Steht die Nummer in der offiziellen Liste, entscheidet der Haltestellenname jetzt nicht mehr (Skript und Karte). Gibt es keine Fahrplan-Linie, kommt das Gebiet (Gemeindefläche oder Hülle der Haltestellen).
+- **Quellen prüfen:** Die Website wird so geprüft, wie das Skript sie abruft (Python, gleiche Kennung). curl bekam am 22.11. ein 404, das Skript die Regeln. `ghcr.io` antwortet ohne Anmeldung mit 401; das gilt als erreichbar.
+
 ## Neu in Fassung 61 (Skript 3.2)
 
 - **Quellen prüfen:** Der Lauf prüft zuerst von GitHub aus, welche Quellen antworten: Geofabrik, openstreetmap.fr, drei Overpass-Server, öffentlicher Routenplaner, gtfs.de, ghcr.io und die Website. Das Ergebnis steht als Tabelle im Protokoll, in `stand.json` (`quellen`) und in der Verwaltung.

@@ -1,113 +1,184 @@
 {
- "erzeugt": "2026-11-19T04:19:56Z",
- "version": "3.0",
+ "erzeugt": "2026-11-22T08:47:12Z",
+ "version": "3.2",
  "linienwege": false,
  "verbuende": {
   "vsn": {
    "datei": "vsn_linien.json",
-   "linien": 152,
+   "linien": 148,
    "liste_wege": 140,
    "liste_neu": 1,
-   "osm_verlauf": 0,
+   "osm_verlauf": 134,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 50,
-   "aus_vorwoche": 4,
-   "gleiche_nummer_entfernt": 8,
+   "verlauf_vorwoche": 0,
+   "aus_vorwoche": 3,
+   "gleiche_nummer_entfernt": 10,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "nicht erreichbar"
+   "osm": "ok (Auszug)"
   },
   "nvv": {
    "datei": "nvv_linien.json",
-   "linien": 420,
-   "liste_wege": 401,
-   "liste_neu": 8,
-   "osm_verlauf": 0,
+   "linien": 430,
+   "liste_wege": 411,
+   "liste_neu": 1,
+   "osm_verlauf": 172,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 82,
+   "verlauf_vorwoche": 0,
    "aus_vorwoche": 9,
    "gleiche_nummer_entfernt": 11,
-   "stadtbus_zugeordnet": 9,
+   "stadtbus_zugeordnet": 25,
    "gebiete": 0,
-   "osm": "nicht erreichbar"
+   "osm": "ok (Auszug)"
   },
   "vrb": {
    "datei": "vrb_linien.json",
-   "linien": 296,
-   "liste_wege": 290,
-   "liste_neu": 1,
-   "osm_verlauf": 0,
+   "linien": 299,
+   "liste_wege": 289,
+   "liste_neu": 4,
+   "osm_verlauf": 238,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 187,
-   "aus_vorwoche": 1,
-   "gleiche_nummer_entfernt": 6,
+   "verlauf_vorwoche": 0,
+   "aus_vorwoche": 3,
+   "gleiche_nummer_entfernt": 8,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "nicht erreichbar"
+   "osm": "ok (Auszug)"
   },
   "rosa": {
    "datei": "svhi_rvhi_linien.json",
    "linien": 80,
    "liste_wege": 62,
    "liste_neu": 2,
-   "osm_verlauf": 0,
+   "osm_verlauf": 54,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 24,
+   "verlauf_vorwoche": 0,
    "aus_vorwoche": 1,
    "gleiche_nummer_entfernt": 0,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "nicht erreichbar"
+   "osm": "ok (Auszug)"
   },
   "rvhi": {
    "datei": "rvhi_linien.json",
    "linien": 80,
    "liste_wege": 41,
    "liste_neu": 2,
-   "osm_verlauf": 0,
+   "osm_verlauf": 54,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 24,
+   "verlauf_vorwoche": 0,
    "aus_vorwoche": 2,
    "gleiche_nummer_entfernt": 0,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "nicht erreichbar"
+   "osm": "ok (Auszug)"
   },
   "oeffis": {
    "datei": "vhp_linien.json",
-   "linien": 75,
+   "linien": 74,
    "liste_wege": 62,
    "liste_neu": 6,
-   "osm_verlauf": 0,
+   "osm_verlauf": 34,
    "fahrplan_verlauf": 0,
-   "verlauf_vorwoche": 15,
-   "aus_vorwoche": 5,
+   "verlauf_vorwoche": 0,
+   "aus_vorwoche": 4,
    "gleiche_nummer_entfernt": 0,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
-   "osm": "nicht erreichbar"
+   "osm": "ok (Auszug)"
   }
+ },
+ "skizzen_offen": {
+  "vsn": 1,
+  "nvv": 2,
+  "vrb": 0,
+  "rosa": 0,
+  "rvhi": 0,
+  "oeffis": 0
+ },
+ "orte_geteilt": 350,
+ "quellen": [
+  {
+   "name": "geofabrik",
+   "url": "https://download.geofabrik.de/europe/germany/niedersachsen-latest.osm.pbf.md5",
+   "code": "000",
+   "ms": 694
+  },
+  {
+   "name": "openstreetmap.fr",
+   "url": "https://download.openstreetmap.fr/extracts/europe/germany.state.txt",
+   "code": "206",
+   "ms": 474
+  },
+  {
+   "name": "overpass-api.de",
+   "url": "https://overpass-api.de/api/status",
+   "code": "000",
+   "ms": 30010
+  },
+  {
+   "name": "overpass.kumi.systems",
+   "url": "https://overpass.kumi.systems/api/status",
+   "code": "000",
+   "ms": 30011
+  },
+  {
+   "name": "overpass.private.coffee",
+   "url": "https://overpass.private.coffee/api/status",
+   "code": "000",
+   "ms": 30011
+  },
+  {
+   "name": "osrm-oeffentlich",
+   "url": "https://router.project-osrm.org/route/v1/driving/9.926800,51.536500;9.935900,51.533200?overview=false",
+   "code": "200",
+   "ms": 523
+  },
+  {
+   "name": "gtfs.de",
+   "url": "https://download.gtfs.de/germany/free/latest.zip",
+   "code": "206",
+   "ms": 545
+  },
+  {
+   "name": "ghcr.io",
+   "url": "https://ghcr.io/v2/",
+   "code": "401",
+   "ms": 132
+  },
+  {
+   "name": "goebus.de",
+   "url": "https://www.goebus.de/_admin//_data/verbund-tarife/linien-regeln.json",
+   "code": "404",
+   "ms": 842
+  }
+ ],
+ "skizze_router": {
+  "eigen": true,
+  "profil": "Bus (Straßen vom 2026-11-22)",
+  "anfragen": {
+   "lokal": 3380
+  },
+  "fehler": ""
  },
  "regeln": true,
  "dauer": {
   "fahrplandaten_laden": 14,
-  "fahrplandaten_auswerten": 159,
-  "osm_auszug_lesen": 0,
+  "fahrplandaten_auswerten": 169,
+  "osm_auszug_lesen": 3,
   "verbuende": {
-   "vsn": 688,
-   "nvv": 454,
-   "vrb": 455,
-   "rosa": 345,
-   "rvhi": 1,
-   "oeffis": 331
+   "vsn": 18,
+   "nvv": 30,
+   "vrb": 33,
+   "rosa": 11,
+   "rvhi": 10,
+   "oeffis": 11
   },
-  "gesamt": 2448
+  "gesamt": 301
  },
- "osm_quelle": "overpass",
+ "osm_quelle": "openstreetmap.fr",
  "overpass": [
-  "Fehler: https://overpass-api.de/api/interpreter (<urlopen error [Errno 101] Network is unreachable>)",
-  "Fehler: https://overpass.kumi.systems/api/interpreter (HTTP Error 504: Gateway Timeout)",
-  "Fehler: https://overpass.private.coffee/api/interpreter (HTTP Error 504: Gateway Timeout)"
+  "Geofabrik-Auszug (ohne Overpass)"
  ],
- "haltestellen": 12509
+ "haltestellen": 12696
 }

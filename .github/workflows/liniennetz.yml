@@ -9,12 +9,12 @@
 #   – OpenStreetMap aus den Auszügen der Geofabrik (Niedersachsen, Hessen, Thüringen, Regierungsbezirk Detmold) statt Overpass:
 #     die öffentlichen Overpass-Server waren von GitHub aus nicht erreichbar (Network is unreachable, 502, 504) und
 #     kosteten je Versuch mehrere Minuten. Nur wenn der Auszug fehlt, wird Overpass noch gefragt (höchstens 12 Minuten).
-# Läuft montags und donnerstags früh, nach jedem Hochladen der Skripte und jederzeit von Hand („Run workflow“).
+# Läuft täglich früh (Fassung 60), nach jedem Hochladen der Skripte und jederzeit von Hand („Run workflow“).
 name: Liniennetz aktualisieren
 
 on:
   schedule:
-    - cron: '23 3 * * 1,4'   # montags und donnerstags 03:23 Uhr (UTC)
+    - cron: '23 3 * * *'     # Fassung 60: täglich 03:23 Uhr (UTC) – gtfs.de erneuert den Fahrplan fast täglich (vorher montags und donnerstags)
   workflow_dispatch:
   push:
     branches: [main]
@@ -59,7 +59,7 @@ jobs:
 
   liniennetz:
     runs-on: ubuntu-24.04
-    timeout-minutes: 110    # Fassung 59: Skizzen über die Straßen bis zu 45 Minuten je Lauf
+    timeout-minutes: 125    # Fassung 59/60: Auszug bis 30, Verarbeitung bis 70 (Skizzen bis 45), Fahrschulen bis 15 Minuten
     steps:
       - name: Dateien holen
         uses: actions/checkout@v5
@@ -69,11 +69,20 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Letzten OpenStreetMap-Auszug bereitlegen
+        # Fassung 60: Am 19.11. lud Geofabrik für alle vier Gebiete nicht (und Overpass antwortete nicht) – der Lauf hatte dann
+        # gar keine Linienwege aus OpenStreetMap. Jetzt liegt der letzte gute Auszug im Zwischenspeicher von GitHub bereit.
+        uses: actions/cache/restore@v4
+        with:
+          path: osm-vorrat
+          key: osm-${{ github.run_id }}
+          restore-keys: osm-
+
       - name: OpenStreetMap-Auszüge laden (Geofabrik)
         # Ganze Bundesländer als Datei (zusammen gut 1,4 GB, Laden 1–3 Minuten), daraus mit osmium nur Buslinien und Fahrschulen.
         # Schlägt dieser Schritt fehl, fragen die Skripte Overpass (mit Zeitbegrenzung) – der Lauf geht weiter.
         continue-on-error: true
-        timeout-minutes: 20
+        timeout-minutes: 30    # Fassung 60: mehr Zeit für Wiederholungen und den Spiegel (am 19.11. war Geofabrik nicht erreichbar)
         run: |
           sudo apt-get install -y -qq osmium-tool >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq osmium-tool >/dev/null)
           mkdir -p osm
@@ -81,30 +90,54 @@ jobs:
             n=$(basename "$land")
             echo "$(date +%T) Lade $land"
             # Fassung 49: ein fehlendes Bundesland bricht den Schritt nicht ab – die übrigen werden trotzdem genutzt
-            if curl -fsSL --retry 3 --retry-delay 15 --connect-timeout 30 -o "osm/$n.osm.pbf" "https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf" \
-               && osmium tags-filter "osm/$n.osm.pbf" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school -o "osm/$n-teil.osm.pbf" --overwrite; then
-              # Fassung 59: Gemeindegrenzen für AST-Gebiete („Gemeinde Rosdorf“) – Fehler hier bremsen nichts
-              osmium tags-filter "osm/$n.osm.pbf" r/boundary=administrative -o "osm/$n-grenzen.osm.pbf" --overwrite || echo "::warning::Grenzen $land nicht gefiltert"
+            # Fassung 60: Am 19.11. kam keine Verbindung zustande („curl: (7) Failed to connect to download.geofabrik.de port 443“) –
+            # curl wiederholte das nicht (--retry gilt nicht für Verbindungsfehler). Jetzt: Wiederholung auch bei Verbindungsfehlern,
+            # dann ausdrücklich über IPv4, dann der Spiegel von openstreetmap.fr.
+            url="https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf"
+            if { curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 -o "osm/$n.osm.pbf" "$url" \
+                 || { echo "Neuer Versuch über IPv4"; curl -4 -fsSL --retry 3 --retry-all-errors --retry-delay 30 --connect-timeout 30 -o "osm/$n.osm.pbf" "$url"; } \
+                 || { [ "$n" != "detmold-regbez" ] && echo "Geofabrik antwortet nicht – Spiegel openstreetmap.fr" && curl -fsSL --retry 3 --retry-all-errors --retry-delay 20 --connect-timeout 30 -o "osm/$n.osm.pbf" "https://download.openstreetmap.fr/extracts/europe/germany/$n-latest.osm.pbf"; }; } \
+               && osmium tags-filter "osm/$n.osm.pbf" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school r/admin_level=7,8 -o "osm/$n-teil.osm.pbf" --overwrite; then
+              # Fassung 60: Gemeindegrenzen (admin_level 7/8) im selben Durchgang wie Buslinien und Fahrschulen – kein zweites Lesen der großen Datei
               echo "$(date +%T) $land fertig"
             else
               echo "::warning::OpenStreetMap-Auszug $land nicht geladen – weiter ohne dieses Gebiet"
             fi
             rm -f "osm/$n.osm.pbf"
           done
-          ls osm/*-teil.osm.pbf >/dev/null 2>&1 || { echo "::warning::Kein Auszug geladen – das Skript fragt Overpass"; exit 0; }
+          if ! ls osm/*-teil.osm.pbf >/dev/null 2>&1; then
+            # Fassung 60: letzter guter Auszug aus dem Zwischenspeicher statt gar keiner Linienwege
+            if [ -s osm-vorrat/auszug.opl ]; then
+              cp osm-vorrat/*.opl osm-vorrat/*.geojsonseq osm/ 2>/dev/null || true
+              echo "GOEBUS_OSM_VORRAT=$(cat osm-vorrat/stand.txt 2>/dev/null || echo unbekannt)" >> "$GITHUB_ENV"
+              echo "::warning::Kein neuer OpenStreetMap-Auszug – nutze den letzten guten vom $(cat osm-vorrat/stand.txt 2>/dev/null || echo '?')"
+            else
+              echo "::warning::Kein Auszug geladen und keiner im Vorrat – das Skript fragt Overpass"
+            fi
+            exit 0
+          fi
           osmium merge osm/*-teil.osm.pbf -o osm/alles.osm.pbf --overwrite
           osmium tags-filter osm/alles.osm.pbf r/route=bus,trolleybus,minibus,share_taxi,tram -o osm/routen.osm.pbf --overwrite
           osmium cat osm/routen.osm.pbf -f opl,add_metadata=false -o osm/auszug.opl --overwrite
           osmium tags-filter osm/alles.osm.pbf nwr/amenity=driving_school -o osm/fahrschulen.osm.pbf --overwrite
           osmium cat osm/fahrschulen.osm.pbf -f opl,add_metadata=false -o osm/fahrschulen.opl --overwrite
-          # Fassung 59: Gemeinden und Samtgemeinden (admin_level 7 und 8) als Flächen für AST-Gebiete
-          if ls osm/*-grenzen.osm.pbf >/dev/null 2>&1; then
-            ( osmium merge osm/*-grenzen.osm.pbf -o osm/grenzen.osm.pbf --overwrite \
-              && osmium tags-filter osm/grenzen.osm.pbf r/admin_level=7,8 -o osm/gemeinden.osm.pbf --overwrite \
-              && osmium export osm/gemeinden.osm.pbf -f geojsonseq --geometry-types=polygon -o osm/gemeinden.geojsonseq --overwrite \
-              && rm -f osm/*-grenzen.osm.pbf osm/grenzen.osm.pbf ) || echo "::warning::Gemeindegrenzen nicht erstellt – AST-Gebiete bleiben ohne Fläche"
-          fi
+          echo "$(date +%T) Linien und Fahrschulen fertig"
+          # Gemeinden und Samtgemeinden (admin_level 7 und 8) als Flächen für AST-Gebiete – zuletzt und mit eigener Zeitgrenze,
+          # damit der Auszug der Linien nie daran scheitert (Fassung 60)
+          ( timeout 300 osmium tags-filter osm/alles.osm.pbf r/admin_level=7,8 -o osm/gemeinden.osm.pbf --overwrite \
+            && timeout 300 osmium export osm/gemeinden.osm.pbf -f geojsonseq --geometry-types=polygon -o osm/gemeinden.geojsonseq --overwrite ) \
+            || echo "::warning::Gemeindegrenzen nicht erstellt – AST-Gebiete bleiben ohne Fläche"
+          # Fassung 60: guten Auszug für spätere Läufe aufheben
+          mkdir -p osm-vorrat && cp osm/auszug.opl osm/fahrschulen.opl osm-vorrat/ && { cp osm/gemeinden.geojsonseq osm-vorrat/ 2>/dev/null || true; } && date -u +%F > osm-vorrat/stand.txt
           ls -la osm
+
+      - name: OpenStreetMap-Auszug für spätere Läufe speichern
+        if: ${{ hashFiles('osm-vorrat/stand.txt') != '' }}
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: osm-vorrat
+          key: osm-${{ github.run_id }}
 
       - name: Fahrplandaten und OpenStreetMap verarbeiten
         # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE

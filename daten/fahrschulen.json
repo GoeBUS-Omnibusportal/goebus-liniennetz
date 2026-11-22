@@ -1,11 +1,11 @@
 {
  "version": "1.1",
- "stand": "2026-11-22T10:34:24Z",
+ "stand": "2026-11-22T14:07:49Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "Geofabrik-Auszug",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
  "anzahl": 521,
- "mit_bus": 46,
+ "mit_bus": 47,
  "schulen": [
   {
    "id": "n1571201710",
@@ -731,6 +731,23 @@
    "klassen": "D, C, C1, D1E, D1, DE, C1E",
    "bus": true,
    "beleg": "Führerscheinklassen ab 19.01.2013. Die Klassen C und D sowie T bilden wir nicht aus. AM",
+   "azav": false,
+   "grund": "",
+   "pschein": false
+  },
+  {
+   "id": "n10293894453",
+   "name": "Kellner",
+   "web": "https://www.fahrschule-kellner.de/",
+   "tel": "+49 5541 6200",
+   "mail": "",
+   "ort": "Reinhardshagen",
+   "plz": "34359",
+   "strasse": "Steinweg 3",
+   "lage": "51.49518,9.60241",
+   "klassen": "C1, C, D1, D, D1E, DE, C1E, CE",
+   "bus": true,
+   "beleg": "lassenspezifischer Ausbildungsstoff für Klasse D1 und D 20.1 Sicherheitskontrollen",
    "azav": false,
    "grund": "",
    "pschein": false
@@ -3600,7 +3617,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
+   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
   },
   {
    "id": "n10285592598",
@@ -5893,7 +5910,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (The read operation timed out)"
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n3908789948",
@@ -7876,22 +7894,6 @@
    "azav": false,
    "grund": "",
    "pschein": false
-  },
-  {
-   "id": "n10293894453",
-   "name": "Kellner",
-   "web": "https://www.fahrschule-kellner.de/",
-   "tel": "+49 5541 6200",
-   "mail": "",
-   "ort": "Reinhardshagen",
-   "plz": "34359",
-   "strasse": "Steinweg 3",
-   "lage": "51.49518,9.60241",
-   "klassen": "",
-   "bus": false,
-   "beleg": "",
-   "azav": false,
-   "grund": "Website nicht erreichbar (The read operation timed out)"
   },
   {
    "id": "n9638983080",

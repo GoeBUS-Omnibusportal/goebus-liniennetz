@@ -1,6 +1,6 @@
 {
- "erzeugt": "2026-11-22T10:29:29Z",
- "version": "3.2",
+ "erzeugt": "2026-11-22T14:02:50Z",
+ "version": "3.3",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {
@@ -1421,15 +1421,7 @@
    ],
    "abgleich": {
     "verschwunden": [],
-    "neu": [
-     "9130",
-     "9140",
-     "9154",
-     "9173",
-     "9180",
-     "9186",
-     "9220"
-    ],
+    "neu": [],
     "nur_osm": [
      "837"
     ],
@@ -1454,21 +1446,19 @@
    "linien": 425,
    "verlauf": {
     "osm": 67,
-    "osm+skizze": 100,
-    "skizze": 256,
-    "haltestellen": 2
+    "osm+skizze": 99,
+    "skizze": 259
    },
    "aus_vorwoche": 3,
    "betreiber": {
     "NVV - Faisy": 324,
     "NVV ESM AST": 56,
     "KVG M": 33,
+    "(ohne Angabe)": 4,
     "Verkehrsgesellschaft Paderborn/Höxter": 3,
     "RMV": 3,
-    "(ohne Angabe)": 3,
     "VGM/VRL": 1,
-    "Verkehrsgemeinschaft Westfalen-Süd": 1,
-    "Verkehrsunternehmen Wartburgmobil VUW gkAör": 1
+    "Verkehrsgemeinschaft Westfalen-Süd": 1
    },
    "liste": [
     {
@@ -1809,7 +1799,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Witzenhausen Ziegenhagen Heegenweg",
      "nach": "Witzenhausen Witzenhausen Bürgerhaus Siedlung",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-22"
     },
@@ -3204,7 +3194,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Witzenhausen Neuseesen Neuseesen",
      "nach": "Witzenhausen Witzenhausen Bahnhof",
-     "verlauf": "haltestellen",
+     "verlauf": "skizze",
      "muster": 2,
      "gesehen": "2026-11-22"
     },
@@ -4280,15 +4270,6 @@
      "gesehen": "2026-11-22"
     },
     {
-     "ref": "170",
-     "betreiber": "Verkehrsunternehmen Wartburgmobil VUW gkAör",
-     "von": "Eschwege Eschwege Fliederweg",
-     "nach": "Eisenach Eis.ZOB Ausstieg",
-     "verlauf": "osm+skizze",
-     "muster": 5,
-     "gesehen": "2026-11-22"
-    },
-    {
      "ref": "195",
      "betreiber": "NVV - Faisy",
      "von": "Hann. Münden Hann. Münden Bahnhof",
@@ -5288,6 +5269,15 @@
      "gesehen": "2026-11-02"
     },
     {
+     "ref": "170",
+     "betreiber": "",
+     "von": "Eschwege",
+     "nach": "Eisenach",
+     "verlauf": "skizze",
+     "muster": 1,
+     "gesehen": ""
+    },
+    {
      "ref": "882",
      "betreiber": "",
      "von": "Ernsthausen",
@@ -5298,22 +5288,11 @@
     }
    ],
    "ersetzt": {
-    "271": "200",
-    "272": "200",
-    "351": "325",
-    "352": "356",
-    "355": "325",
-    "594": "851",
     "882": "525"
    },
    "abgleich": {
-    "verschwunden": [
-     "23"
-    ],
-    "neu": [
-     "74",
-     "882"
-    ],
+    "verschwunden": [],
+    "neu": [],
     "nur_osm": [],
     "nur_quelle": [],
     "nur_soll": [],
@@ -5321,35 +5300,33 @@
    },
    "pruefung": {
     "ohne_betreiber": [
+     "170",
      "23",
      "300",
      "882"
     ],
     "wenige_halte": [
+     "170",
      "519",
      "74"
     ],
     "mehrere_betreiber": [],
-    "ohne_verlauf": [
-     "219",
-     "293"
-    ]
+    "ohne_verlauf": []
    },
    "osm": "ok (Auszug)",
    "verlauf_vorwoche": 0
   },
   "vrb": {
-   "linien": 299,
+   "linien": 298,
    "verlauf": {
     "osm": 122,
     "osm+skizze": 104,
-    "skizze": 73
+    "skizze": 72
    },
    "aus_vorwoche": 1,
    "betreiber": {
     "Tarifverb Region Braunschweig": 293,
     "(ohne Angabe)": 4,
-    "Hildesheim": 1,
     "Regionalbus Braunschweig": 1
    },
    "liste": [
@@ -7136,15 +7113,6 @@
      "gesehen": "2026-11-22"
     },
     {
-     "ref": "N3",
-     "betreiber": "Hildesheim",
-     "von": "Hildesheim Hauptbahnhof-ZOB",
-     "nach": "Hohenhameln/Mehrzweckhalle",
-     "verlauf": "skizze",
-     "muster": 1,
-     "gesehen": "2026-11-22"
-    },
-    {
      "ref": "180",
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Wolfsburg, Hauptbahnhof",
@@ -8052,7 +8020,9 @@
     "470": "470"
    },
    "abgleich": {
-    "verschwunden": [],
+    "verschwunden": [
+     "N3"
+    ],
     "neu": [],
     "nur_osm": [
      "166",

@@ -114,7 +114,9 @@ jobs:
           }
           rm -f osm/quellen.jsonl
           echo "Quelle                       Code   Dauer     Adresse"
-          if pruefe geofabrik "https://download.geofabrik.de/europe/germany/niedersachsen-latest.osm.pbf.md5"; then echo "OSM_GEOFABRIK=1" >> "$GITHUB_ENV"; fi
+          # Fassung 65: Geofabrik legt die Dateien seit November 2026 in Unterordnern ab (…/germany/niedersachsen/niedersachsen-latest…);
+          # der alte Pfad antwortet mit 404 – am 22.11. im Browser geprüft. Von GitHub aus antwortet Geofabrik wieder (404 statt keine Verbindung).
+          if pruefe geofabrik "https://download.geofabrik.de/europe/germany/niedersachsen/niedersachsen-latest.osm.pbf.md5"; then echo "OSM_GEOFABRIK=1" >> "$GITHUB_ENV"; fi
           if pruefe openstreetmap.fr "https://download.openstreetmap.fr/extracts/europe/germany.state.txt" ersatz; then echo "OSM_FR=1" >> "$GITHUB_ENV"; fi
           pruefe overpass-api.de "https://overpass-api.de/api/status" reserve || true
           pruefe overpass.kumi.systems "https://overpass.kumi.systems/api/status" reserve || true
@@ -170,8 +172,12 @@ jobs:
             for land in niedersachsen hessen thueringen nordrhein-westfalen/detmold-regbez; do
               n=$(basename "$land")
               echo "$(date +%T) Lade $land (Geofabrik)"
-              if curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 -A "$AGENT" -o "osm/$n.osm.pbf" "https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf" \
-                 && teile "osm/$n.osm.pbf" "$n"; then echo "$(date +%T) $land fertig"; else echo "::warning::$land nicht geladen"; fi
+              url="https://download.geofabrik.de/europe/germany/$land/$n-latest.osm.pbf"    # Fassung 65: neuer Pfad mit Unterordner
+              if curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 -A "$AGENT" -o "osm/$n.osm.pbf" "$url"; then
+                soll=$(curl -fsSL -A "$AGENT" "$url.md5" | cut -d' ' -f1 || true); ist=$(md5sum "osm/$n.osm.pbf" | cut -d' ' -f1)
+                if [ -n "$soll" ] && [ "$soll" != "$ist" ]; then echo "::warning::Prüfsumme $land passt nicht – Datei verworfen"; rm -f "osm/$n.osm.pbf"; fi
+              fi
+              if [ -s "osm/$n.osm.pbf" ] && teile "osm/$n.osm.pbf" "$n"; then echo "$(date +%T) $land fertig"; echo "OSM_QUELLE_DATEI=geofabrik" >> "$GITHUB_ENV"; else echo "::warning::$land nicht geladen"; fi
               rm -f "osm/$n.osm.pbf"
             done
           fi
@@ -198,7 +204,13 @@ jobs:
             if [ -s osm-vorrat/auszug.opl ]; then
               cp osm-vorrat/*.opl osm-vorrat/*.geojsonseq osm/ 2>/dev/null || true
               echo "GOEBUS_OSM_VORRAT=$(cat osm-vorrat/stand.txt 2>/dev/null || echo unbekannt)" >> "$GITHUB_ENV"
-              echo "::warning::Kein neuer OpenStreetMap-Auszug – nutze den letzten guten vom $(cat osm-vorrat/stand.txt 2>/dev/null || echo '?')"
+              # Fassung 65: Planmäßig (Vorrat jünger als 2 Tage, openstreetmap.fr wird nur alle 2 Tage geladen) nur ein Hinweis, keine Warnung
+              if [ "${OSM_FR:-}" = 1 ] && [ -n "${OSM_VORRAT_TAGE:-}" ] && [ "${OSM_VORRAT_TAGE}" -lt 2 ]; then
+                echo "::notice::Planmäßig der OpenStreetMap-Auszug vom $(cat osm-vorrat/stand.txt) (openstreetmap.fr wird nur alle 2 Tage geladen)"
+                echo "GOEBUS_OSM_PLANMAESSIG=1" >> "$GITHUB_ENV"
+              else
+                echo "::warning::Kein neuer OpenStreetMap-Auszug – nutze den letzten guten vom $(cat osm-vorrat/stand.txt 2>/dev/null || echo '?')"
+              fi
             else
               echo "::warning::Kein Auszug geladen und keiner im Vorrat – das Skript fragt Overpass (von GitHub aus meist gesperrt)"
             fi
@@ -215,11 +227,13 @@ jobs:
             && timeout 300 osmium export osm/gemeinden.osm.pbf -f geojsonseq --geometry-types=polygon -o osm/gemeinden.geojsonseq --overwrite ) \
             || echo "::warning::Gemeindegrenzen nicht erstellt – AST-Gebiete aus den Haltestellen"
           # Fassung 60: guten Auszug für spätere Läufe aufheben
-          mkdir -p osm-vorrat && cp osm/auszug.opl osm/fahrschulen.opl osm-vorrat/ && { cp osm/gemeinden.geojsonseq osm-vorrat/ 2>/dev/null || true; } && date -u +%F > osm-vorrat/stand.txt
+          mkdir -p osm-vorrat && cp osm/auszug.opl osm/fahrschulen.opl osm-vorrat/ && { cp osm/gemeinden.geojsonseq osm-vorrat/ 2>/dev/null || true; } && date -u +%F > osm-vorrat/stand.txt \
+            && echo "OSM_NEU=1" >> "$GITHUB_ENV"
           ls -la osm
 
       - name: OpenStreetMap-Auszug für spätere Läufe speichern
-        if: ${{ hashFiles('osm-vorrat/stand.txt') != '' }}
+        # Fassung 65: nur, wenn es einen neuen Auszug gibt (vorher bei jedem Lauf 45 MB derselben Daten)
+        if: ${{ env.OSM_NEU == '1' && hashFiles('osm-vorrat/stand.txt') != '' }}
         continue-on-error: true
         uses: actions/cache/save@v5   # Fassung 63: Node 24
         with:

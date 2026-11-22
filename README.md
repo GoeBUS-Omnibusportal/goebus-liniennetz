@@ -1,6 +1,6 @@
 # GöBUS – Liniennetze automatisch aktuell halten
 
-Dieser Ordner erzeugt jede Woche die Liniennetze der Verbünde für die GöBUS-Website. Die Daten kommen aus zwei Quellen:
+Dieser Ordner erzeugt jeden Tag die Liniennetze der Verbünde für die GöBUS-Website. Die Daten kommen aus zwei Quellen:
 
 - **Vollständigkeit und Texte** aus den amtlichen Fahrplandaten (GTFS): alle Linien mit Nummer, Betreiber, Start und Ziel. Die Datei stammt von GTFS.DE, erzeugt aus den Daten von DELFI e.V., unter der Lizenz CC BY 4.0.
 - **Straßengenaue Verläufe** aus OpenStreetMap, wenn dort eine Linie mit derselben Nummer dicht an den Haltestellen verläuft. Sonst wird die Linie über die Haltestellen gezogen.
@@ -12,7 +12,7 @@ Das STRATO-Paket „Homepage Starter“ hat keine Cronjobs. Die Rechenarbeit üb
 1. **GitHub-Konto anlegen** (kostenlos) auf github.com.
 2. **Neues Repository erstellen**: Oben rechts auf „+“ klicken, dann „New repository“ wählen. Als Name zum Beispiel `goebus-liniennetz` eintragen, „Public“ wählen und auf „Create repository“ klicken.
    „Public“ ist nötig, damit die Website die fertigen Dateien ohne Passwort abholen kann. Im Repository liegen nur öffentliche Fahrplan- und Kartendaten, keine Zugangsdaten.
-3. **Dateien hochladen**: Im neuen Repository auf „uploading an existing file“ klicken und den **Inhalt** dieses Ordners hineinziehen. Dazu gehören `liniennetz.py`, `fahrschulen.py`, `fahrplanseiten.py`, `verbuende.json`, `landkreise.topo.json`, `.gitignore`, `README.md` und der Ordner `.github`. Danach auf „Commit changes“ klicken.
+3. **Dateien hochladen**: Im neuen Repository auf „uploading an existing file“ klicken und den **Inhalt** dieses Ordners hineinziehen. Dazu gehören `liniennetz.py`, `fahrschulen.py`, `fahrplanseiten.py`, `verbuende.json`, `landkreise.topo.json`, `osrm-bus.lua`, `.gitignore`, `README.md` und der Ordner `.github`. Danach auf „Commit changes“ klicken.
    Falls der Ordner `.github` beim Hochladen fehlt (versteckter Ordner): Auf „Add file“ und dann „Create new file“ klicken, als Namen `.github/workflows/liniennetz.yml` eingeben und den Inhalt der gleichnamigen Datei hineinkopieren.
 4. **Schreibrecht für den Ablauf erlauben**: Unter „Settings“ → „Actions“ → „General“ → „Workflow permissions“ die Option „Read and write permissions“ wählen und speichern.
 5. **Ersten Lauf starten**: Unter „Actions“ → „Liniennetz aktualisieren“ auf „Run workflow“ klicken. Nach etwa 5 bis 15 Minuten liegt im Repository der Ordner `daten` mit `vsn_linien.json`, `nvv_linien.json` usw.
@@ -23,11 +23,36 @@ Das STRATO-Paket „Homepage Starter“ hat keine Cronjobs. Die Rechenarbeit üb
 
 Von da an läuft alles automatisch:
 
-- **GitHub** erzeugt die Daten montags und donnerstags neu – und sofort nach jedem Hochladen von `liniennetz.py` oder `verbuende.json`.
+- **GitHub** erzeugt die Daten jeden Tag um 3:23 Uhr (UTC) neu (seit Fassung 60, vorher montags und donnerstags; seit Fassung 61 mit Ersatzquelle und eigenem Routenplaner) – und sofort nach jedem Hochladen von `liniennetz.py` oder `verbuende.json`.
 - **Die Website** prüft höchstens alle 6 Stunden die kleine Datei `daten/stand.json` und übernimmt eine neue Auswertung sofort (bis Update 23 erst, wenn die eigenen Dateien älter als 7 Tage waren – neue Ergebnisse kamen dadurch bis zu einer Woche später an).
 - **Sofort abholen:** in der Verwaltung unter *Verbund & Tarife → Abgleich der Liniennetze → Jetzt abholen*.
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
+
+## Neu in Fassung 61 (Skript 3.2)
+
+- **Quellen prüfen:** Der Lauf prüft zuerst von GitHub aus, welche Quellen antworten: Geofabrik, openstreetmap.fr, drei Overpass-Server, öffentlicher Routenplaner, gtfs.de, ghcr.io und die Website. Das Ergebnis steht als Tabelle im Protokoll, in `stand.json` (`quellen`) und in der Verwaltung.
+- **Geofabrik gesperrt:** Am 19. und 22.11.2026 lehnte Geofabrik jede Verbindung von GitHub ab („Couldn't connect to server“, auch über IPv4). Overpass sperrt Azure/AWS seit Oktober 2025. Der Ersatzserver der 60. Fassung half nicht: openstreetmap.fr bietet von den deutschen Ländern nur NRW an.
+  - Jetzt lädt der Lauf **Deutschland von openstreetmap.fr**: 6 GB, mit Prüfsumme. Daraus schneidet er die Region aus (`osmium extract -b 8.2,50.6,11.8,52.9`).
+  - Das geschieht höchstens alle 2 Tage. Dazwischen gilt der letzte gute Auszug aus dem Zwischenspeicher.
+  - `stand.json` meldet dann `osm_quelle: openstreetmap.fr`.
+- **Eigener Routenplaner** (`osrm-bus.lua`, Schritt „Eigenen Routenplaner bauen und starten“):
+  - OSRM läuft in Docker (`ghcr.io/project-osrm/osrm-backend:v26.10.0-debian`) auf den Straßen der Region.
+  - Gebaut wird er einmal je Woche. Die fertigen Daten liegen im Zwischenspeicher von GitHub.
+  - Das Skript fragt `http://127.0.0.1:5000` ohne Wartezeit, also sind alle Skizzen in einem Lauf fertig.
+  - Fällt er aus, nimmt das Skript den öffentlichen Server (`skizze_wechsel()`). `stand.json` nennt das unter `skizze_router`.
+- **Bus-Profil:** Busschleusen und Busspuren sind befahrbar, `bus=no` ist gesperrt. Straßen unter 18 t oder 3,6 m sind gesperrt, außer sie sind für Busse freigegeben. Feld- und Fußwege gibt der Auszug gar nicht erst her.
+- **Bediengebiet ohne Gemeindefläche:** Fehlt die Gemeindegrenze, bildet `gebiet_aus_haltestellen()` eine Hülle um alle Haltestellen des Orts, mit 500 m Rand (`gebiet_quelle: haltestellen`). Die Karte nennt das Gebiet „ungefähr“.
+
+## Neu in Fassung 60 (Skript 3.1)
+
+- **OpenStreetMap-Ausfall abgefangen:** Am 19.11.2026 lehnte Geofabrik alle Downloads ab (`curl: (7) Failed to connect to download.geofabrik.de`), auch Overpass antwortete nicht – der Lauf hatte keine einzige OpenStreetMap-Linie. Jetzt: vier Wiederholungen je Land, danach IPv4 (`curl -4`), danach der Spiegel `download.openstreetmap.fr`. Klappt nichts, nimmt der Lauf den zuletzt gelungenen Auszug aus dem GitHub-Zwischenspeicher (`actions/cache`, Ordner `osm-vorrat`); `stand.json` meldet dann `osm_quelle: vorrat` und `osm_stand`.
+- **Täglich** um 3:23 Uhr statt zweimal die Woche. Gemeindegrenzen kommen im selben osmium-Durchgang wie Buslinien und Fahrschulen.
+- **Eine Fahrplan-Linie, mehrere Orte:** „Linie 1“ von NVV - Faisy ist in den Fahrplandaten *eine* route_id für fünf Städte. Bisher kamen nur die 16 längsten Fahrtmuster weiter (aus ein bis zwei Orten), StadtBus Witzenhausen 1 (281) oder Korbach 1–5 (581–585) fehlten. Jetzt werden die Fahrten je Ort ausgewertet (`orte_der_fahrten()`, Raster rund 4 km); Hin- und Rückfahrt einer Überlandlinie führt `zusammenfassen()` wieder zusammen. `stand.json`: `orte_geteilt`.
+- **Linienwege ohne eindeutigen Ort** (NVV 23 „Wilhelmshöhe (Park) <> Dönche <> Druseltal <> Herkules“): Gibt es keinen eindeutigen Namen als Anker, probiert `halte_aus_weg()` jeden Kandidaten des seltensten Namens und nimmt die kürzeste Kette (höchstens 15 km je Abschnitt).
+- **Gleiche Nummer:** Ein Eintrag fällt schon unter 95 % im Verbund weg, wenn ein anderes Unternehmen dieselbe Nummer ganz im Verbund fährt (VRB 262 Harzer ab Braunlage neben Wolfsburg). Passt ein Eintrag zum Linienweg der Liste, gilt für die übrigen ebenfalls 95 % (vorher 75 %).
+- **Ersetzt-Regeln:** Zeigen zwei alte Nummern auf eine neue (ROSA/RVHI 5 und 43 → 5/43), werden beide Verläufe zusammengelegt; bisher überschrieb der zweite den ersten. Der Verlauf einer alten Nummer wird außerdem nur übernommen, wenn er die Haltestellen der neuen abfährt; eine eigene Skizze der neuen Nummer zählt als eigener Verlauf.
+- **Skizzen:** Antwortet der Routenplaner mit HTTP 400 („kein Weg“), bleibt nur dieses Stück gerade – bisher brach das alle weiteren Skizzen des Laufs ab. Nach allen Verbünden nutzt ein Nachlauf die restliche Zeit; `stand.json` nennt je Verbund `skizzen_offen`.
 
 ## Neu in Fassung 59 (Skript 3.0)
 

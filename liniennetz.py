@@ -43,7 +43,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '3.1'
+VERSION = '3.2'
 
 # 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
 import socket as _socket
@@ -207,22 +207,35 @@ def weg_aus_folge(namen, hoechstens=7):
 
 
 SKIZZE_URL = os.environ.get('GOEBUS_SKIZZE_URL', 'https://router.project-osrm.org/route/v1/driving/')
+SKIZZE_OEFFENTLICH = 'https://router.project-osrm.org/route/v1/driving/'
+SKIZZE_NEU = set()    # 3.2 (Fassung 61): in diesem Lauf vom eigenen Routenplaner berechnete Stücke
+SKIZZE_ZAHL = Counter()
+
+
+def skizze_lokal():
+    """3.2 (Fassung 61): eigener Routenplaner im GitHub-Lauf (OSRM mit Bus-Profil auf 127.0.0.1) – ohne Wartezeit je Anfrage."""
+    return re.match(r'^https?://(?:127\.0\.0\.1|localhost)[:/]', SKIZZE.get('url') or SKIZZE_URL or '') is not None
 
 
 def skizze_teil(t, cache, ende):
     """Eine gerade Verbindung (Haltestellen in Fahrtreihenfolge) über die Straßen legen. Rückgabe: Liste der Punkte,
     [] = bleibt gerade (Umweg über 2,5-fach oder kein Weg), None = Zeitbudget aufgebraucht oder Server nicht erreichbar."""
     schluessel = ';'.join('%.5f,%.5f' % (x, y) for x, y in t)
-    if schluessel in cache:
+    lokal = skizze_lokal()
+    # 3.2 (Fassung 61): Mit dem eigenen Routenplaner (Bus-Profil) wird jedes Stück neu berechnet – ältere Skizzen stammen vom
+    # öffentlichen Server mit Auto-Profil. Ohne eigenen Routenplaner gilt der Zwischenspeicher wie bisher.
+    if schluessel in cache and (not lokal or schluessel in SKIZZE_NEU):
         return cache[schluessel]
     if time.time() > ende or SKIZZE.get('abbruch'):
         return None
     weg = []
     for i in range(0, len(t) - 1, 24):
         stueck = t[i:i + 25]
-        url = SKIZZE_URL + ';'.join('%.6f,%.6f' % (x, y) for x, y in stueck) + '?overview=full&geometries=geojson&continue_straight=false'
+        url = (SKIZZE.get('url') or SKIZZE_URL) + ';'.join('%.6f,%.6f' % (x, y) for x, y in stueck) + '?overview=full&geometries=geojson&continue_straight=false'
         try:
-            time.sleep(1.05)
+            if not lokal:
+                time.sleep(1.05)    # öffentlicher Server: höchstens eine Anfrage je Sekunde
+            SKIZZE_ZAHL['lokal' if lokal else 'oeffentlich'] += 1
             req = urllib.request.Request(url, headers={'User-Agent': 'GoeBUS-Liniennetz/%s (+https://goebus.de)' % VERSION})
             with urllib.request.urlopen(req, timeout=20) as r:
                 antwort = json.load(r)
@@ -231,11 +244,16 @@ def skizze_teil(t, cache, ende):
             if e.code == 400:    # 3.1 (Fassung 60): „NoRoute“/„NoSegment“ – nur dieses Stück bleibt gerade, die übrigen Skizzen laufen weiter
                 log('Skizze: kein Weg (HTTP 400) für', schluessel[:60])
                 cache[schluessel] = []
+                SKIZZE_NEU.add(schluessel)
                 return []
+            if lokal:
+                return skizze_wechsel(t, cache, ende, e)
             log('Skizze: Abbruch –', type(e).__name__, str(e)[:80])
             SKIZZE['abbruch'] = True
             return None
         except Exception as e:    # Server nicht erreichbar oder Rate-Limit: für diesen Lauf aufhören
+            if lokal:
+                return skizze_wechsel(t, cache, ende, e)
             log('Skizze: Abbruch –', type(e).__name__, str(e)[:80])
             SKIZZE['abbruch'] = True
             return None
@@ -245,7 +263,17 @@ def skizze_teil(t, cache, ende):
     if not weg or strasse > 2.5 * gerade + 2000:
         weg = []
     cache[schluessel] = [[round(x, 6), round(y, 6)] for x, y in vereinfachen([tuple(c) for c in weg])] if weg else []
+    if lokal:
+        SKIZZE_NEU.add(schluessel)
     return cache[schluessel]
+
+
+def skizze_wechsel(t, cache, ende, fehler):
+    """3.2 (Fassung 61): Der eigene Routenplaner antwortet nicht mehr – für den Rest des Laufs der öffentliche Server."""
+    log('Skizze: eigener Routenplaner antwortet nicht (%s: %s) – weiter mit dem öffentlichen Server' % (type(fehler).__name__, str(fehler)[:60]))
+    SKIZZE['url'] = SKIZZE_OEFFENTLICH
+    SKIZZE['router_fehler'] = str(fehler)[:120]
+    return skizze_teil(t, cache, ende)
 
 
 def skizzen(feats, cache, ende):
@@ -1487,7 +1515,7 @@ def gebiete_ergaenzen(feats, liste, v, kreise, datei):
     """3.0 (Fassung 59): AST-Linien, die nur ein Gebiet nennen („9130 Gemeinde Rosdorf“, „9173 Samtgemeinde Radolfshausen“),
     haben weder Fahrplandaten noch Haltestellen – sie fahren nach Anmeldung in der Gemeinde. Sie bekommen die Gemeindefläche
     aus OpenStreetMap (verlauf „gebiet“), die Karte zeigt sie als Bediengebiet. Rückgabe: Zahl ergänzter Gebiete."""
-    if not liste or not datei or not os.path.exists(datei):
+    if not liste:
         return 0
     da = {ref_norm(f['properties'].get('ref', '')) for f in feats}
     gesucht = {}
@@ -1497,13 +1525,22 @@ def gebiete_ergaenzen(feats, liste, v, kreise, datei):
             gesucht[k] = (ref, weg, hinweis, m.group(1).lower(), halt_norm(m.group(2)))
     if not gesucht:
         return 0
-    flaechen = gemeinden_laden(datei, {x[4] for x in gesucht.values()})
+    flaechen = gemeinden_laden(datei, {x[4] for x in gesucht.values()}) if datei and os.path.exists(datei) else {}
     ids = [k for k in v['kreise'] if k in kreise]
     n = 0
     for k, (ref, weg, hinweis, art, name) in gesucht.items():
         kand = [x for x in flaechen.get(name, []) if not ids or kreis_von(x[2][0], x[2][1], kreise, ids) is not None]
         if not kand:
-            log(v['slug'], 'Gebiet', weg, 'nicht gefunden')
+            # 3.2 (Fassung 61): keine Gemeindefläche (Datei fehlt oder Name nicht gefunden) – ungefähres Gebiet aus den Haltestellen
+            # des Orts („Rosdorf, Kirche“, „Rosdorf Mitte“ …): Hülle um alle Haltestellen mit rund 500 m Rand
+            geom = gebiet_aus_haltestellen(name, HALTE_REGION, kreise, ids)
+            if not geom:
+                log(v['slug'], 'Gebiet', weg, 'nicht gefunden')
+                continue
+            feats.append({'type': 'Feature', 'properties': {
+                'ref': ref, 'name': '%s: %s' % (ref, weg), 'from': weg, 'to': '', 'operator': '', 'network': v.get('kurz', ''), 'route': 'bus',
+                'quelle': 'liste', 'verlauf': 'gebiet', 'gebiet_quelle': 'haltestellen', 'weg': weg, 'hinweis': hinweis, 'description': weg}, 'geometry': geom})
+            n += 1
             continue
         stufe = '7' if art == 'samtgemeinde' else '8'
         _, polys, _ = sorted(kand, key=lambda x: (x[0] != stufe, -len(x[1][0][0])))[0]
@@ -1516,6 +1553,43 @@ def gebiete_ergaenzen(feats, liste, v, kreise, datei):
     if n:
         log(v['slug'], n, 'Bediengebiete (Gemeindeflächen) ergänzt')
     return n
+
+
+def huelle(pts):
+    """Konvexe Hülle (Andrew) einer Punktliste [(lon, lat)] → Ring gegen den Uhrzeigersinn, geschlossen."""
+    pts = sorted(set(pts))
+    if len(pts) < 3:
+        return []
+    kreuz = lambda o, a, b: (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    unten, oben = [], []
+    for p in pts:
+        while len(unten) >= 2 and kreuz(unten[-2], unten[-1], p) <= 0:
+            unten.pop()
+        unten.append(p)
+    for p in reversed(pts):
+        while len(oben) >= 2 and kreuz(oben[-2], oben[-1], p) <= 0:
+            oben.pop()
+        oben.append(p)
+    ring = unten[:-1] + oben[:-1]
+    return ring + ring[:1]
+
+
+def gebiet_aus_haltestellen(name, index, kreise, ids, rand_m=500):
+    """3.2 (Fassung 61): Bediengebiet ohne Gemeindefläche – alle Haltestellen, deren Name mit dem Ort beginnt („rosdorf …“),
+    im Verbund; Hülle mit Rand. Mindestens zwei Haltestellen. → GeoJSON-Polygon oder None."""
+    if not name:
+        return None
+    halte = [(h[0], h[1]) for h in index if (h[3] == name or h[3].startswith(name + ' ')) and (not ids or kreis_von(h[0], h[1], kreise, ids) is not None)]
+    if len(halte) < 2:
+        return None
+    pts = []
+    for x, y in halte:
+        dx, dy = rand_m / (111320 * math.cos(math.radians(y))), rand_m / 110540
+        for i in range(8):
+            w = i * math.pi / 4
+            pts.append((round(x + dx * math.cos(w), 5), round(y + dy * math.sin(w), 5)))
+    ring = huelle(pts)
+    return {'type': 'Polygon', 'coordinates': [[[x, y] for x, y in ring]]} if ring else None
 
 
 def liste_anwenden(feats, liste, index, osm_idx, v):
@@ -1916,6 +1990,12 @@ def main():
                     stand['verbuende'][v['slug']]['skizzen_nachlauf'] = n
     stand['skizzen_offen'] = {v['slug']: sum(1 for f in feats if str(f['properties'].get('verlauf', '')).endswith('haltestellen')) for v, feats, _, _ in NACHLAUF}
     stand['orte_geteilt'] = ORTE_GETEILT[-1] if ORTE_GETEILT else 0    # 3.1: Linien mit mehreren Orten (je Ort ausgewertet)
+    # 3.2 (Fassung 61): Erreichbarkeit der Quellen vom GitHub-Lauf aus (Schritt „Quellen prüfen“) und Herkunft des OSM-Auszugs
+    try:
+        stand['quellen'] = json.load(open(os.environ['GOEBUS_QUELLEN'], encoding='utf-8')) if os.environ.get('GOEBUS_QUELLEN') and os.path.exists(os.environ['GOEBUS_QUELLEN']) else []
+    except (ValueError, OSError):
+        stand['quellen'] = []
+    stand['skizze_router'] = {'eigen': bool(re.match(r'^https?://(?:127\.0\.0\.1|localhost)[:/]', SKIZZE_URL or '')), 'profil': os.environ.get('GOEBUS_SKIZZE_PROFIL', ''), 'anfragen': dict(SKIZZE_ZAHL), 'fehler': SKIZZE.get('router_fehler', '')}    # 3.2 (Fassung 61)
     if archiv:
         with open(archiv_pfad, 'w', encoding='utf-8') as fh:
             json.dump(archiv, fh, ensure_ascii=False, separators=(',', ':'))
@@ -1923,6 +2003,8 @@ def main():
     dauer['gesamt'] = round(time.time() - T0)
     stand['dauer'] = dauer
     stand['osm_quelle'] = 'geofabrik' if auszug else ('overpass' if not a.ohne_osm and not a.osm_json else 'aus')
+    if auszug and os.environ.get('OSM_QUELLE_DATEI'):    # 3.2 (Fassung 61): Ersatz für die gesperrte Geofabrik
+        stand['osm_quelle'] = os.environ['OSM_QUELLE_DATEI']
     if auszug and os.environ.get('GOEBUS_OSM_VORRAT'):    # 3.1: letzter guter Auszug aus dem Zwischenspeicher (Geofabrik nicht erreichbar)
         stand['osm_quelle'], stand['osm_stand'] = 'vorrat', os.environ['GOEBUS_OSM_VORRAT']
     stand['overpass'] = (['Geofabrik-Auszug (ohne Overpass)'] if auszug else []) + OVERPASS_STATUS[-12:]

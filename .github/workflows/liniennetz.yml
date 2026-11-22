@@ -121,7 +121,13 @@ jobs:
           pruefe osrm-oeffentlich "https://router.project-osrm.org/route/v1/driving/9.926800,51.536500;9.935900,51.533200?overview=false" || true
           pruefe gtfs.de "https://download.gtfs.de/germany/free/latest.zip" || true
           pruefe ghcr.io "https://ghcr.io/v2/" || true
-          if [ -n "${{ vars.GOEBUS_ADRESSE }}" ]; then pruefe goebus.de "${{ vars.GOEBUS_ADRESSE }}/_data/verbund-tarife/linien-regeln.json" || true; fi
+          # Fassung 62: die Website so prüfen, wie das Skript sie abruft (Python, gleiche Kennung) – curl bekam am 22.11. 404, Python die Regeln
+          if [ -n "${{ vars.GOEBUS_ADRESSE }}" ]; then
+            u="${{ vars.GOEBUS_ADRESSE }}/_data/verbund-tarife/linien-regeln.json"; t0=$(date +%s%3N)
+            code=$(python3 -c "import sys,urllib.request as u;r=u.Request(sys.argv[1],headers={'User-Agent':'GoeBUS-Liniennetz/3.2 (+https://www.goebus.de)'});print(u.urlopen(r,timeout=30).status)" "$u" 2>/dev/null || echo 000)
+            ms=$(( $(date +%s%3N) - t0 )); printf '%-28s %s  %5d ms  %s\n' goebus.de "$code" "$ms" "$u"
+            printf '{"name":"%s","url":"%s","code":"%s","ms":%d}\n' goebus.de "$u" "$code" "$ms" >> osm/quellen.jsonl
+          fi
           { echo '['; paste -sd, osm/quellen.jsonl; echo ']'; } > osm/quellen.json
           echo "GOEBUS_QUELLEN=$PWD/osm/quellen.json" >> "$GITHUB_ENV"
           # Alter des letzten guten Auszugs (Tage) – openstreetmap.fr (6 GB) nur laden, wenn der Vorrat älter als 2 Tage ist

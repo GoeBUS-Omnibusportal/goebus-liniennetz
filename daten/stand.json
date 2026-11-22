@@ -1,31 +1,31 @@
 {
- "erzeugt": "2026-11-22T08:47:12Z",
+ "erzeugt": "2026-11-22T10:29:29Z",
  "version": "3.2",
  "linienwege": false,
  "verbuende": {
   "vsn": {
    "datei": "vsn_linien.json",
-   "linien": 148,
+   "linien": 155,
    "liste_wege": 140,
    "liste_neu": 1,
    "osm_verlauf": 134,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
-   "aus_vorwoche": 3,
-   "gleiche_nummer_entfernt": 10,
+   "aus_vorwoche": 2,
+   "gleiche_nummer_entfernt": 9,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
    "osm": "ok (Auszug)"
   },
   "nvv": {
    "datei": "nvv_linien.json",
-   "linien": 430,
+   "linien": 425,
    "liste_wege": 411,
    "liste_neu": 1,
    "osm_verlauf": 172,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
-   "aus_vorwoche": 9,
+   "aus_vorwoche": 3,
    "gleiche_nummer_entfernt": 11,
    "stadtbus_zugeordnet": 25,
    "gebiete": 0,
@@ -39,8 +39,8 @@
    "osm_verlauf": 238,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
-   "aus_vorwoche": 3,
-   "gleiche_nummer_entfernt": 8,
+   "aus_vorwoche": 1,
+   "gleiche_nummer_entfernt": 7,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
    "osm": "ok (Auszug)"
@@ -81,7 +81,7 @@
    "osm_verlauf": 34,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
-   "aus_vorwoche": 4,
+   "aus_vorwoche": 3,
    "gleiche_nummer_entfernt": 0,
    "stadtbus_zugeordnet": 0,
    "gebiete": 0,
@@ -102,79 +102,79 @@
    "name": "geofabrik",
    "url": "https://download.geofabrik.de/europe/germany/niedersachsen-latest.osm.pbf.md5",
    "code": "000",
-   "ms": 694
+   "ms": 690
   },
   {
    "name": "openstreetmap.fr",
    "url": "https://download.openstreetmap.fr/extracts/europe/germany.state.txt",
    "code": "206",
-   "ms": 474
+   "ms": 516
   },
   {
    "name": "overpass-api.de",
    "url": "https://overpass-api.de/api/status",
    "code": "000",
-   "ms": 30010
+   "ms": 342
   },
   {
    "name": "overpass.kumi.systems",
    "url": "https://overpass.kumi.systems/api/status",
    "code": "000",
-   "ms": 30011
+   "ms": 30010
   },
   {
    "name": "overpass.private.coffee",
    "url": "https://overpass.private.coffee/api/status",
    "code": "000",
-   "ms": 30011
+   "ms": 30010
   },
   {
    "name": "osrm-oeffentlich",
    "url": "https://router.project-osrm.org/route/v1/driving/9.926800,51.536500;9.935900,51.533200?overview=false",
    "code": "200",
-   "ms": 523
+   "ms": 556
   },
   {
    "name": "gtfs.de",
    "url": "https://download.gtfs.de/germany/free/latest.zip",
    "code": "206",
-   "ms": 545
+   "ms": 596
   },
   {
    "name": "ghcr.io",
    "url": "https://ghcr.io/v2/",
    "code": "401",
-   "ms": 132
+   "ms": 119
   },
   {
    "name": "goebus.de",
    "url": "https://www.goebus.de/_admin//_data/verbund-tarife/linien-regeln.json",
-   "code": "404",
-   "ms": 842
+   "code": "000",
+   "ms": 2166
   }
  ],
  "skizze_router": {
   "eigen": true,
   "profil": "Bus (Straßen vom 2026-11-22)",
   "anfragen": {
-   "lokal": 3380
+   "lokal": 3392
   },
   "fehler": ""
  },
  "regeln": true,
  "dauer": {
-  "fahrplandaten_laden": 14,
-  "fahrplandaten_auswerten": 169,
+  "fahrplandaten_laden": 15,
+  "fahrplandaten_auswerten": 170,
   "osm_auszug_lesen": 3,
   "verbuende": {
-   "vsn": 18,
-   "nvv": 30,
-   "vrb": 33,
+   "vsn": 19,
+   "nvv": 32,
+   "vrb": 36,
    "rosa": 11,
-   "rvhi": 10,
+   "rvhi": 11,
    "oeffis": 11
   },
-  "gesamt": 301
+  "gesamt": 308
  },
  "osm_quelle": "openstreetmap.fr",
  "overpass": [

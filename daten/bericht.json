@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-22T18:32:33Z",
+ "erzeugt": "2026-11-22T18:42:41Z",
  "version": "3.4",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
@@ -1420,10 +1420,7 @@
     }
    ],
    "abgleich": {
-    "verschwunden": [
-     "51",
-     "642"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [
      "837"
@@ -9475,41 +9472,8 @@
      "gesehen": ""
     }
    ],
-   "ersetzt": {
-    "7": "25",
-    "8": "53",
-    "10": "34",
-    "11": "5/43",
-    "14": "51",
-    "102": "5/43",
-    "105": "52",
-    "106": "N5",
-    "107": "34"
-   },
    "abgleich": {
-    "verschwunden": [
-     "1",
-     "2",
-     "3",
-     "4",
-     "6",
-     "7",
-     "8",
-     "9",
-     "10",
-     "11",
-     "13",
-     "14",
-     "17",
-     "101",
-     "102",
-     "103",
-     "104",
-     "105",
-     "106",
-     "107",
-     "108"
-    ],
+    "verschwunden": [],
     "neu": [],
     "nur_osm": [],
     "nur_quelle": [],

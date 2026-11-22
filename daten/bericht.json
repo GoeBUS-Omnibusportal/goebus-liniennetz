@@ -1,6 +1,6 @@
 {
- "erzeugt": "2026-11-22T18:42:41Z",
- "version": "3.4",
+ "erzeugt": "2026-11-22T19:22:12Z",
+ "version": "3.5",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {
@@ -8,8 +8,7 @@
    "verlauf": {
     "skizze": 29,
     "osm": 46,
-    "osm+skizze": 79,
-    "osm+haltestellen": 1
+    "osm+skizze": 80
    },
    "aus_vorwoche": 3,
    "betreiber": {
@@ -1396,7 +1395,7 @@
      "betreiber": "VSN-Direkt",
      "von": "Adelebsen Schule, Mast 1 N",
      "nach": "Göttingen, Bahnhof/ZOB I",
-     "verlauf": "osm+haltestellen",
+     "verlauf": "osm+skizze",
      "muster": 8,
      "gesehen": "2026-11-13"
     },
@@ -1445,8 +1444,8 @@
   "nvv": {
    "linien": 425,
    "verlauf": {
-    "osm": 67,
-    "osm+skizze": 99,
+    "osm": 64,
+    "osm+skizze": 102,
     "skizze": 259
    },
    "aus_vorwoche": 3,
@@ -1655,7 +1654,7 @@
      "betreiber": "VGM/VRL",
      "von": "Willingen, Bahnhof",
      "nach": "Düdinghausen, Kirche",
-     "verlauf": "osm",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-22"
     },
@@ -4571,7 +4570,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Hatzfeld Hatzfeld Binzer",
      "nach": "Frankenberg Frankenberg Bahnhof",
-     "verlauf": "osm",
+     "verlauf": "osm+skizze",
      "muster": 12,
      "gesehen": "2026-11-22"
     },
@@ -5048,7 +5047,7 @@
      "betreiber": "NVV - Faisy",
      "von": "Medebach Medebach Park Hochsauerland",
      "nach": "Frankenberg Frankenberg Bahnhof",
-     "verlauf": "osm",
+     "verlauf": "osm+skizze",
      "muster": 4,
      "gesehen": "2026-11-22"
     },
@@ -5320,8 +5319,8 @@
   "vrb": {
    "linien": 298,
    "verlauf": {
-    "osm": 122,
-    "osm+skizze": 104,
+    "osm": 121,
+    "osm+skizze": 105,
     "skizze": 72
    },
    "aus_vorwoche": 1,
@@ -6317,7 +6316,7 @@
      "betreiber": "Tarifverb Region Braunschweig",
      "von": "Helmstedt, Bahnhof",
      "nach": "Beendorf, Schulplatz",
-     "verlauf": "osm",
+     "verlauf": "osm+skizze",
      "muster": 2,
      "gesehen": "2026-11-22"
     },

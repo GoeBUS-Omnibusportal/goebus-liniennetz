@@ -1,10 +1,10 @@
 {
  "version": "1.1",
- "stand": "2026-11-22T18:46:46Z",
+ "stand": "2026-11-22T19:28:09Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "Geofabrik-Auszug",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
- "anzahl": 521,
+ "anzahl": 515,
  "mit_bus": 47,
  "schulen": [
   {
@@ -1093,7 +1093,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
+   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
   },
   {
    "id": "n8993663668",
@@ -7063,56 +7063,6 @@
    "pschein": false
   },
   {
-   "id": "w284274418",
-   "name": "Fahrschule Pegasus Westheim",
-   "web": "",
-   "tel": "",
-   "mail": "",
-   "ort": "Marsberg",
-   "plz": "34431",
-   "strasse": "Kasseler Straße 31",
-   "lage": "51.49483,8.90795",
-   "klassen": "",
-   "bus": false,
-   "beleg": "",
-   "azav": false,
-   "grund": ""
-  },
-  {
-   "id": "w284274819",
-   "name": "Fahrschule Sieke",
-   "web": "https://www.fahrschule-sieke.de/",
-   "tel": "",
-   "mail": "",
-   "ort": "Marsberg",
-   "plz": "34431",
-   "strasse": "Kasseler Straße 51",
-   "lage": "51.49571,8.91066",
-   "klassen": "C1E, C1",
-   "bus": false,
-   "beleg": "",
-   "azav": false,
-   "grund": "",
-   "pschein": false
-  },
-  {
-   "id": "n8050001511",
-   "name": "Sieke",
-   "web": "https://www.fahrschule-sieke.de/",
-   "tel": "",
-   "mail": "",
-   "ort": "Marsberg",
-   "plz": "34431",
-   "strasse": "Sauerlandstraße 57",
-   "lage": "51.41805,8.77421",
-   "klassen": "C1E, C1",
-   "bus": false,
-   "beleg": "",
-   "azav": false,
-   "grund": "",
-   "pschein": false
-  },
-  {
    "id": "n1639152087",
    "name": "Fahrschule Gass",
    "web": "",
@@ -7177,22 +7127,6 @@
    "azav": false,
    "grund": "",
    "pschein": false
-  },
-  {
-   "id": "w189868476",
-   "name": "Fahrschule Gerlach GmbH",
-   "web": "",
-   "tel": "",
-   "mail": "",
-   "ort": "Nordharz",
-   "plz": "38871",
-   "strasse": "Wasserstraße 3A",
-   "lage": "51.90223,10.66430",
-   "klassen": "",
-   "bus": false,
-   "beleg": "",
-   "azav": false,
-   "grund": ""
   },
   {
    "id": "n10884357665",
@@ -7307,7 +7241,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
+   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
   },
   {
    "id": "n9384139160",
@@ -8412,38 +8346,6 @@
    "plz": "99880",
    "strasse": "Wiesenstraße 11",
    "lage": "50.88723,10.46480",
-   "klassen": "",
-   "bus": false,
-   "beleg": "",
-   "azav": false,
-   "grund": ""
-  },
-  {
-   "id": "n7023553685",
-   "name": "Fahrschule Sattler-Pelka",
-   "web": "https://fahrschule-wernigerode.de/",
-   "tel": "+49 160 94917747",
-   "mail": "",
-   "ort": "Wernigerode",
-   "plz": "38855",
-   "strasse": "Schreiberstraße 21",
-   "lage": "51.84068,10.79317",
-   "klassen": "",
-   "bus": false,
-   "beleg": "",
-   "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unabl)"
-  },
-  {
-   "id": "w223249369",
-   "name": "Tom's Fahrschule",
-   "web": "",
-   "tel": "+49 3943 44422",
-   "mail": "",
-   "ort": "Wernigerode",
-   "plz": "38855",
-   "strasse": "Am Lüttgegraben 2",
-   "lage": "51.84094,10.78870",
    "klassen": "",
    "bus": false,
    "beleg": "",

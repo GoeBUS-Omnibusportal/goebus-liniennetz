@@ -29,6 +29,11 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 66 (Skript 3.6)
+
+- **Hochladen:** `liniennetz.py` und `README.md` ersetzen.
+- **Gedächtnis:** Eine Linie, die laut Linienlisten zu einem Nachbarverbund gehört, wird nicht mehr als „aus der Vorwoche“ zurückgeholt. Beispiel: Skript 3.4 gab VSN 51 an die Öffis ab, das Gedächtnis holte sie in den VSN zurück. Die Regel gilt auch für Linien, die diese Woche nicht in den Fahrplandaten stehen; dann zählen Start, Ziel und Name der gespeicherten Linie. Eigene Unternehmen sind ausgenommen. Im Protokoll steht „aus der Vorwoche nicht behalten – gehört …“.
+
 ## Neu in Fassung 65 (Skript 3.5)
 
 - **Hochladen:** `liniennetz.py`, `README.md` und `.github/workflows/liniennetz.yml` ersetzen.

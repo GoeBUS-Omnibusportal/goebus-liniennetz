@@ -43,7 +43,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '3.5'
+VERSION = '3.6'
 
 # 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
 import socket as _socket
@@ -986,6 +986,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
                          and weg_woerter(LISTEN[w['slug']][ref_norm(ref)][1]) and weg_passt(LISTEN[w['slug']][ref_norm(ref)][1], seqs)]
                 if fremd:
                     log(v['slug'], 'Linie', ref, '(%s) nicht übernommen – nicht in der eigenen Liste, gehört zu %s' % (op, ', '.join(fremd)))
+                    ABGEGEBEN.setdefault(v['slug'], {})[ref_norm(ref)] = ', '.join(fremd)    # 3.6: auch nicht aus der Vorwoche zurückholen
                     continue
             if (anteil >= 0.25 and im_verbund >= 2) or eigener_betreiber or gelistet:
                 von, nach = halte[haupt[0]][2], halte[haupt[-1]][2]
@@ -1535,6 +1536,30 @@ def ersetzt_durch(f, feats, nah=300, anteil=0.7):
 
 
 ERSETZT = {}     # slug → {alte Nummer: neue Nummer} (für den Bericht)
+ABGEGEBEN = {}   # 3.6 (Fassung 66): slug → {Nummer: Nachbarverbund} – Linien, die zu einem Nachbarverbund gehören (VSN 51 → Öffis)
+
+
+def vorwoche_fremd(f, v, verbuende, kreise):
+    """2.6: gelistete Nummer, Verlauf überwiegend außerhalb und Linienweg passt nicht zu Start/Ziel → True;
+    3.6 (Fassung 66): nicht in der eigenen Liste, aber in der eines Nachbarverbunds mit passendem Linienweg → 'nachbar'."""
+    p = f.get('properties', {})
+    eigene = LISTEN.get(v['slug'], {})
+    eintrag = eigene.get(ref_norm(p.get('ref', '')))
+    if any(b.lower() in str(p.get('operator', '')).lower() for b in v.get('betreiber', []) if b):
+        return False
+    if not eintrag:
+        # 3.6: nicht in der eigenen Liste, aber in der Liste eines Nachbarverbunds mit passendem Linienweg (wie in linien_aus_gtfs)
+        if len(eigene) < 30: return False
+        folge = [[(0, 0, p.get('from', '')), (0, 0, p.get('to', '')), (0, 0, p.get('name', ''))]]
+        return 'nachbar' if any(w['slug'] != v['slug'] and ref_norm(p.get('ref', '')) in LISTEN.get(w['slug'], {})
+                   and weg_woerter(LISTEN[w['slug']][ref_norm(p.get('ref', ''))][1]) and weg_passt(LISTEN[w['slug']][ref_norm(p.get('ref', ''))][1], folge)
+                   for w in verbuende) else False
+    pts = [c for c in koordinaten(f.get('geometry'))]
+    pts = pts[::max(1, len(pts) // 60)]
+    if not pts:
+        return False
+    drin = sum(1 for x, y in pts if kreis_von(x, y, kreise, [k for k in v['kreise'] if k in kreise]) is not None) / len(pts)
+    return drin < 0.25 and not weg_passt(eintrag[1], [[(0, 0, p.get('from', '')), (0, 0, p.get('to', '')), (0, 0, p.get('name', ''))]])
 
 
 def gedaechtnis(feats, alt_pfad, heute, tage=28, slug='', fremd=None):
@@ -1557,8 +1582,15 @@ def gedaechtnis(feats, alt_pfad, heute, tage=28, slug='', fremd=None):
         gesehen = str(p.get('gesehen') or alt.get('erzeugt', '')[:10] or heute)
         if schl(p) in vorhanden or gesehen < grenze or not f.get('geometry') or fernbus(p) or keine_linie(p.get('ref', ''), p.get('from'), p.get('to'), p.get('name', ''), p.get('route', '')):
             continue
-        if fremd and fremd(f):    # 2.6: früher fälschlich übernommen (gleiche Nummer, anderer Linienweg) – nicht behalten
-            log(slug, 'Linie', p.get('ref'), '(%s) aus der Vorwoche nicht behalten – gleiche Nummer, anderer Linienweg' % p.get('operator', ''))
+        # 3.6 (Fassung 66): gehört laut Linienlisten zu einem Nachbarverbund – nicht aus der Vorwoche zurückholen. Skript 3.4 nahm VSN 51
+        # aus dem VSN, das Gedächtnis holte sie als „aus der Vorwoche“ wieder herein (Lauf vom 22.11.)
+        nb = ABGEGEBEN.get(slug, {}).get(ref_norm(p.get('ref', '')))
+        if nb:
+            log(slug, 'Linie', p.get('ref'), '(%s) aus der Vorwoche nicht behalten – gehört zu %s' % (p.get('operator', ''), nb))
+            continue
+        grund = fremd(f) if fremd else False
+        if grund:    # 2.6: früher fälschlich übernommen (gleiche Nummer, anderer Linienweg) – nicht behalten
+            log(slug, 'Linie', p.get('ref'), '(%s) aus der Vorwoche nicht behalten – %s' % (p.get('operator', ''), 'gehört laut Linienlisten zu einem Nachbarverbund' if grund == 'nachbar' else 'gleiche Nummer, anderer Linienweg'))
             continue
         neu = ersetzt_durch(f, [x for x in feats if not x['properties'].get('aus_vorwoche')])
         if neu:
@@ -2297,17 +2329,7 @@ def main():
             f.pop('_formen', None)
             f['properties']['gesehen'] = heute
         ziel = os.path.join(a.ausgabe, v['datei'])
-        def fremd(f, v=v):    # 2.6: gelistete Nummer, Verlauf überwiegend außerhalb und Linienweg passt nicht zu Start/Ziel
-            p = f.get('properties', {})
-            eintrag = LISTEN.get(v['slug'], {}).get(ref_norm(p.get('ref', '')))
-            if not eintrag or any(b.lower() in str(p.get('operator', '')).lower() for b in v.get('betreiber', []) if b):
-                return False
-            pts = [c for c in koordinaten(f.get('geometry'))]
-            pts = pts[::max(1, len(pts) // 60)]
-            if not pts:
-                return False
-            drin = sum(1 for x, y in pts if kreis_von(x, y, kreise, [k for k in v['kreise'] if k in kreise]) is not None) / len(pts)
-            return drin < 0.25 and not weg_passt(eintrag[1], [[(0, 0, p.get('from', '')), (0, 0, p.get('to', '')), (0, 0, p.get('name', ''))]])
+        def fremd(f, v=v): return vorwoche_fremd(f, v, verbuende, kreise)
         alt_n = gedaechtnis(feats, ziel, heute, a.behalten_tage, v['slug'], fremd) if a.behalten_tage > 0 else 0
         gleich_n += gleiche_nummer(feats, LISTEN.get(v['slug'], {}), v, verbuende, kreise, v['slug'])    # 2.9: auch Einträge aus der Vorwoche
         # Version 2.2: Regeln der Website (ersetzte Linien, z. B. VSN 265 → 260) und fehlende Linienwege ergänzen

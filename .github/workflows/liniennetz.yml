@@ -9,6 +9,7 @@
 #   – OpenStreetMap aus den Auszügen der Geofabrik (Niedersachsen, Hessen, Thüringen, Regierungsbezirk Detmold) statt Overpass:
 #     die öffentlichen Overpass-Server waren von GitHub aus nicht erreichbar (Network is unreachable, 502, 504) und
 #     kosteten je Versuch mehrere Minuten. Nur wenn der Auszug fehlt, wird Overpass noch gefragt (höchstens 12 Minuten).
+# Fassung 61: eigener Routenplaner (OSRM in Docker, Bus-Profil osrm-bus.lua) für die Skizzen, einmal je Woche gebaut.
 # Läuft täglich früh (Fassung 60), nach jedem Hochladen der Skripte und jederzeit von Hand („Run workflow“).
 name: Liniennetz aktualisieren
 
@@ -18,7 +19,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['liniennetz.py', 'fahrschulen.py', 'fahrplanseiten.py', 'verbuende.json', 'landkreise.topo.json', '.github/workflows/liniennetz.yml']
+    paths: ['liniennetz.py', 'fahrschulen.py', 'fahrplanseiten.py', 'verbuende.json', 'landkreise.topo.json', 'osrm-bus.lua', '.github/workflows/liniennetz.yml']
 
 concurrency:
   group: liniennetz
@@ -59,7 +60,7 @@ jobs:
 
   liniennetz:
     runs-on: ubuntu-24.04
-    timeout-minutes: 125    # Fassung 59/60: Auszug bis 30, Verarbeitung bis 70 (Skizzen bis 45), Fahrschulen bis 15 Minuten
+    timeout-minutes: 160    # Fassung 59/60/61: Auszug bis 30, Routenplaner bis 35, Verarbeitung bis 70 (Skizzen bis 45), Fahrschulen bis 15 Minuten
     steps:
       - name: Dateien holen
         uses: actions/checkout@v5
@@ -78,33 +79,99 @@ jobs:
           key: osm-${{ github.run_id }}
           restore-keys: osm-
 
-      - name: OpenStreetMap-Auszüge laden (Geofabrik)
-        # Ganze Bundesländer als Datei (zusammen gut 1,4 GB, Laden 1–3 Minuten), daraus mit osmium nur Buslinien und Fahrschulen.
-        # Schlägt dieser Schritt fehl, fragen die Skripte Overpass (mit Zeitbegrenzung) – der Lauf geht weiter.
+      - name: Woche bestimmen
+        # Fassung 61: Der eigene Routenplaner wird einmal je Woche neu gebaut (Straßen ändern sich selten)
+        run: echo "WOCHE=$(date -u +%G-%V)" >> "$GITHUB_ENV"
+
+      - name: Routenplaner-Daten bereitlegen
+        id: osrmcache
+        uses: actions/cache/restore@v4
+        with:
+          path: osrm
+          key: osrm-bus-v1-${{ env.WOCHE }}
+          restore-keys: osrm-bus-v1-
+
+      - name: Routenplaner neu bauen?
+        if: ${{ steps.osrmcache.outputs.cache-hit != 'true' }}
+        run: echo "OSRM_BAUEN=1" >> "$GITHUB_ENV"
+
+      - name: Quellen prüfen
+        # Fassung 61: Vor dem Laden prüft der Lauf von GitHub aus, welche Quellen antworten (Geofabrik, openstreetmap.fr,
+        # Overpass, Routenplaner, Fahrplandaten, Website). Am 19. und 22.11.2026 lehnte Geofabrik jede Verbindung von GitHub ab
+        # („Couldn't connect to server“, auch über IPv4) – Geofabrik sperrt bei Missbrauch ganze Adressbereiche, Overpass sperrt
+        # Azure/AWS seit Oktober 2025. Das Ergebnis steht im Protokoll, in osm/quellen.json und danach in der Verwaltung.
+        run: |
+          mkdir -p osm
+          pruefe() {  # Name, Adresse
+            local t0=$(date +%s%3N) code
+            code=$(curl -4 -s -o /dev/null -L -r 0-200 --connect-timeout 15 --max-time 30 -A "GoeBUS-Liniennetz (+https://goebus.de)" -w "%{http_code}" "$2" 2>/dev/null || true)
+            [ -z "$code" ] && code=000
+            local ms=$(( $(date +%s%3N) - t0 ))
+            printf '%-28s %s  %5d ms  %s\n' "$1" "$code" "$ms" "$2"
+            printf '{"name":"%s","url":"%s","code":"%s","ms":%d}\n' "$1" "$2" "$code" "$ms" >> osm/quellen.jsonl
+            case "$code" in 2*|3*) return 0;; *) return 1;; esac
+          }
+          rm -f osm/quellen.jsonl
+          echo "Quelle                       Code   Dauer     Adresse"
+          if pruefe geofabrik "https://download.geofabrik.de/europe/germany/niedersachsen-latest.osm.pbf.md5"; then echo "OSM_GEOFABRIK=1" >> "$GITHUB_ENV"; fi
+          if pruefe openstreetmap.fr "https://download.openstreetmap.fr/extracts/europe/germany.state.txt"; then echo "OSM_FR=1" >> "$GITHUB_ENV"; fi
+          pruefe overpass-api.de "https://overpass-api.de/api/status" || true
+          pruefe overpass.kumi.systems "https://overpass.kumi.systems/api/status" || true
+          pruefe overpass.private.coffee "https://overpass.private.coffee/api/status" || true
+          pruefe osrm-oeffentlich "https://router.project-osrm.org/route/v1/driving/9.926800,51.536500;9.935900,51.533200?overview=false" || true
+          pruefe gtfs.de "https://download.gtfs.de/germany/free/latest.zip" || true
+          pruefe ghcr.io "https://ghcr.io/v2/" || true
+          if [ -n "${{ vars.GOEBUS_ADRESSE }}" ]; then pruefe goebus.de "${{ vars.GOEBUS_ADRESSE }}/_data/verbund-tarife/linien-regeln.json" || true; fi
+          { echo '['; paste -sd, osm/quellen.jsonl; echo ']'; } > osm/quellen.json
+          echo "GOEBUS_QUELLEN=$PWD/osm/quellen.json" >> "$GITHUB_ENV"
+          # Alter des letzten guten Auszugs (Tage) – openstreetmap.fr (6 GB) nur laden, wenn der Vorrat älter als 2 Tage ist
+          if [ -s osm-vorrat/stand.txt ]; then echo "OSM_VORRAT_TAGE=$(( ( $(date -u +%s) - $(date -u -d "$(cat osm-vorrat/stand.txt)" +%s) ) / 86400 ))" >> "$GITHUB_ENV"; fi
+
+      - name: OpenStreetMap-Auszüge laden (Geofabrik, sonst openstreetmap.fr)
+        # Geofabrik: vier Gebiete (zusammen gut 1,4 GB). Ist Geofabrik gesperrt: Deutschland von openstreetmap.fr (6 GB,
+        # geprüft am 22.11.2026: Datei vorhanden, Stand 21.11.) und daraus der Ausschnitt der Region – höchstens alle 2 Tage,
+        # dazwischen der letzte gute Auszug aus dem Zwischenspeicher. Daraus mit osmium nur Buslinien, Fahrschulen, Gemeinden
+        # und (für den eigenen Routenplaner) Straßen.
         continue-on-error: true
-        timeout-minutes: 30    # Fassung 60: mehr Zeit für Wiederholungen und den Spiegel (am 19.11. war Geofabrik nicht erreichbar)
+        timeout-minutes: 40
         run: |
           sudo apt-get install -y -qq osmium-tool >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq osmium-tool >/dev/null)
           mkdir -p osm
-          for land in niedersachsen hessen thueringen nordrhein-westfalen/detmold-regbez; do
-            n=$(basename "$land")
-            echo "$(date +%T) Lade $land"
-            # Fassung 49: ein fehlendes Bundesland bricht den Schritt nicht ab – die übrigen werden trotzdem genutzt
-            # Fassung 60: Am 19.11. kam keine Verbindung zustande („curl: (7) Failed to connect to download.geofabrik.de port 443“) –
-            # curl wiederholte das nicht (--retry gilt nicht für Verbindungsfehler). Jetzt: Wiederholung auch bei Verbindungsfehlern,
-            # dann ausdrücklich über IPv4, dann der Spiegel von openstreetmap.fr.
-            url="https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf"
-            if { curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 -o "osm/$n.osm.pbf" "$url" \
-                 || { echo "Neuer Versuch über IPv4"; curl -4 -fsSL --retry 3 --retry-all-errors --retry-delay 30 --connect-timeout 30 -o "osm/$n.osm.pbf" "$url"; } \
-                 || { [ "$n" != "detmold-regbez" ] && echo "Geofabrik antwortet nicht – Spiegel openstreetmap.fr" && curl -fsSL --retry 3 --retry-all-errors --retry-delay 20 --connect-timeout 30 -o "osm/$n.osm.pbf" "https://download.openstreetmap.fr/extracts/europe/germany/$n-latest.osm.pbf"; }; } \
-               && osmium tags-filter "osm/$n.osm.pbf" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school r/admin_level=7,8 -o "osm/$n-teil.osm.pbf" --overwrite; then
-              # Fassung 60: Gemeindegrenzen (admin_level 7/8) im selben Durchgang wie Buslinien und Fahrschulen – kein zweites Lesen der großen Datei
-              echo "$(date +%T) $land fertig"
-            else
-              echo "::warning::OpenStreetMap-Auszug $land nicht geladen – weiter ohne dieses Gebiet"
+          AGENT="GoeBUS-Liniennetz (+https://goebus.de)"
+          teile() {  # Datei, Kurzname: Buslinien/Fahrschulen/Gemeinden und Straßen herausfiltern
+            osmium tags-filter "$1" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school r/admin_level=7,8 -o "osm/$2-teil.osm.pbf" --overwrite || return 1
+            if [ "${OSRM_BAUEN:-}" = 1 ]; then
+              osmium tags-filter "$1" w/highway=motorway,motorway_link,trunk,trunk_link,primary,primary_link,secondary,secondary_link,tertiary,tertiary_link,unclassified,residential,living_street,service,busway,bus_guideway,road w/bus=yes,designated w/psv=yes,designated -o "osm/$2-strassen.osm.pbf" --overwrite \
+                || echo "::warning::Straßen $2 nicht gefiltert – Routenplaner ohne dieses Gebiet"
             fi
-            rm -f "osm/$n.osm.pbf"
-          done
+          }
+          if [ "${OSM_GEOFABRIK:-}" = 1 ]; then
+            for land in niedersachsen hessen thueringen nordrhein-westfalen/detmold-regbez; do
+              n=$(basename "$land")
+              echo "$(date +%T) Lade $land (Geofabrik)"
+              if curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 -A "$AGENT" -o "osm/$n.osm.pbf" "https://download.geofabrik.de/europe/germany/$land-latest.osm.pbf" \
+                 && teile "osm/$n.osm.pbf" "$n"; then echo "$(date +%T) $land fertig"; else echo "::warning::$land nicht geladen"; fi
+              rm -f "osm/$n.osm.pbf"
+            done
+          fi
+          if ! ls osm/*-teil.osm.pbf >/dev/null 2>&1 && [ "${OSM_FR:-}" = 1 ] && { [ -z "${OSM_VORRAT_TAGE:-}" ] || [ "${OSM_VORRAT_TAGE}" -ge 2 ] || [ "${OSRM_BAUEN:-}" = 1 ]; }; then
+            # Fassung 61: Ersatz für die gesperrte Geofabrik – Deutschland von openstreetmap.fr, Prüfsumme, Ausschnitt der Region
+            echo "$(date +%T) Lade Deutschland (openstreetmap.fr, rund 6 GB)"
+            if curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 -A "$AGENT" -o osm/germany.osm.pbf "https://download.openstreetmap.fr/extracts/europe/germany-latest.osm.pbf"; then
+              soll=$(curl -fsSL -A "$AGENT" "https://download.openstreetmap.fr/extracts/europe/germany.osm.pbf.md5" | cut -d' ' -f1 || true)
+              ist=$(md5sum osm/germany.osm.pbf | cut -d' ' -f1)
+              if [ -n "$soll" ] && [ "$soll" != "$ist" ]; then echo "::warning::Prüfsumme von openstreetmap.fr passt nicht ($ist statt $soll) – Datei verworfen"; rm -f osm/germany.osm.pbf; fi
+            fi
+            if [ -s osm/germany.osm.pbf ]; then
+              echo "$(date +%T) Ausschnitt der Region"
+              osmium extract -b 8.2,50.6,11.8,52.9 osm/germany.osm.pbf -o osm/region.osm.pbf --overwrite && rm -f osm/germany.osm.pbf \
+                && teile osm/region.osm.pbf region && echo "$(date +%T) Region fertig"
+              rm -f osm/germany.osm.pbf osm/region.osm.pbf
+              echo "OSM_QUELLE_DATEI=openstreetmap.fr" >> "$GITHUB_ENV"
+            else
+              echo "::warning::openstreetmap.fr nicht geladen"
+            fi
+          fi
           if ! ls osm/*-teil.osm.pbf >/dev/null 2>&1; then
             # Fassung 60: letzter guter Auszug aus dem Zwischenspeicher statt gar keiner Linienwege
             if [ -s osm-vorrat/auszug.opl ]; then
@@ -112,7 +179,7 @@ jobs:
               echo "GOEBUS_OSM_VORRAT=$(cat osm-vorrat/stand.txt 2>/dev/null || echo unbekannt)" >> "$GITHUB_ENV"
               echo "::warning::Kein neuer OpenStreetMap-Auszug – nutze den letzten guten vom $(cat osm-vorrat/stand.txt 2>/dev/null || echo '?')"
             else
-              echo "::warning::Kein Auszug geladen und keiner im Vorrat – das Skript fragt Overpass"
+              echo "::warning::Kein Auszug geladen und keiner im Vorrat – das Skript fragt Overpass (von GitHub aus meist gesperrt)"
             fi
             exit 0
           fi
@@ -122,11 +189,10 @@ jobs:
           osmium tags-filter osm/alles.osm.pbf nwr/amenity=driving_school -o osm/fahrschulen.osm.pbf --overwrite
           osmium cat osm/fahrschulen.osm.pbf -f opl,add_metadata=false -o osm/fahrschulen.opl --overwrite
           echo "$(date +%T) Linien und Fahrschulen fertig"
-          # Gemeinden und Samtgemeinden (admin_level 7 und 8) als Flächen für AST-Gebiete – zuletzt und mit eigener Zeitgrenze,
-          # damit der Auszug der Linien nie daran scheitert (Fassung 60)
+          # Gemeinden und Samtgemeinden (admin_level 7 und 8) als Flächen für AST-Gebiete – zuletzt und mit eigener Zeitgrenze
           ( timeout 300 osmium tags-filter osm/alles.osm.pbf r/admin_level=7,8 -o osm/gemeinden.osm.pbf --overwrite \
             && timeout 300 osmium export osm/gemeinden.osm.pbf -f geojsonseq --geometry-types=polygon -o osm/gemeinden.geojsonseq --overwrite ) \
-            || echo "::warning::Gemeindegrenzen nicht erstellt – AST-Gebiete bleiben ohne Fläche"
+            || echo "::warning::Gemeindegrenzen nicht erstellt – AST-Gebiete aus den Haltestellen"
           # Fassung 60: guten Auszug für spätere Läufe aufheben
           mkdir -p osm-vorrat && cp osm/auszug.opl osm/fahrschulen.opl osm-vorrat/ && { cp osm/gemeinden.geojsonseq osm-vorrat/ 2>/dev/null || true; } && date -u +%F > osm-vorrat/stand.txt
           ls -la osm
@@ -138,6 +204,57 @@ jobs:
         with:
           path: osm-vorrat
           key: osm-${{ github.run_id }}
+
+      - name: Eigenen Routenplaner bauen und starten (OSRM, Bus-Profil)
+        # Fassung 61: Statt des öffentlichen Servers (höchstens eine Anfrage je Sekunde) rechnet ein eigener OSRM im Lauf –
+        # alle Skizzen in einem Lauf, mit Bus-Profil (osrm-bus.lua). Klappt etwas nicht, nimmt das Skript wie bisher den
+        # öffentlichen Server; der Lauf geht weiter.
+        continue-on-error: true
+        timeout-minutes: 35
+        run: |
+          mkdir -p osrm
+          IMG=ghcr.io/project-osrm/osrm-backend:v26.10.0-debian    # geprüft am 22.11.2026 (Profile liegen unter /opt)
+          docker pull -q "$IMG" || { IMG=ghcr.io/project-osrm/osrm-backend:latest; docker pull -q "$IMG"; }
+          if [ "${OSRM_BAUEN:-}" = 1 ] && ls osm/*-strassen.osm.pbf >/dev/null 2>&1; then
+            echo "$(date +%T) Straßen zusammenführen"
+            osmium merge osm/*-strassen.osm.pbf -o osm/strassen.osm.pbf --overwrite
+            osmium extract -b 8.2,50.6,11.8,52.9 osm/strassen.osm.pbf -o osm/region.osm.pbf --overwrite
+            rm -f osm/*-strassen.osm.pbf osm/strassen.osm.pbf
+            docker run --rm "$IMG" cat /opt/car.lua > osm/car.lua
+            # Bus-Teil vor dem abschließenden „return {“ der Kopie von car.lua einfügen
+            awk 'FNR==NR { z[++n] = $0; next } { b[++m] = $0 } END { for (i = m; i > 0; i--) if (b[i] ~ /^return[ ]*\{/) { r = i; break }
+                 for (i = 1; i <= m; i++) { if (i == r) for (j = 1; j <= n; j++) print z[j]; print b[i] } }' osrm-bus.lua osm/car.lua > osm/bus.lua
+            grep -q "GöBUS Fassung 61" osm/bus.lua || { echo "::warning::Bus-Profil nicht eingefügt – Auto-Profil"; cp osm/car.lua osm/bus.lua; }
+            rm -rf osrm-neu && mkdir osrm-neu && mv osm/region.osm.pbf osrm-neu/
+            echo "$(date +%T) osrm-extract"
+            docker run --rm -v "$PWD/osrm-neu:/data" -v "$PWD/osm/bus.lua:/opt/bus.lua:ro" "$IMG" osrm-extract -p /opt/bus.lua /data/region.osm.pbf
+            docker run --rm -v "$PWD/osrm-neu:/data" "$IMG" osrm-partition /data/region.osrm
+            docker run --rm -v "$PWD/osrm-neu:/data" "$IMG" osrm-customize /data/region.osrm
+            rm -f osrm-neu/region.osm.pbf && date -u +%F > osrm-neu/stand.txt
+            rm -rf osrm && mv osrm-neu osrm && echo "OSRM_NEU=1" >> "$GITHUB_ENV"
+            echo "$(date +%T) Routenplaner gebaut"; du -sh osrm
+          fi
+          if ls osrm/region.osrm* >/dev/null 2>&1; then
+            docker run -d --name osrm -p 127.0.0.1:5000:5000 -v "$PWD/osrm:/data" "$IMG" osrm-routed --algorithm mld --max-viaroute-size 1000 /data/region.osrm
+            for i in $(seq 1 60); do curl -sf "http://127.0.0.1:5000/route/v1/driving/9.926800,51.536500;9.935900,51.533200" >/dev/null && break; sleep 2; done
+            if curl -sf "http://127.0.0.1:5000/route/v1/driving/9.926800,51.536500;9.935900,51.533200" >/dev/null; then
+              echo "GOEBUS_SKIZZE_URL=http://127.0.0.1:5000/route/v1/driving/" >> "$GITHUB_ENV"
+              echo "GOEBUS_SKIZZE_PROFIL=Bus (Straßen vom $(cat osrm/stand.txt 2>/dev/null || echo '?'))" >> "$GITHUB_ENV"
+              echo "Eigener Routenplaner bereit"
+            else
+              echo "::warning::Eigener Routenplaner antwortet nicht – Skizzen über den öffentlichen Server"; docker logs osrm | tail -20
+            fi
+          else
+            echo "::warning::Keine Routenplaner-Daten – Skizzen über den öffentlichen Server"
+          fi
+
+      - name: Routenplaner-Daten für spätere Läufe speichern
+        if: ${{ env.OSRM_NEU == '1' }}
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: osrm
+          key: osrm-bus-v1-${{ env.WOCHE }}
 
       - name: Fahrplandaten und OpenStreetMap verarbeiten
         # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE

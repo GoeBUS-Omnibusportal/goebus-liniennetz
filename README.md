@@ -29,6 +29,13 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 65 (Skript 3.5)
+
+- **Hochladen:** `liniennetz.py`, `README.md` und `.github/workflows/liniennetz.yml` ersetzen.
+- **Geofabrik:** Die Dateien liegen jetzt in Unterordnern, zum Beispiel `europe/germany/niedersachsen/niedersachsen-latest.osm.pbf`. Der alte Pfad antwortet mit 404; am 22.11.2026 für alle vier Gebiete geprüft. Prüfung und Download nutzen den neuen Pfad, der Download mit Prüfsumme.
+- **Vorrat:** Der Lauf nimmt den OpenStreetMap-Auszug planmäßig aus dem Zwischenspeicher, wenn er jünger als 2 Tage ist. Das erscheint jetzt als Hinweis statt als Warnung und steht in `stand.json` als `osm_planmaessig`. Der Zwischenspeicher wird nur bei einem neuen Auszug gespeichert.
+- **Skizzen:** Linien aus der Vorwoche (`aus_vorwoche`) tragen keine Eigenschaft `luecken`. Dann gelten gerade Verbindungen zweier Haltestellen ab 150 m als Lücken und werden skizziert. Beispiel: VSN 110 mit drei solchen Stücken; sie fehlt seit dem 13.11. in den Fahrplandaten. Bisher blieben solche Linien bis zu vier Wochen gerade.
+
 ## Neu in Fassung 64 (Skript 3.4)
 
 - **Hochladen:** `liniennetz.py`, `README.md` und `.github/workflows/liniennetz.yml` ersetzen.

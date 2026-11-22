@@ -43,7 +43,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '3.4'
+VERSION = '3.5'
 
 # 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
 import socket as _socket
@@ -599,6 +599,14 @@ def skizzen(feats, cache, ende):
             continue
         teile = [g['coordinates']] if g['type'] == 'LineString' else list(g['coordinates'])
         k = len(teile) if v == 'haltestellen' else int(p.get('luecken') or 0)
+        if v != 'haltestellen' and not p.get('luecken'):
+            # 3.5 (Fassung 65): ohne Angabe der Lücken (Linie aus der Vorwoche, VSN 110 seit 13.11.) die geraden Verbindungen
+            # zweier Haltestellen als Lücken nehmen – vorher blieb so eine Linie bis zu vier Wochen gerade
+            luecke = [i for i, t in enumerate(teile) if len(t) == 2 and _m(t[0], t[1]) >= 150]
+            if not luecke:
+                continue
+            teile = [t for i, t in enumerate(teile) if i not in luecke] + [teile[i] for i in luecke]
+            k = len(luecke)
         if k <= 0 or k > len(teile):
             continue
         neu, fertig, skizziert = list(teile[:len(teile) - k]), True, 0
@@ -2387,6 +2395,7 @@ def main():
         stand['osm_quelle'] = os.environ['OSM_QUELLE_DATEI']
     if auszug and os.environ.get('GOEBUS_OSM_VORRAT'):    # 3.1: letzter guter Auszug aus dem Zwischenspeicher (Geofabrik nicht erreichbar)
         stand['osm_quelle'], stand['osm_stand'] = 'vorrat', os.environ['GOEBUS_OSM_VORRAT']
+        stand['osm_planmaessig'] = os.environ.get('GOEBUS_OSM_PLANMAESSIG') == '1'    # 3.5 (Fassung 65): jünger als 2 Tage, kein Ausfall
     stand['overpass'] = (['Geofabrik-Auszug (ohne Overpass)'] if auszug else []) + OVERPASS_STATUS[-12:]
     bericht['overpass'] = stand['overpass']
     # 2.4: Haltestellen der Region mit ihren Linien (für die Haltestellenseiten der Website)

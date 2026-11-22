@@ -102,22 +102,23 @@ jobs:
         # Azure/AWS seit Oktober 2025. Das Ergebnis steht im Protokoll, in osm/quellen.json und danach in der Verwaltung.
         run: |
           mkdir -p osm
-          pruefe() {  # Name, Adresse
-            local t0=$(date +%s%3N) code
-            code=$(curl -4 -s -o /dev/null -L -r 0-200 --connect-timeout 15 --max-time 30 -A "GoeBUS-Liniennetz (+https://goebus.de)" -w "%{http_code}" "$2" 2>/dev/null || true)
+          pruefe() {  # Name, Adresse, Rolle (haupt | ersatz | reserve) – Fassung 64: Reserve nur kurz prüfen (vorher je 30 s Wartezeit)
+            local t0=$(date +%s%3N) code rolle="${3:-haupt}" mt=30
+            [ "$rolle" = reserve ] && mt=10
+            code=$(curl -4 -s -o /dev/null -L -r 0-200 --connect-timeout 8 --max-time $mt -A "GoeBUS-Liniennetz (+https://goebus.de)" -w "%{http_code}" "$2" 2>/dev/null || true)
             [ -z "$code" ] && code=000
             local ms=$(( $(date +%s%3N) - t0 ))
             printf '%-28s %s  %5d ms  %s\n' "$1" "$code" "$ms" "$2"
-            printf '{"name":"%s","url":"%s","code":"%s","ms":%d}\n' "$1" "$2" "$code" "$ms" >> osm/quellen.jsonl
+            printf '{"name":"%s","url":"%s","code":"%s","ms":%d,"rolle":"%s"}\n' "$1" "$2" "$code" "$ms" "$rolle" >> osm/quellen.jsonl
             case "$code" in 2*|3*) return 0;; *) return 1;; esac
           }
           rm -f osm/quellen.jsonl
           echo "Quelle                       Code   Dauer     Adresse"
           if pruefe geofabrik "https://download.geofabrik.de/europe/germany/niedersachsen-latest.osm.pbf.md5"; then echo "OSM_GEOFABRIK=1" >> "$GITHUB_ENV"; fi
-          if pruefe openstreetmap.fr "https://download.openstreetmap.fr/extracts/europe/germany.state.txt"; then echo "OSM_FR=1" >> "$GITHUB_ENV"; fi
-          pruefe overpass-api.de "https://overpass-api.de/api/status" || true
-          pruefe overpass.kumi.systems "https://overpass.kumi.systems/api/status" || true
-          pruefe overpass.private.coffee "https://overpass.private.coffee/api/status" || true
+          if pruefe openstreetmap.fr "https://download.openstreetmap.fr/extracts/europe/germany.state.txt" ersatz; then echo "OSM_FR=1" >> "$GITHUB_ENV"; fi
+          pruefe overpass-api.de "https://overpass-api.de/api/status" reserve || true
+          pruefe overpass.kumi.systems "https://overpass.kumi.systems/api/status" reserve || true
+          pruefe overpass.private.coffee "https://overpass.private.coffee/api/status" reserve || true
           pruefe osrm-oeffentlich "https://router.project-osrm.org/route/v1/driving/9.926800,51.536500;9.935900,51.533200?overview=false" || true
           pruefe gtfs.de "https://download.gtfs.de/germany/free/latest.zip" || true
           pruefe ghcr.io "https://ghcr.io/v2/" || true

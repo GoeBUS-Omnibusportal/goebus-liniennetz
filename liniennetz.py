@@ -43,7 +43,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '3.3'
+VERSION = '3.4'
 
 # 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
 import socket as _socket
@@ -408,9 +408,21 @@ def weg_aus_folge(namen, hoechstens=7):
                 if mit[i]:
                     break
                 rand.add(i)
+        # 3.4: Haltestellen ohne Ort zwischen zwei Halten mit Ort zählen zu deren Ort, wenn die Gemeinde passt
+        # (VSN 51: „Marienthaler Straße“ vor „Hameln, Bahnhof“ → Hameln)
+        def nachbar_ort(i, schritt):
+            j = i + schritt
+            while 0 <= j < len(namen):
+                if mit[j]:
+                    return ort0(namen[j])
+                j += schritt
+            return ''
         orte = []
         for i, n in enumerate(namen):
-            o = (gem.get(n) if i in rand and gem.get(n) else '') or (ort0(n) if ',' in n else halt_sauber(n))
+            g = gem.get(n) or ''
+            if g and i not in rand and g not in (nachbar_ort(i, -1), nachbar_ort(i, 1)):
+                g = ''
+            o = g or (ort0(n) if ',' in n else halt_sauber(n))
             if not orte or orte[-1] != o:
                 orte.append(o)
     glieder = orte if len(orte) >= 3 or (len(orte) == 2 and len(namen) <= 3) else None
@@ -685,6 +697,54 @@ def tagesfahrten(z, fahrten, dienst, linien, region):
     TAGESFAHRTEN.update({'stichtag': tag.isoformat(), 'zeiten': zeiten, 'je': je, 'linien': jl})
 
 
+# 3.4 (Fassung 64): Schulbusse – Fahrten am Stichtag (Schultag) und an einem Mittwoch in den Schulferien von Niedersachsen und
+# Hessen (KMK, Stand 09.10.2025: Weihnachten NI 23.12.–09.01., HE 23.12.–12.01.; Ostern NI 22.03.–03.04., HE 22.03.–02.04.).
+# Der erste Ferientag, den die Fahrplandaten noch abdecken (mindestens 30 % der Fahrten des Stichtags), zählt.
+FERIEN_MITTWOCHE = [x for x in (os.environ.get('GOEBUS_FERIENTAGE') or '2027-01-06,2027-03-24,2027-03-31').split(',') if re.match(r'^\d{4}-\d\d-\d\d$', x.strip())]
+SCHULE = {'tag': '', 'je': {}}    # route_id → (Fahrten am Stichtag, Fahrten am Ferientag)
+
+
+def schultage(z, fahrten, dienst):
+    import datetime as _dt
+    st = stichtag()
+    akt_s = dienste_am(z, st)
+    n_s = Counter(rid for t, (rid, _, _, _) in fahrten.items() if dienst.get(t) in akt_s)
+    if not n_s:
+        return
+    for tag in FERIEN_MITTWOCHE:
+        d = _dt.date.fromisoformat(tag.strip())
+        if d <= st:
+            continue
+        akt_f = dienste_am(z, d)
+        n_f = Counter(rid for t, (rid, _, _, _) in fahrten.items() if dienst.get(t) in akt_f)
+        if sum(n_f.values()) >= 0.3 * sum(n_s.values()):
+            SCHULE.update(tag=d.isoformat(), je={rid: (n_s[rid], n_f.get(rid, 0)) for rid in n_s})
+            log('Schultage: Ferientag %s – %d von %d Linienvarianten fahren dann nicht' % (d.strftime('%d.%m.%Y'), sum(1 for r in n_s if not n_f.get(r)), len(n_s)))
+            return
+        log('Schultage: %s nicht mehr in den Fahrplandaten (%d Fahrten)' % (d.strftime('%d.%m.%Y'), sum(n_f.values())))
+
+
+def schultage_setzen(feats):
+    """3.4: properties.schultage = 'nur' (keine Fahrt am Ferientag) oder 'weniger' (höchstens halb so viele), ferientag = Datum"""
+    if not SCHULE['tag']:
+        return
+    for f in feats:
+        p = f['properties']
+        rids = [r for r in str(p.get('gtfs:route_id') or '').split(';') if r in SCHULE['je']]
+        if not rids:
+            continue
+        a = sum(SCHULE['je'][r][0] for r in rids); b = sum(SCHULE['je'][r][1] for r in rids)
+        if a >= 1 and b == 0:
+            p['schultage'] = 'nur'
+        elif a >= 4 and b <= a / 2:
+            p['schultage'] = 'weniger'
+        else:
+            continue
+        p['ferientag'] = SCHULE['tag']
+        p['fahrten_schultag'] = a
+        p['fahrten_ferientag'] = b
+
+
 ZELLE = {}           # 3.1: stop_id → Rasterzelle (nur Haltestellen der Region)
 ORTE_GETEILT = []    # 3.1: Zahl der Linien, deren Fahrten in mehrere Orte geteilt wurden
 
@@ -824,6 +884,10 @@ def gtfs_auswerten(pfad, kreise, verbuende):
         tagesfahrten(z, fahrten, dienst, linien, region)
     except Exception as e:    # freiwillig – die Liniennetze hängen nicht davon ab
         log('Abfahrten je Haltestelle nicht ermittelt:', e)
+    try:
+        schultage(z, fahrten, dienst)
+    except Exception as e:    # 3.4: freiwillig
+        log('Schultage nicht ermittelt:', e)
     del dienst
 
     # Linienwege aus den Fahrplandaten (shapes.txt) – nur für die ausgewählten Fahrten
@@ -906,6 +970,15 @@ def gtfs_auswerten(pfad, kreise, verbuende):
             if gelistet and anteil < 0.25 and not weg_passt(LISTEN[v['slug']][ref_norm(ref)][1], seqs):
                 gelistet = False
                 log(v['slug'], 'Linie', ref, '(%s) nicht übernommen – gleiche Nummer, anderer Linienweg' % op)
+            # 3.4 (Fassung 64): Nicht in der eigenen Linienliste, aber in der Liste eines Nachbarverbunds mit passendem Linienweg →
+            # gehört dorthin (VSN 51 Bodenwerder – Hameln ist die Öffis-Linie 51; im VSN ist sie nicht gelistet)
+            eigene = LISTEN.get(v['slug'], {})
+            if not gelistet and not eigener_betreiber and len(eigene) >= 30 and ref_norm(ref) not in eigene:
+                fremd = [w['kurz'] for w in verbuende if w['slug'] != v['slug'] and ref_norm(ref) in LISTEN.get(w['slug'], {})
+                         and weg_woerter(LISTEN[w['slug']][ref_norm(ref)][1]) and weg_passt(LISTEN[w['slug']][ref_norm(ref)][1], seqs)]
+                if fremd:
+                    log(v['slug'], 'Linie', ref, '(%s) nicht übernommen – nicht in der eigenen Liste, gehört zu %s' % (op, ', '.join(fremd)))
+                    continue
             if (anteil >= 0.25 and im_verbund >= 2) or eigener_betreiber or gelistet:
                 von, nach = halte[haupt[0]][2], halte[haupt[-1]][2]
                 muster_l = [[(x, y) for x, y, _ in q] for q in seqs]
@@ -930,6 +1003,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
     for slug in ergebnis:
         vorher = len(ergebnis[slug])
         ergebnis[slug] = zusammenfassen(ergebnis[slug])
+        schultage_setzen(ergebnis[slug])    # 3.4 (Fassung 64)
         log(slug, len(ergebnis[slug]), 'Linien aus den Fahrplandaten', '(%d Einträge zusammengefasst)' % (vorher - len(ergebnis[slug])) if vorher > len(ergebnis[slug]) else '')
     return ergebnis
 
@@ -2300,6 +2374,7 @@ def main():
         stand['quellen'] = json.load(open(os.environ['GOEBUS_QUELLEN'], encoding='utf-8')) if os.environ.get('GOEBUS_QUELLEN') and os.path.exists(os.environ['GOEBUS_QUELLEN']) else []
     except (ValueError, OSError):
         stand['quellen'] = []
+    stand['schultage'] = {'ferientag': SCHULE['tag'], 'nur': sum(1 for v in SCHULE['je'].values() if v[0] and not v[1])}    # 3.4 (Fassung 64)
     stand['skizze_router'] = {'eigen': bool(re.match(r'^https?://(?:127\.0\.0\.1|localhost)[:/]', SKIZZE_URL or '')), 'profil': os.environ.get('GOEBUS_SKIZZE_PROFIL', ''), 'anfragen': dict(SKIZZE_ZAHL), 'fehler': SKIZZE.get('router_fehler', '')}    # 3.2 (Fassung 61)
     if archiv:
         with open(archiv_pfad, 'w', encoding='utf-8') as fh:

@@ -29,6 +29,14 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 64 (Skript 3.4)
+
+- **Hochladen:** `liniennetz.py`, `README.md` und `.github/workflows/liniennetz.yml` ersetzen.
+- **Linie eines Nachbarverbunds:** Steht eine Linie nicht in der vollständigen Liste des eigenen Verbunds (mindestens 30 Einträge), aber in der Liste eines Nachbarverbunds mit passendem Linienweg, gehört sie dorthin. Beispiel: VSN 51 Bodenwerder – Hameln ist die Öffis-Linie 51. Linien eigener Unternehmen sind ausgenommen. Im Protokoll steht „nicht übernommen – gehört zu …“.
+- **Schultage:** Fahrten je Linie am Stichtag und an einem Ferien-Mittwoch (Vorgabe `2027-01-06,2027-03-24,2027-03-31`, änderbar über `GOEBUS_FERIENTAGE`). Gezählt wird der erste Tag, den die Fahrplandaten noch abdecken (mindestens 30 % der Fahrten des Stichtags). Die Ergebnisse stehen in den Eigenschaften `schultage` (`nur` / `weniger`), `ferientag`, `fahrten_schultag` und `fahrten_ferientag`, außerdem in `stand.json` → `schultage`.
+- **Linienweg:** Eine Haltestelle ohne Ort zwischen Halten mit Ort zählt zu deren Ort, wenn die Gemeinde passt (VSN 51: „Marienthaler Straße“ vor „Hameln, Bahnhof“).
+- **Quellen prüfen:** Jede Quelle hat jetzt eine Rolle (`haupt`, `ersatz` oder `reserve`). Die Overpass-Server sind Reserve und werden höchstens 10 s lang geprüft statt 30 s.
+
 ## Neu in Fassung 63 (Skript 3.3)
 
 - **Hochladen:** `liniennetz.py`, `osrm-bus.lua` und `.github/workflows/liniennetz.yml` ersetzen. Der erste Lauf baut den Routenplaner einmal neu (Schlüssel `osrm-bus-v2`, etwa 2 Minuten).

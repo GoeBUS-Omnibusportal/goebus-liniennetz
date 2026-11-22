@@ -1,6 +1,6 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-22T14:02:50Z · Skript 3.3 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-22T18:32:33Z · Skript 3.4 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
 Overpass: Geofabrik-Auszug (ohne Overpass)
 
@@ -9,7 +9,7 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Verlauf:** 0 Linienweg aus den Fahrplandaten, 46 OpenStreetMap, 1 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 800
 - **Weniger als drei Halte:** 800
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 51, 642
 - **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** 837
 - **Nur in der Linienübersicht des Verbunds:** keine
@@ -33,7 +33,7 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Verlauf:** 0 Linienweg aus den Fahrplandaten, 122 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 300, 440, 460, 470
 - **Weniger als drei Halte:** 300, 440, 460, 470
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** N3
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
 - **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** 166, 837, 166 - 1040
 - **Nur in der Linienübersicht des Verbunds:** keine
@@ -52,12 +52,12 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## RVHI – 80 Linien
+## RVHI – 71 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 23 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 17 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 43, 5
 - **Weniger als drei Halte:** 43, 5
-- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
+- **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13, 14, 17, 101, 102, 103, 104, 105, 106, 107, 108
 - **Neu in den Fahrplandaten:** keine
 - **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine

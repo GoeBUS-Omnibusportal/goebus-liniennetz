@@ -38,11 +38,20 @@ import re
 import sys
 import time
 import urllib.parse
+import urllib.error
 import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '3.0'
+VERSION = '3.1'
+
+# 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
+import socket as _socket
+_gai = _socket.getaddrinfo
+def _gai_ipv4_zuerst(*args, **kw):
+    r = _gai(*args, **kw)
+    return sorted(r, key=lambda x: 0 if x[0] == _socket.AF_INET else 1)
+_socket.getaddrinfo = _gai_ipv4_zuerst
 GTFS_URL = 'https://download.gtfs.de/germany/nv_free/latest.zip'
 OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 # Weitere öffentliche Overpass-Server, falls der Hauptserver ausgelastet ist (häufigste Ursache für fehlende Verläufe)
@@ -218,6 +227,14 @@ def skizze_teil(t, cache, ende):
             with urllib.request.urlopen(req, timeout=20) as r:
                 antwort = json.load(r)
             c = antwort['routes'][0]['geometry']['coordinates']
+        except urllib.error.HTTPError as e:
+            if e.code == 400:    # 3.1 (Fassung 60): „NoRoute“/„NoSegment“ – nur dieses Stück bleibt gerade, die übrigen Skizzen laufen weiter
+                log('Skizze: kein Weg (HTTP 400) für', schluessel[:60])
+                cache[schluessel] = []
+                return []
+            log('Skizze: Abbruch –', type(e).__name__, str(e)[:80])
+            SKIZZE['abbruch'] = True
+            return None
         except Exception as e:    # Server nicht erreichbar oder Rate-Limit: für diesen Lauf aufhören
             log('Skizze: Abbruch –', type(e).__name__, str(e)[:80])
             SKIZZE['abbruch'] = True
@@ -344,6 +361,39 @@ def tagesfahrten(z, fahrten, dienst, linien, region):
     TAGESFAHRTEN.update({'stichtag': tag.isoformat(), 'zeiten': zeiten, 'je': je, 'linien': jl})
 
 
+ZELLE = {}           # 3.1: stop_id → Rasterzelle (nur Haltestellen der Region)
+ORTE_GETEILT = []    # 3.1: Zahl der Linien, deren Fahrten in mehrere Orte geteilt wurden
+
+
+def orte_der_fahrten(ts, ort_von):
+    """3.1 (Fassung 60): Fahrten einer route_id nach Orten gruppieren – Rasterzellen (rund 4 km), die sich berühren, gelten als
+    ein Ort. Reihenfolge: Ort mit der längsten Fahrt zuerst; innerhalb eines Orts bleibt die Reihenfolge (längste zuerst)."""
+    zellen = []
+    for t in ts:
+        z = ort_von.get(t)
+        if z is not None and z not in zellen:
+            zellen.append(z)
+    eltern = {z: z for z in zellen}
+    def wurzel(z):
+        while eltern[z] != z:
+            eltern[z] = eltern[eltern[z]]
+            z = eltern[z]
+        return z
+    for i, a in enumerate(zellen):
+        for b in zellen[i + 1:]:
+            if abs(a[0] - b[0]) <= 1 and abs(a[1] - b[1]) <= 1:
+                eltern[wurzel(a)] = wurzel(b)
+    gruppen, folge = {}, []
+    for t in ts:
+        z = ort_von.get(t)
+        w = wurzel(z) if z is not None else (folge[0] if folge else None)
+        if w not in gruppen:
+            gruppen[w] = []
+            folge.append(w)
+        gruppen[w].append(t)
+    return [gruppen[w] for w in folge]
+
+
 def gtfs_auswerten(pfad, kreise, verbuende):
     alle_kreise = sorted({k for v in verbuende for k in v['kreise'] if k in kreise})
     bx = (min(kreise[k]['bbox'][0] for k in alle_kreise), min(kreise[k]['bbox'][1] for k in alle_kreise),
@@ -366,6 +416,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
             k = cache[schl]
             if k:
                 region[s['stop_id']] = k
+                ZELLE[s['stop_id']] = (int(lon // 0.06), int(lat // 0.04))    # 3.1: Raster rund 4 × 4 km (Orte einer Linie trennen)
                 TAGESFAHRTEN.setdefault('name', {})[s['stop_id']] = s.get('stop_name', '')
                 if (s.get('platform_code') or '').strip():    # 2.7: Steig (für den Steigplan der Haltestellenseite)
                     TAGESFAHRTEN.setdefault('steig', {})[s['stop_id']] = s['platform_code'].strip()[:12]
@@ -375,6 +426,7 @@ def gtfs_auswerten(pfad, kreise, verbuende):
 
     log('Fahrten durchsuchen (1. Durchgang) …')
     laenge = Counter()
+    ort_von = {}                      # 3.1: trip_id → Rasterzelle der ersten Haltestelle in der Region
     muster = {}                       # trip_id → Kennung der Haltestellenfolge (gleiche Folge = gleiches Muster)
     treffer = defaultdict(Counter)    # trip_id → Landkreis → Anzahl Halte
     for t, sid in gtfs_spalten(z, 'stop_times.txt', ('trip_id', 'stop_id')):
@@ -383,6 +435,8 @@ def gtfs_auswerten(pfad, kreise, verbuende):
         k = region.get(sid)
         if k:
             treffer[t][k] += 1
+            if t not in ort_von:
+                ort_von[t] = ZELLE.get(sid)
     log(len(treffer), 'Fahrten berühren die Region')
 
     fahrten = {}
@@ -402,8 +456,23 @@ def gtfs_auswerten(pfad, kreise, verbuende):
         if m not in je_linie[rid] or laenge[t] > laenge[je_linie[rid][m]]:
             je_linie[rid][m] = t
     MAX_MUSTER = 16
-    for rid in je_linie:
-        je_linie[rid] = sorted(je_linie[rid].values(), key=lambda t: -laenge[t])[:MAX_MUSTER]
+    # 3.1 (Fassung 60): Eine route_id kann mehrere Orte umfassen – „NVV - Faisy“ Linie 1 fährt als EINE Linie der Fahrplandaten in
+    # Eschwege, Witzenhausen, Bad Hersfeld, Korbach und Bad Wildungen. Bisher kamen nur die 16 längsten Muster weiter, alle aus
+    # einem oder zwei Orten; StadtBus Witzenhausen 1 (281), Korbach 1–5 (581–585) u. a. fehlten ganz. Jetzt je Ort (Fahrten,
+    # deren erste Haltestelle in der Region höchstens eine Rasterzelle entfernt liegt) eigene Muster. Gleiche Orte führt
+    # zusammenfassen()/orte_trennen() wieder zusammen (Hin- und Rückrichtung einer Überlandlinie).
+    for rid in list(je_linie):
+        ts = sorted(je_linie[rid].values(), key=lambda t: -laenge[t])
+        orte = orte_der_fahrten(ts, ort_von)
+        if len(orte) < 2:
+            je_linie[rid] = ts[:MAX_MUSTER]
+            continue
+        del je_linie[rid]
+        for i, gr in enumerate(orte[:12]):
+            je_linie[(rid, i)] = gr[:MAX_MUSTER]
+    ORTE_GETEILT.append(sum(1 for k in je_linie if isinstance(k, tuple) and k[1] == 0))
+    if ORTE_GETEILT[-1]:
+        log(ORTE_GETEILT[-1], 'Linien der Fahrplandaten fahren in mehreren Orten – je Ort ausgewertet')
     vertreter = {t for ts in je_linie.values() for t in ts}
     del muster
 
@@ -460,7 +529,8 @@ def gtfs_auswerten(pfad, kreise, verbuende):
         return [(round(x, 6), round(y, 6)) for x, y in vereinfachen(f)] if sum(1 for p in probe if r.abstand(p) <= 250) / len(probe) >= 0.8 else None
 
     ergebnis = defaultdict(list)    # slug → Features
-    for rid, trips in je_linie.items():
+    for rid_k, trips in je_linie.items():
+        rid = rid_k[0] if isinstance(rid_k, tuple) else rid_k
         r = linien.get(rid, {})
         ref = (r.get('route_short_name') or '').strip() or (r.get('route_long_name') or '').strip()
         # Version 2.1: „Linie 6“/„Bus 6“ als Nummer → „6“; nur Einzellinien (keine „31, 32“, „501/52“); keine Sonderkennungen ohne Fahrgastbetrieb
@@ -721,10 +791,12 @@ def gleiche_nummer(feats, liste, v, verbuende, kreise, slug=''):
             op = str(p.get('operator', '') or '').lower()
             fremd_op = any(re.search(r'(^|[^a-z])' + re.escape(re.sub(r'[^a-z0-9]', '', k)) + r'([^a-z]|$)', op) for k in andere if re.sub(r'[^a-z0-9]', '', k))
             if passt:
-                weg_damit = fremd_op or drin[id(f)] < 0.75
+                weg_damit = fremd_op or drin[id(f)] < 0.95     # 3.1 (Fassung 60): vorher 0.75 – VRB 262 Harzer ab Braunlage fährt zu 90 % im VRB
             else:    # 3.0 (Fassung 59): kein passender Linienweg (VRB 264 „Velstove – VW-Werk“) – fährt ein Eintrag ganz im Verbund (≥ 90 %),
                      # fallen die überwiegend außerhalb fahrenden (< 60 %) weg: Harzer 264/265 ab Braunlage, PVG 803 ab Wittingen
-                weg_damit = drin[id(f)] < 0.6 and any(drin[id(x)] >= 0.9 for x in fs if x is not f)
+                     # 3.1 (Fassung 60): auch unter 95 %, wenn ein anderes Unternehmen dieselbe Nummer ganz im Verbund fährt (≥ 99 %, VRB 262)
+                weg_damit = (drin[id(f)] < 0.6 and any(drin[id(x)] >= 0.9 for x in fs if x is not f)) or \
+                            (drin[id(f)] < 0.95 and any(drin[id(x)] >= 0.99 and str(x['properties'].get('operator', '') or '').lower() != op for x in fs if x is not f))
             if weg_damit:
                 raus.add(id(f))
                 log(slug, 'Linie', p.get('ref'), '(%s, %s → %s) nicht übernommen – gleiche Nummer, anderer Linienweg, %d %% im Verbund'
@@ -1162,7 +1234,27 @@ def regeln_anwenden(feats, regeln, slug, alt_pfad, archiv):
         kn = ref_norm(neu_ref)
         ziel = next((f for f in feats if ref_norm(f['properties'].get('ref', '')) == kn), None)
         von, nach = str((r or {}).get('von', '')).strip(), str((r or {}).get('nach', '')).strip()
-        stark = ziel is not None and ziel.get('geometry') and str(ziel['properties'].get('verlauf', '')).split('+')[0] in ('fahrplan', 'osm', 'vorwoche')
+        # 3.1 (Fassung 60): Zwei alte Nummern auf eine neue („ROSA: 5 = 5/43“ und „43 = 5/43“) – die Durchlauflinie fährt beide Wege.
+        # Bisher überschrieb die zweite Regel den Verlauf der ersten; jetzt werden beide Verläufe zusammengelegt.
+        if ziel is not None and quelle is not None and quelle.get('geometry') and ziel.get('geometry') and ziel['properties'].get('_regel_lauf'):
+            teile = lambda g: [g['coordinates']] if g['type'] == 'LineString' else list(g['coordinates']) if g['type'] == 'MultiLineString' else []
+            ziel['geometry'] = {'type': 'MultiLineString', 'coordinates': teile(ziel['geometry']) + teile(quelle['geometry'])}
+            ziel['properties']['ersetzt_von'] = str(ziel['properties'].get('ersetzt_von', '')) + ', ' + str(alte)
+            ERSETZT.setdefault(slug, {})[str(alte)] = neu_ref
+            log(slug, 'Regel: Linie', alte, '→', neu_ref, '– Verlauf ergänzt')
+            n += 1
+            continue
+        stark = ziel is not None and ziel.get('geometry') and str(ziel['properties'].get('verlauf', '')).split('+')[0] in ('fahrplan', 'osm', 'vorwoche', 'skizze')
+        # 3.1 (Fassung 60): Den Verlauf der alten Nummer nur übernehmen, wenn er die Haltestellen der neuen Linie auch abfährt –
+        # ROSA 5/43 (Diekholzen – Hildesheim ZOB) bekam sonst den Weg der 43 und lag bis zu 5 km neben ihren Haltestellen.
+        if ziel is not None and ziel.get('geometry') and not stark and quelle is not None and quelle.get('geometry'):
+            zp = list(koordinaten(ziel['geometry']))
+            qp = list(koordinaten(quelle['geometry']))
+            if zp and qp:
+                qp = qp[::max(1, len(qp) // 400)]
+                nah = sum(1 for x, y in zp[::max(1, len(zp) // 60)] if min(_m((x, y), q) for q in qp) < 300)
+                if nah < 0.8 * len(zp[::max(1, len(zp) // 60)]):
+                    stark = True
         if ziel is not None and stark:
             p = ziel['properties']
             if von and not p.get('from'):
@@ -1175,7 +1267,7 @@ def regeln_anwenden(feats, regeln, slug, alt_pfad, archiv):
                 ziel['properties'].update({'from': von or ziel['properties'].get('from', ''), 'to': nach or ziel['properties'].get('to', '')})
             continue
         p = dict(ziel['properties'] if ziel is not None else quelle['properties'])
-        p.update({'ref': neu_ref, 'ersetzt_von': str(alte), 'verlauf': 'uebernommen', 'aus_vorwoche': False})
+        p.update({'ref': neu_ref, 'ersetzt_von': str(alte), 'verlauf': 'uebernommen', 'aus_vorwoche': False, '_regel_lauf': True})
         if von or nach:
             p['from'], p['to'] = von or p.get('from', ''), nach or p.get('to', '')
             p['name'] = '%s: %s => %s' % (neu_ref, p['from'], p['to'])
@@ -1189,6 +1281,8 @@ def regeln_anwenden(feats, regeln, slug, alt_pfad, archiv):
         ERSETZT.setdefault(slug, {})[str(alte)] = neu_ref
         log(slug, 'Regel: Linie', alte, '→', neu_ref, '– Verlauf übertragen')
         n += 1
+    for f in feats:
+        f['properties'].pop('_regel_lauf', None)
     return n
 
 
@@ -1324,6 +1418,28 @@ def halte_aus_weg(weg, index):
             nb = [wahl[j] for j in (i - 1, i + 1) if 0 <= j < len(wahl) and wahl[j]]
             if nb:
                 wahl[i] = min(k, key=lambda h: min(_m(h, x) for x in nb))
+    if sum(1 for w in wahl if w) < 2 and sum(1 for k in kand if k) >= 2:
+        # 3.1 (Fassung 60): kein eindeutiger Name als Anker (NVV 23 „Wilhelmshöhe (Park) <> Dönche <> Druseltal <> Herkules“ –
+        # die KVG-Haltestellen tragen keinen Ortsnamen, „Herkules“ gibt es auch in Vellmar). Jeden Kandidaten des seltensten
+        # Namens als Anker probieren, die übrigen nach Nähe wählen; es gilt die kürzeste Kette, höchstens 15 km je Abschnitt.
+        basis = min((i for i, k in enumerate(kand) if k), key=lambda i: len(kand[i]))
+        beste = None
+        for anker in kand[basis][:40]:
+            w2 = list(wahl)
+            w2[basis] = w2[basis] or anker
+            for _ in range(len(w2)):
+                for i, k in enumerate(kand):
+                    if w2[i] or not k:
+                        continue
+                    nb = [w2[j] for j in (i - 1, i + 1) if 0 <= j < len(w2) and w2[j]]
+                    if nb:
+                        w2[i] = min(k, key=lambda h: min(_m(h, x) for x in nb))
+            kette = [w for w in w2 if w]
+            laenge = sum(_m(kette[j], kette[j + 1]) for j in range(len(kette) - 1))
+            if len(kette) >= 2 and all(_m(kette[j], kette[j + 1]) <= 15000 for j in range(len(kette) - 1)) and (beste is None or laenge < beste[0]):
+                beste = (laenge, w2)
+        if beste:
+            wahl = beste[1]
     pts = [w for w in wahl if w]
     out = []
     for w in pts:
@@ -1334,6 +1450,7 @@ def halte_aus_weg(weg, index):
 
 GEBIET_RX = re.compile(r'^\s*(Samtgemeinde|Gemeinde|Flecken|Stadt|Einheitsgemeinde)\s+(.+?)\s*$', re.I)
 GEMEINDEN = {'datei': None, 'flaechen': None}
+NACHLAUF = []    # 3.1: (Verbund, Linien, Datei, GeoJSON) für den Nachlauf der Skizzen
 
 
 def gemeinden_laden(datei, namen):
@@ -1770,6 +1887,7 @@ def main():
         with open(ziel + '.neu', 'w', encoding='utf-8') as fh:
             json.dump(geo, fh, ensure_ascii=False, separators=(',', ':'))
         os.replace(ziel + '.neu', ziel)
+        NACHLAUF.append((v, feats, ziel, geo))    # 3.1: Restzeit der Skizzen nach allen Verbünden
         dauer['verbuende'][v['slug']] = round(time.time() - tv)
         stand['verbuende'][v['slug']] = {'datei': v['datei'], 'linien': len(feats), 'liste_wege': li_weg, 'liste_neu': li_neu, 'osm_verlauf': osm_n, 'fahrplan_verlauf': fp_n, 'verlauf_vorwoche': vw_n, 'aus_vorwoche': alt_n, 'gleiche_nummer_entfernt': gleich_n, 'stadtbus_zugeordnet': stadt_n, 'gebiete': geb_n, 'osm': osm_status}
         bericht['verbuende'][v['slug']] = bericht_verbund(v, feats)
@@ -1780,6 +1898,24 @@ def main():
         bericht['verbuende'][v['slug']]['osm'] = osm_status
         bericht['verbuende'][v['slug']]['verlauf_vorwoche'] = vw_n
         log(v['slug'], len(feats), 'Linien gespeichert:', fp_n, 'mit Linienweg aus den Fahrplandaten,', osm_n, 'aus OpenStreetMap (%s),' % osm_status, vw_n, 'Verläufe aus der Vorwoche,', alt_n, 'Linien aus den Vorwochen →', v['datei'])
+    # 3.1 (Fassung 60): Nachlauf – was ein Verbund in seinem Anteil nicht geschafft hat, bekommt jetzt die ganze Restzeit
+    # (am 19.11. blieben im VSN 50 Linien gerade, obwohl Öffis und RVHI ihre Zeit kaum brauchten).
+    if SKIZZE.get('cache') is not None and SKIZZE.get('ende') and not SKIZZE.get('abbruch'):
+        for v, feats, ziel, geo in NACHLAUF:
+            if time.time() >= SKIZZE['ende'] or SKIZZE.get('abbruch'):
+                break
+            verworfen = {str(x).strip() for x in ((regeln or {}).get('skizze_aus') or {}).get(v['slug'], [])}
+            n = skizzen([f for f in feats if f['properties'].get('ref', '').strip() not in verworfen], SKIZZE['cache'], SKIZZE['ende'])
+            if n:
+                geo['features'] = sorted(feats, key=lambda f: (len(f['properties']['ref']), f['properties']['ref']))
+                with open(ziel + '.neu', 'w', encoding='utf-8') as fh:
+                    json.dump(geo, fh, ensure_ascii=False, separators=(',', ':'))
+                os.replace(ziel + '.neu', ziel)
+                log(v['slug'], n, 'weitere Linienverläufe im Nachlauf skizziert')
+                if v['slug'] in stand['verbuende']:
+                    stand['verbuende'][v['slug']]['skizzen_nachlauf'] = n
+    stand['skizzen_offen'] = {v['slug']: sum(1 for f in feats if str(f['properties'].get('verlauf', '')).endswith('haltestellen')) for v, feats, _, _ in NACHLAUF}
+    stand['orte_geteilt'] = ORTE_GETEILT[-1] if ORTE_GETEILT else 0    # 3.1: Linien mit mehreren Orten (je Ort ausgewertet)
     if archiv:
         with open(archiv_pfad, 'w', encoding='utf-8') as fh:
             json.dump(archiv, fh, ensure_ascii=False, separators=(',', ':'))
@@ -1787,6 +1923,8 @@ def main():
     dauer['gesamt'] = round(time.time() - T0)
     stand['dauer'] = dauer
     stand['osm_quelle'] = 'geofabrik' if auszug else ('overpass' if not a.ohne_osm and not a.osm_json else 'aus')
+    if auszug and os.environ.get('GOEBUS_OSM_VORRAT'):    # 3.1: letzter guter Auszug aus dem Zwischenspeicher (Geofabrik nicht erreichbar)
+        stand['osm_quelle'], stand['osm_stand'] = 'vorrat', os.environ['GOEBUS_OSM_VORRAT']
     stand['overpass'] = (['Geofabrik-Auszug (ohne Overpass)'] if auszug else []) + OVERPASS_STATUS[-12:]
     bericht['overpass'] = stand['overpass']
     # 2.4: Haltestellen der Region mit ihren Linien (für die Haltestellenseiten der Website)

@@ -1,6 +1,6 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-22T19:38:35Z · Skript 3.6 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-23T04:50:17Z · Skript 3.6 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
 Overpass: Geofabrik-Auszug (ohne Overpass)
 
@@ -18,7 +18,7 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## NVV – 425 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 64 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 67 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 170, 23, 300, 882
 - **Weniger als drei Halte:** 170, 519, 74
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
@@ -30,7 +30,7 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## VRB – 298 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 121 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 122 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 300, 440, 460, 470
 - **Weniger als drei Halte:** 300, 440, 460, 470
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine

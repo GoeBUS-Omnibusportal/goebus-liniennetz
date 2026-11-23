@@ -21,13 +21,14 @@ import os
 import re
 import time
 import unicodedata
+import urllib.parse
 import urllib.request
 
-VERSION = '1.0'
+VERSION = '1.1'   # Fassung 68: Uhrzeiten mit Komma (RVHI), Halte ohne eigene Zeit, Webseiten und Bilder (Texterkennung)
 UA = 'GoeBUS-Schulverkehr/' + VERSION + ' (+https://www.goebus.de)'
 
-ZEIT_RX = re.compile(r'^(\d{1,2})[:.](\d{2})(?:[*¹²³)]+|\s*Uhr)?$')
-SPANNE_RX = re.compile(r'^(\d{1,2})[:.](\d{2})\s*[-–]\s*\d{1,2}[:.]\d{2}[*)]*$')
+ZEIT_RX = re.compile(r'^(\d{1,2})[:.,](\d{2})(?:[*¹²³)]+|\s*Uhr)?$')
+SPANNE_RX = re.compile(r'^(\d{1,2})[:.,](\d{2})\s*[-–]\s*\d{1,2}[:.,]\d{2}[*)]*$')
 DURCH_RX = re.compile(r'^(?:[I|lǀ¦│]|—|–|-|↓|\.{1,3})$')
 FAHRT_RX = re.compile(r'Fahrt\s*-?\s*Nr\.?\s*(\d{1,5}[A-Z]?)\b', re.I)
 FAHRPLAN_RX = re.compile(r'Fahrplan\s*(?:Nr\.?\s*)?(\d{3,5})\s*([HZR])?\b', re.I)
@@ -56,6 +57,95 @@ def woerter_aus_pdf(pfad):
             seiten.append([{'t': w['text'], 'x0': float(w['x0']), 'x1': float(w['x1']), 'top': float(w['top']), 'bottom': float(w['bottom']),
                             'size': float(w.get('size') or 0)} for w in ws if str(w.get('text', '')).strip()])
     return seiten
+
+
+def woerter_ocr(bild):
+    """1.1: Texterkennung (tesseract, deutsch) für Bilder und eingescannte PDFs → Wörter wie aus pdfplumber, in Punkt umgerechnet
+    (Maßstab: mittlere Wortgröße ≈ 9 pt), damit dieselben Abstände wie im PDF gelten."""
+    import shutil
+    import subprocess
+    if not shutil.which('tesseract'):
+        return []
+    try:
+        r = subprocess.run(['tesseract', bild, 'stdout', '-l', 'deu', '--psm', '6', 'tsv'], capture_output=True, text=True, timeout=180)
+    except Exception:
+        return []
+    roh = []
+    for z in r.stdout.splitlines()[1:]:
+        t = z.split('\t')
+        if len(t) < 12 or t[0] != '5' or not t[11].strip():
+            continue
+        try:
+            conf = float(t[10])
+        except ValueError:
+            conf = -1
+        if conf < 20:
+            continue
+        x, y, w, h = (int(t[6]), int(t[7]), int(t[8]), int(t[9]))
+        roh.append((t[11].strip(), x, y, w, h))
+    if not roh:
+        return []
+    hs = sorted(x[4] for x in roh)
+    f = 9.0 / max(1, hs[len(hs) // 2])
+    return [{'t': t, 'x0': x * f, 'x1': (x + w) * f, 'top': y * f, 'bottom': (y + h) * f, 'size': h * f} for t, x, y, w, h in roh]
+
+
+def art_von(pfad):
+    k = open(pfad, 'rb').read(512)
+    if k[:5] == b'%PDF-':
+        return 'pdf'
+    if k[:8] == b'\x89PNG\r\n\x1a\n' or k[:3] == b'\xff\xd8\xff' or k[:4] in (b'GIF8', b'RIFF'):
+        return 'bild'
+    if re.search(rb'<(?:!doctype|html|head|body)', k[:512], re.I):
+        return 'html'
+    return ''
+
+
+def woerter_lesen(pfad, url, holen_fn, tmp, woerter_fn=None, tiefe=0):
+    """1.1: PDF (ohne Text: Seiten als Bild und Texterkennung), Bild (Texterkennung) oder Webseite (die verlinkten Fahrpläne und
+    Fahrplan-Bilder darauf, höchstens vier). → (Seiten mit Wörtern, Herkunft 'pdf' | 'ocr' | 'webseite+…')"""
+    a = art_von(pfad)
+    if a == 'pdf':
+        seiten = (woerter_fn or woerter_aus_pdf)(pfad)
+        if sum(len(x) for x in seiten) >= 8:
+            return seiten, 'pdf'
+        try:    # eingescannt: Seiten als Bild (pypdfium2 kommt mit pdfplumber)
+            import pdfplumber
+            out = []
+            with pdfplumber.open(pfad) as pdf:
+                for i, page in enumerate(pdf.pages[:6]):
+                    b = os.path.join(tmp, 'seite-%d-%d.png' % (id(pfad) % 100000, i))
+                    page.to_image(resolution=250).original.save(b)
+                    out.append(woerter_ocr(b))
+            return out, 'ocr'
+        except Exception:
+            return seiten, 'pdf'
+    if a == 'bild':
+        return [woerter_ocr(pfad)], 'ocr'
+    host = lambda x: re.sub(r'^www\.', '', urllib.parse.urlsplit(x).netloc.lower())
+    if a == 'html' and tiefe == 0 and not host(url).endswith('goebus.de'):    # eigene Seiten: Fahrpläne liegen dort immer als Datei
+        import html as _h
+        roh = open(pfad, 'rb').read(3 * 1024 * 1024).decode('utf-8', 'replace')
+        ziele = []
+        for m in re.finditer(r'<(?:a|img)\b[^>]*?(?:href|src)\s*=\s*["\']([^"\']+)["\'][^>]*>', roh, re.I):
+            u = urllib.parse.urljoin(url, _h.unescape(m.group(1)))
+            if host(u) == host(url) and re.search(r'\.(?:pdf|jpe?g|png|gif|webp)(?:$|[?#])', u, re.I) and re.search(r'bus|fahr|einsatz|linie', urllib.parse.unquote(u), re.I) and u not in ziele:
+                ziele.append(u)
+        # WordPress-Vorschaubilder („…-300x212.jpg“) nur, wenn das große Bild fehlt
+        ziele = [u for u in ziele if not (re.search(r'-\d{2,4}x\d{2,4}(\.\w+)(?:$|[?#])', u) and re.sub(r'-\d{2,4}x\d{2,4}(\.\w+)', r'\1', u) in ziele)]
+        seiten, her = [], set()
+        for i, u in enumerate(ziele[:4]):
+            ziel = os.path.join(tmp, 'teil-%d-%d' % (id(pfad) % 100000, i))
+            try:
+                if not holen_fn(u, ziel):
+                    continue
+            except Exception:
+                continue
+            s2, h2 = woerter_lesen(ziel, u, holen_fn, tmp, woerter_fn, 1)
+            seiten += s2
+            her.add(h2)
+        return seiten, 'webseite+' + '+'.join(sorted(her)) if her else 'webseite'
+    return [], a or 'unbekannt'
 
 
 def zeit_von(t):
@@ -104,8 +194,25 @@ def text(ws):
     return re.sub(r'\s+', ' ', ' '.join(w['t'] for w in ws)).strip()
 
 
+# 1.1: Wochentage und Gültigkeiten sind keine Haltestellen (Übersichtsseite der Molitorisschule Harsum: Zeilen „Mo-Fr“, „Fr“ –
+# „Fr“ landete als genauer Treffer in Braunschweig)
+_TAG = r'(?:mo|di|mi|do|fr|sa|so|montags?|dienstags?|mittwochs?|donnerstags?|freitags?|samstags?|sonntags?)\.?'
+TAGE_RX = re.compile(r'^(?:' + _TAG + r'(?:\s*(?:[-–/,+&]|bis|und)\s*' + _TAG + r')*|täglich|werktags|schultags?|schultage|ferien|nur an schultagen)$', re.I)
+
+
 def ist_name(t):
-    return bool(re.search(r'[A-Za-zÄÖÜäöüß]{2,}', t)) and not zeit_von(t) and not KOPFWORT_RX.match(t)
+    return bool(re.search(r'[A-Za-zÄÖÜäöüß]{2,}', t)) and not zeit_von(t) and not KOPFWORT_RX.match(t) and not TAGE_RX.match(t.strip())
+
+
+def fahrt_plausibel(f):
+    """1.1: Eine Fahrt hält nicht dreimal am selben Halt und besteht nicht überwiegend aus Wiederholungen
+    (sonst wurde eine Übersicht oder Legende als Fahrt gelesen)."""
+    namen = [norm(h[0]) and ' '.join(norm(h[0])) for h in f['halte']]
+    if any(not n for n in namen):
+        return False
+    from collections import Counter
+    c = Counter(namen)
+    return max(c.values()) <= 2 and len(c) >= max(2, 0.6 * len(namen))
 
 
 # ---------------------------------------------------------------------------------------------------------------------------
@@ -194,12 +301,25 @@ def fahrten_paare(zs, seite):
                     j += 1
                 nm = text(name)
                 if nm and ist_name(nm):
-                    paare.append({'zeit': zt, 'name': nm, 'x0': w['x0'], 'y': z['y']})
+                    paare.append({'zeit': zt, 'name': nm, 'x0': w['x0'], 'y': z['y'], 'nx0': name[0]['x0'], 'h': max(4.0, name[0]['bottom'] - name[0]['top'])})
                 i = j
                 continue
             if w['t'].lower() == 'abfahrt':
                 anker.append({'x0': w['x0'], 'y': z['y'], 'art': 'abfahrt'})
             i += 1
+    # 1.1: Folgezeilen ohne Uhrzeit, linksbündig unter dem Namen des vorigen Halts („Nach Ganztag, Sowada“: 15.50 Uhr Lamspringe,
+    # Grundschule – Lamspringe, Hellegrund – Glashütte) → Halte ohne eigene Zeit
+    for z in zs:
+        if any(zeit_von(w['t']) for w in z['w']):
+            continue
+        seg = segmente(z['w'], 14.0)[0]
+        nm = text(seg)
+        if not ist_name(nm) or len(nm) > 45 or nm.endswith('.') or FAHRT_RX.search(nm) or EINSATZ_RX.search(nm):
+            continue
+        vor = [p for p in paare if abs(p.get('nx0', -99) - seg[0]['x0']) < 6 and 0 < z['y'] - p['y'] < 2.6 * p.get('h', 8)]
+        if vor:
+            v = max(vor, key=lambda p: p['y'])
+            paare.append({'zeit': '', 'name': nm, 'x0': v['x0'], 'y': z['y'], 'nx0': v['nx0'], 'h': v['h']})
     # Kopfzeilen (Fahrt-Nr., Einsatz) – Anker, wenn es keine „Abfahrt“-Spalten gibt; sonst Kopftext der Kästen
     koepfe = []
     for z in zs:
@@ -226,7 +346,7 @@ def fahrten_paare(zs, seite):
             continue
         # Kopftext: Zeilen über dem Anker im Bereich des Kastens (Einsatzplan) bzw. die Kopfzeile selbst und die Zeile darunter (Liste)
         kt = []
-        oben = a['y'] - (70 if a['art'] == 'abfahrt' else 0)
+        oben = a['y'] - (70 if a['art'] == 'abfahrt' else 40 if a['art'] == 'seite' else 0)    # 1.1: Liste ohne Fahrt-Nr.: Überschrift darüber
         unten = a['y'] if a['art'] == 'abfahrt' else min(h['y'] for h in a['halte'])
         rechts = min([b['x0'] for b in anker if b is not a and abs(b['y'] - a['y']) < 6 and b['x0'] > a['x0'] + 20] or [a['x0'] + 230]) - 6
         for z in zs:
@@ -398,6 +518,10 @@ def auslesen(seiten):
             if m:
                 erg['unternehmen'] = m.group(1).strip()[:80]
     erg['fahrten'] = [f for f in erg['fahrten'] if len(f['halte']) >= 2]
+    # 1.1: Halte, die nur Wochentage sind, und unplausible Fahrten verwerfen
+    for f in erg['fahrten']:
+        f['halte'] = [h for h in f['halte'] if ist_name(h[0])]
+    erg['fahrten'] = [f for f in erg['fahrten'] if len(f['halte']) >= 2 and fahrt_plausibel(f)]
     return erg
 
 
@@ -450,7 +574,7 @@ class HalteIndex:
     def kandidaten(self, name, ort=''):
         """→ [(score, name, lon, lat, guete)] – guete: genau (alle Wörter), aehnlich (alle besonderen Wörter), ort (nur der Ort)"""
         q = norm(name)
-        if not q:
+        if not q or len(''.join(q)) < 3:     # 1.1: „Fr“, „B“ – zu kurz für einen Namen
             return []
         qs = set(q)
         teile = re.split(r'\s*[,/]\s*|\s+-\s+', str(name).strip(), maxsplit=1)
@@ -506,12 +630,19 @@ def _verorten(fahrten, index, ort, mitte):
     """Jede Haltestelle aller Fahrten → [lon, lat, guete] oder None. guete: genau | aehnlich | ort (ungefähr, nur der Ort bekannt).
     Mehrdeutige Namen nach der Nähe zu den Nachbarhalten; unplausible Sprünge (schneller als 80 km/h) werden verworfen."""
     ort_tok = norm(ort)
+    om = None     # 1.1: Mitte des Schulorts (Median – „Ottbergen“ gibt es auch bei Höxter)
+    if ort:
+        ko = index.kandidaten(ort, ort)
+        ko = [x for x in ko if x[0] >= (ko[0][0] - 0.05)] if ko else []
+        if ko:
+            om = (sorted(x[2] for x in ko)[len(ko) // 2], sorted(x[3] for x in ko)[len(ko) // 2])
     for f in fahrten:
         lage = []
         for name, _ in f['halte']:
             k = index.kandidaten(name, ort)
-            if not k and ort_tok and not set(norm(name)) & set(ort_tok):
-                k = [x[:4] + ('ort' if x[4] == 'ort' else 'aehnlich',) for x in index.kandidaten(ort + ', ' + name, ort)]    # „Glashütte“ in Lamspringe
+            weit = bool(k) and om is not None and all(_km((x[2], x[3]), om) > 20 for x in k[:40])    # 1.1: nur gleichnamige Halte anderswo
+            if (not k or weit) and ort_tok and not set(norm(name)) & set(ort_tok):
+                k = (k if weit else []) + [x[:4] + ('ort' if x[4] == 'ort' else 'aehnlich',) for x in index.kandidaten(ort + ', ' + name, ort)]    # „Glashütte“ in Lamspringe
             lage.append(k[:40])
         pos = [None] * len(lage)
         # 1. eindeutig genaue Treffer
@@ -524,7 +655,8 @@ def _verorten(fahrten, index, ort, mitte):
         # 2. Plausibilität der eindeutigen: ein Halt, der zu beiden Nachbarn unpassend weit liegt, war eine Namensgleichheit
         def passt(i, p, q, j):
             d = _km(p, q)
-            dt = abs(_min(f['halte'][j][1]) - _min(f['halte'][i][1]))
+            a, b = f['halte'][j][1], f['halte'][i][1]
+            dt = abs(_min(a) - _min(b)) if a and b else abs(i - j) * 5    # 1.1: Halt ohne eigene Zeit – etwa 5 Minuten je Halt
             return d <= max(6.0, dt * 1.35 + 2)
         for _ in range(2):
             for i in range(len(pos)):
@@ -532,6 +664,12 @@ def _verorten(fahrten, index, ort, mitte):
                     continue
                 nb = [j for j in (i - 1, i + 1, i - 2, i + 2) if 0 <= j < len(pos) and pos[j]]
                 if nb and not any(passt(i, pos[i], pos[j], j) for j in nb[:2]):
+                    pos[i] = None
+        # 2b. (1.1) ein einzelner genauer Treffer weit weg vom Schulort, den kein anderer bestätigt, war eine Namensgleichheit
+        #     („Glashütte“ in Lamspringe ≠ Osterwald, Glashütte, wenn die übrigen Halte nur im Ort bekannt sind)
+        if om:
+            for i in range(len(pos)):
+                if pos[i] and _km(pos[i], om) > 20 and not any(pos[j] and j != i and _km(pos[i], pos[j]) < 20 for j in range(len(pos))):
                     pos[i] = None
         # 3. übrige über die Nachbarn (genau vor ähnlich vor Ort)
         for _ in range(3):
@@ -543,7 +681,9 @@ def _verorten(fahrten, index, ort, mitte):
                 for score, n, lon, lat, g in k:
                     if nb and not any(passt(i, (lon, lat), pos[j], j) for j in nb):
                         continue
-                    if not nb and g != 'genau' and not (mitte and _km((lon, lat), mitte) <= 20):
+                    if not nb and g != 'genau' and not (mitte and _km((lon, lat), mitte) <= 20) and not (om and _km((lon, lat), om) <= 12):
+                        continue
+                    if not nb and om and _km((lon, lat), om) > 20:      # 1.1: ohne Nachbarn nicht weit weg vom Schulort
                         continue
                     d = min((_km((lon, lat), pos[j]) for j in nb), default=_km((lon, lat), mitte) if mitte else 0)
                     wert = score - d * 0.01
@@ -569,7 +709,7 @@ def holen(url, ziel, zeit=60):
     with urllib.request.urlopen(req, timeout=zeit) as r, open(ziel, 'wb') as fh:
         daten = r.read(30 * 1024 * 1024)
         fh.write(daten)
-    return daten[:5] == b'%PDF-'
+    return len(daten) > 20    # 1.1: auch Webseiten und Bilder (Art erkennt woerter_lesen)
 
 
 def gleiche_firma(a, b):
@@ -631,17 +771,24 @@ def schulverkehr(eintraege, halte, ausgabe, skizze=None, log=print, cache_pfad=N
                 erg = alt['erg']
             else:
                 try:
-                    erg = auslesen(woerter_fn(pdf))
+                    seiten, herkunft = woerter_lesen(pdf, quelle, holen_fn, tmp, woerter_fn)
+                    erg = auslesen(seiten)
+                    erg['herkunft'] = herkunft
                 except Exception as ex:
                     erg = {'art': '', 'fahrten': [], 'fehler': str(ex)[:120]}
             neu_cache[str(e.get('id'))] = {'hash': h, 'version': VERSION, 'erg': erg, 'link': e.get('link'), 'gelesen': time.strftime('%Y-%m-%d')}
             p['abruf'] = 'spiegel' if quelle != e.get('link') else 'quelle'
         p['art'] = erg.get('art', '')
+        if erg.get('herkunft') and erg['herkunft'] != 'pdf':
+            p['herkunft'] = erg['herkunft']     # 1.1: „ocr“ (Texterkennung) oder „webseite+…“
         if erg.get('gueltig_ab'):
             p['gueltig_ab'] = erg['gueltig_ab']
         fahrten = [dict(f) for f in erg.get('fahrten', [])]
         oeff = sorted({f['oeffentlich'] for f in fahrten if f.get('oeffentlich')})
         fahrten = [f for f in fahrten if not f.get('oeffentlich')]
+        for f in fahrten:     # 1.1: auch für den Vorrat älterer Läufe
+            f['halte'] = [h for h in f['halte'] if ist_name(h[0])]
+        fahrten = [f for f in fahrten if len(f['halte']) >= 2 and fahrt_plausibel(f)]
         if oeff:
             p['oeffentlich'] = oeff
         for n in unternehmen_aus(e, erg, {}):
@@ -658,15 +805,17 @@ def schulverkehr(eintraege, halte, ausgabe, skizze=None, log=print, cache_pfad=N
         plaene.append(p)
     # Verläufe
     for p in plaene:
-        linien, alle_gerade, muster = [], True, set()
-        for f in p.get('fahrten') or []:
+        linien, alle_gerade, muster, zu = [], True, {}, []
+        for fi, f in enumerate(p.get('fahrten') or []):
             pts = [(l[0], l[1]) for l in (f.get('lage') or []) if l]
             if len(pts) < 2:
                 continue
             k = ';'.join('%.5f,%.5f' % q for q in pts)
             if k in muster:
+                zu[muster[k]].append(fi)     # 1.1: gleicher Weg → dieselbe Linie (Website: gleiche Farbe)
                 continue
-            muster.add(k)
+            muster[k] = len(zu)
+            zu.append([fi])
             weg = skizze(pts) if skizze and (ende is None or time.time() < ende) else None
             if weg:
                 alle_gerade = False
@@ -680,7 +829,7 @@ def schulverkehr(eintraege, halte, ausgabe, skizze=None, log=print, cache_pfad=N
         p['verortet'] = [verortet, halte_n]
         feats.append({'type': 'Feature', 'geometry': {'type': 'MultiLineString', 'coordinates': linien},
                       'properties': {'ref': str(p['id']), 'id': p['id'], 'name': p.get('beschreibung') or p.get('schule', ''), 'schule': p.get('schule', ''),
-                                     'ort': p.get('ort', ''), 'verlauf': 'haltestellen' if alle_gerade else 'skizze'}})
+                                     'ort': p.get('ort', ''), 'verlauf': 'haltestellen' if alle_gerade else 'skizze', 'fahrten': zu}})
     if cache_pfad:
         try:
             with open(cache_pfad, 'w', encoding='utf-8') as fh:

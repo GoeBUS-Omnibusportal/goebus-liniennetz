@@ -29,6 +29,26 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 68 (Workflow, schulverkehr.py 1.1)
+
+- **Hochladen:** `.github/workflows/liniennetz.yml`, `schulverkehr.py` und `README.md`; `liniennetz.py` bleibt 3.7.
+- **Lage am 23.11.2026:** Geofabrik baut um. Die `.md5`-Dateien antworten, die Auszüge selbst nicht: 503/502, „…-latest“ leitet auf eine Datei mit Datum („niedersachsen-261122.osm.pbf“), die es nicht gibt (404). Die Prüfung sah nur die `.md5` und hielt Geofabrik für erreichbar; der Lauf versuchte jedes Gebiet fünfmal mit 30 Sekunden Pause (rund 20 Minuten) und hätte ein einzeln geladenes Gebiet als ganzen Auszug genommen.
+- **Jetzt:**
+  - **Prüfung:** Für alle vier Gebiete wird die Datei selbst angefragt (erste Bytes, mit Weiterleitungen). Nur wenn alle antworten, versucht der Lauf Geofabrik.
+  - **Alles oder nichts:** Fehlt bei Geofabrik ein Gebiet (zwei Versuche, Zeitgrenze 15 Minuten je Datei), werden alle verworfen und es geht mit openstreetmap.fr weiter. Ohne Prüfsumme wird nichts genommen.
+  - **openstreetmap.fr** (Deutschland mit `.md5`, am 23.11. in 3 Minuten geladen) ist die verlässliche Quelle; die Datei wird zusätzlich mit `osmium fileinfo` geprüft.
+  - **Vorrat von heute:** Ist der Auszug im Zwischenspeicher von heute und vollständig (Linien, Gemeinden, Haltestellen), lädt der Lauf nichts neu – etwa beim Lauf nach dem Hochladen neuer Dateien.
+  - **Plausibilität:** Ein neuer Auszug mit weniger als 1500 Linien-Relationen oder weniger als 70 % des Vorrats derselben Quelle (höchstens 7 Tage alt) ersetzt den Vorrat nicht; der Lauf nimmt dann den Vorrat. Die Quelle steht in `osm-vorrat/quelle.txt`.
+- **Schülerverkehr (schulverkehr.py 1.1)** – nach den Fahrplänen, die Lauf #52 am 23.11. nicht lesen konnte:
+  - **Uhrzeiten mit Komma** („7,21“, Tabellen des RVHI – Bürgerschule Alfeld, Grundschule Gronau).
+  - **Halte ohne eigene Uhrzeit:** Listen, in denen nur der erste Halt eine Zeit hat und die übrigen Namen darunter stehen („Nach Ganztag, Sowada, Kleinbus“ in Lamspringe). Die Überschrift einer Liste ohne Fahrt-Nr. wird zum Titel; die Website zeigt „·“ statt einer Zeit.
+  - **Webseiten und Bilder:** Führt der Link auf eine Webseite (Grundschule Sibbesse: zwei Bilder), werden die Fahrplan-Dateien darauf geladen – nur von derselben Website, nur mit „bus“, „fahr“, „einsatz“ oder „linie“ im Namen, höchstens vier, ohne Vorschaubilder. Eigene Seiten (goebus.de) werden nicht durchsucht.
+  - **Texterkennung:** Bilder und eingescannte PDFs (ohne Text) liest tesseract (deutsch); das Ergebnis heißt `herkunft: "ocr"` bzw. `"webseite+ocr"`, die Website weist darauf hin. Der Workflow installiert `tesseract-ocr` und `tesseract-ocr-deu`; fehlt es, bleiben nur diese Pläne ohne Fahrten.
+  - **Namensgleichheit:** Ein einzelner genauer Treffer mehr als 20 km vom Schulort, den kein anderer Halt bestätigt, gilt als Namensgleichheit („Glashütte“ in Lamspringe ≠ Osterwald, Glashütte – im Lauf #52 dreimal falsch); dann zählt der Ort.
+  - **Wochentage sind keine Haltestellen:** Die Übersichtsseite der Molitorisschule Harsum (Zeilen „Mo-Fr“, „Fr“ mit Uhrzeiten) wurde als Fahrt gelesen; „Fr“ fand eine Haltestelle in Braunschweig, daher der Weg dorthin. Jetzt: Namen aus Wochentagen und Gültigkeiten werden verworfen, Namen unter drei Buchstaben werden nicht gesucht, und eine Fahrt, die einen Halt öfter als zweimal anfährt oder überwiegend aus Wiederholungen besteht, gilt als nicht plausibel – auch im Vorrat älterer Läufe.
+  - **Wege je Fahrt:** Jedes Feature trägt `properties.fahrten` (je Linie die Nummern der Fahrten mit genau diesem Weg). Die Website färbt damit die Wege eines Fahrplans einzeln.
+  - Version 1.1: Der Zwischenspeicher wird einmal neu ausgelesen.
+
 ## Neu in Fassung 67 (Skript 3.7, schulverkehr.py 1.0)
 
 - **Hochladen:** `liniennetz.py`, **`schulverkehr.py` (neu)**, `README.md` und `.github/workflows/liniennetz.yml`.

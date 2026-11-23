@@ -19,7 +19,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['liniennetz.py', 'schulverkehr.py', 'fahrschulen.py', 'fahrplanseiten.py', 'verbuende.json', 'landkreise.topo.json', 'osrm-bus.lua', '.github/workflows/liniennetz.yml']
+    paths: ['liniennetz.py', 'schulverkehr.py', 'efahrten.py', 'fahrschulen.py', 'fahrplanseiten.py', 'verbuende.json', 'landkreise.topo.json', 'osrm-bus.lua', '.github/workflows/liniennetz.yml']
 
 concurrency:
   group: liniennetz
@@ -60,7 +60,7 @@ jobs:
 
   liniennetz:
     runs-on: ubuntu-24.04
-    timeout-minutes: 160    # Fassung 59/60/61: Auszug bis 30, Routenplaner bis 35, Verarbeitung bis 70 (Skizzen bis 45), Fahrschulen bis 15 Minuten
+    timeout-minutes: 175    # Fassung 59/60/61: Auszug bis 30, Routenplaner bis 35, Verarbeitung bis 80 (Skizzen bis 45, Fassung 69: E-Fahrten), Fahrschulen bis 15 Minuten
     steps:
       - name: Dateien holen
         uses: actions/checkout@v5
@@ -360,11 +360,12 @@ jobs:
       - name: Fahrplandaten und OpenStreetMap verarbeiten
         # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE
         # (Settings → Secrets and variables → Actions → Variables); ohne Variable läuft alles wie bisher.
-        timeout-minutes: 70    # Fassung 59: Verarbeitung gut 6 Minuten + Skizzen bis 45 Minuten (Variable GOEBUS_SKIZZE_MINUTEN)
+        timeout-minutes: 80    # Fassung 59: Verarbeitung gut 6 Minuten + Skizzen bis 45 Minuten (GOEBUS_SKIZZE_MINUTEN); Fassung 69: + E-Fahrten bis 8 Minuten
         env:
           GOEBUS_SKIZZE_MINUTEN: ${{ vars.GOEBUS_SKIZZE_MINUTEN || '45' }}
           GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
           GOEBUS_SCHUL_MINUTEN: ${{ vars.GOEBUS_SCHUL_MINUTEN || '8' }}
+          GOEBUS_EF_MINUTEN: ${{ vars.GOEBUS_EF_MINUTEN || '8' }}    # Fassung 69: E-Fahrten (SVHI, RVHI, GöVB-E-Wagen, Frühwagen)
         run: python liniennetz.py --ausgabe daten --osm-auszug osm/auszug.opl --gemeinden osm/gemeinden.geojsonseq --osm-halte osm/halte.geojsonseq
 
       - name: Fahrschulen mit Busführerschein suchen

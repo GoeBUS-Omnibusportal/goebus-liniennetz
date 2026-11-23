@@ -19,7 +19,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['liniennetz.py', 'fahrschulen.py', 'fahrplanseiten.py', 'verbuende.json', 'landkreise.topo.json', 'osrm-bus.lua', '.github/workflows/liniennetz.yml']
+    paths: ['liniennetz.py', 'schulverkehr.py', 'fahrschulen.py', 'fahrplanseiten.py', 'verbuende.json', 'landkreise.topo.json', 'osrm-bus.lua', '.github/workflows/liniennetz.yml']
 
 concurrency:
   group: liniennetz
@@ -162,7 +162,8 @@ jobs:
           mkdir -p osm
           AGENT="GoeBUS-Liniennetz (+https://goebus.de)"
           teile() {  # Datei, Kurzname: Buslinien/Fahrschulen/Gemeinden und Straßen herausfiltern
-            osmium tags-filter "$1" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school r/admin_level=7,8 -o "osm/$2-teil.osm.pbf" --overwrite || return 1
+            # Fassung 67: dazu Haltestellen und Orte (Schülerverkehr: Haltestellen verorten, die in den Fahrplandaten fehlen)
+            osmium tags-filter "$1" r/route=bus,trolleybus,minibus,share_taxi,tram nwr/amenity=driving_school r/admin_level=7,8 n/highway=bus_stop n/public_transport=platform n/place=city,town,village,suburb,hamlet,isolated_dwelling -o "osm/$2-teil.osm.pbf" --overwrite || return 1
             if [ "${OSRM_BAUEN:-}" = 1 ]; then
               osmium tags-filter "$1" w/highway=motorway,motorway_link,trunk,trunk_link,primary,primary_link,secondary,secondary_link,tertiary,tertiary_link,unclassified,residential,living_street,service,busway,bus_guideway,road w/bus=yes,designated w/psv=yes,designated -o "osm/$2-strassen.osm.pbf" --overwrite \
                 || echo "::warning::Straßen $2 nicht gefiltert – Routenplaner ohne dieses Gebiet"
@@ -222,12 +223,17 @@ jobs:
           osmium tags-filter osm/alles.osm.pbf nwr/amenity=driving_school -o osm/fahrschulen.osm.pbf --overwrite
           osmium cat osm/fahrschulen.osm.pbf -f opl,add_metadata=false -o osm/fahrschulen.opl --overwrite
           echo "$(date +%T) Linien und Fahrschulen fertig"
+          # Fassung 67: Haltestellen und Orte rund um den Landkreis Hildesheim (Schülerverkehr)
+          ( osmium tags-filter osm/alles.osm.pbf n/highway=bus_stop n/public_transport=platform n/place=city,town,village,suburb,hamlet,isolated_dwelling -o osm/halte-alle.osm.pbf --overwrite \
+            && osmium extract -b 9.45,51.72,10.55,52.45 osm/halte-alle.osm.pbf -o osm/halte.osm.pbf --overwrite \
+            && osmium export osm/halte.osm.pbf -f geojsonseq --geometry-types=point -o osm/halte.geojsonseq --overwrite ) \
+            || echo "::warning::Haltestellen aus OpenStreetMap nicht erstellt – Schülerverkehr nur mit den Fahrplandaten"
           # Gemeinden und Samtgemeinden (admin_level 7 und 8) als Flächen für AST-Gebiete – zuletzt und mit eigener Zeitgrenze
           ( timeout 300 osmium tags-filter osm/alles.osm.pbf r/admin_level=7,8 -o osm/gemeinden.osm.pbf --overwrite \
             && timeout 300 osmium export osm/gemeinden.osm.pbf -f geojsonseq --geometry-types=polygon -o osm/gemeinden.geojsonseq --overwrite ) \
             || echo "::warning::Gemeindegrenzen nicht erstellt – AST-Gebiete aus den Haltestellen"
           # Fassung 60: guten Auszug für spätere Läufe aufheben
-          mkdir -p osm-vorrat && cp osm/auszug.opl osm/fahrschulen.opl osm-vorrat/ && { cp osm/gemeinden.geojsonseq osm-vorrat/ 2>/dev/null || true; } && date -u +%F > osm-vorrat/stand.txt \
+          mkdir -p osm-vorrat && cp osm/auszug.opl osm/fahrschulen.opl osm-vorrat/ && { cp osm/gemeinden.geojsonseq osm/halte.geojsonseq osm-vorrat/ 2>/dev/null || true; } && date -u +%F > osm-vorrat/stand.txt \
             && echo "OSM_NEU=1" >> "$GITHUB_ENV"
           ls -la osm
 
@@ -294,6 +300,12 @@ jobs:
           path: osrm
           key: osrm-bus-v2-${{ env.WOCHE }}
 
+      - name: Schülerverkehr – PDF-Leser installieren
+        # Fassung 67: pdfplumber liest die Fahrpläne des Schülerverkehrs (Landkreis Hildesheim). Schlägt das fehl, bleibt nur dieser Teil aus.
+        continue-on-error: true
+        timeout-minutes: 5
+        run: python -m pip install --quiet --disable-pip-version-check pdfplumber==0.11.4 || python -m pip install --quiet --user pdfplumber
+
       - name: Fahrplandaten und OpenStreetMap verarbeiten
         # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE
         # (Settings → Secrets and variables → Actions → Variables); ohne Variable läuft alles wie bisher.
@@ -301,7 +313,8 @@ jobs:
         env:
           GOEBUS_SKIZZE_MINUTEN: ${{ vars.GOEBUS_SKIZZE_MINUTEN || '45' }}
           GOEBUS_REGELN: ${{ vars.GOEBUS_ADRESSE != '' && format('{0}/_data/verbund-tarife/linien-regeln.json', vars.GOEBUS_ADRESSE) || '' }}
-        run: python liniennetz.py --ausgabe daten --osm-auszug osm/auszug.opl --gemeinden osm/gemeinden.geojsonseq
+          GOEBUS_SCHUL_MINUTEN: ${{ vars.GOEBUS_SCHUL_MINUTEN || '8' }}
+        run: python liniennetz.py --ausgabe daten --osm-auszug osm/auszug.opl --gemeinden osm/gemeinden.geojsonseq --osm-halte osm/halte.geojsonseq
 
       - name: Fahrschulen mit Busführerschein suchen
         # Fassung 42: OpenStreetMap (Fassung 48: aus dem Auszug) und Websites der Fahrschulen. Schlägt dieser Schritt fehl,

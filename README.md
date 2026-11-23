@@ -29,6 +29,17 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 67 (Skript 3.7, schulverkehr.py 1.0)
+
+- **Hochladen:** `liniennetz.py`, **`schulverkehr.py` (neu)**, `README.md` und `.github/workflows/liniennetz.yml`.
+- **Freigestellter Schülerverkehr im Landkreis Hildesheim:**
+  - Der Lauf holt die Liste der Fahrpläne aus der Verwaltung (`_data/verbund-tarife/schulverkehr-quellen.json` neben den Regeln; oder `GOEBUS_SCHULVERKEHR`).
+  - Jeder Fahrplan (PDF) wird geladen und mit pdfplumber ausgelesen: Einsatzpläne („Fahrt-Nr. 109; Fahrplan 2245 H“, Spalten „Abfahrt | Haltestelle“, mehrere Kästen), Listen („7.45 Uhr Glashütte“) und Tabellen (Haltestellen als Zeilen, Fahrten als Spalten; „I“ = fährt durch, Spalten „Linie 67“ gehören zum Liniennetz und werden nur vermerkt).
+  - Haltestellen werden über die Fahrplandaten (alle Haltestellen um den Landkreis) und OpenStreetMap (`osm/halte.geojsonseq`: Haltestellen mit dem nächsten Ort davor) verortet: genau, ähnlich oder nur ungefähr im Ort; mehrdeutige Namen über die Nachbarhalte, unplausible Sprünge (schneller als die Fahrzeit erlaubt) werden verworfen.
+  - Die Fahrten legt der eigene Routenplaner über die Straßen (Zeitbudget `GOEBUS_SCHUL_MINUTEN`, Vorgabe 8 Minuten).
+  - Ergebnis: `daten/schulverkehr_hi.json` (Fahrpläne mit Fahrten, Halten, Zeiten, Unternehmen, Status; Karte als GeoJSON), Zwischenspeicher `daten/schulverkehr-cache.json` (unveränderte PDFs werden nicht neu ausgelesen; ist ein PDF nicht abrufbar, gilt der letzte gelesene Stand).
+- **Workflow:** pdfplumber wird installiert; aus dem OpenStreetMap-Auszug kommen zusätzlich Haltestellen und Orte (auch im Vorrat für spätere Läufe).
+
 ## Neu in Fassung 66 (Skript 3.6)
 
 - **Hochladen:** `liniennetz.py` und `README.md` ersetzen.

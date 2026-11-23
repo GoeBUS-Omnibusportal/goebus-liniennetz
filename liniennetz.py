@@ -43,7 +43,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '3.6'
+VERSION = '3.7'
 
 # 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
 import socket as _socket
@@ -801,6 +801,8 @@ def gtfs_auswerten(pfad, kreise, verbuende):
             lat, lon = float(s['stop_lat']), float(s['stop_lon'])
         except (KeyError, ValueError):
             continue
+        if SCHUL_BBOX[0] <= lon <= SCHUL_BBOX[2] and SCHUL_BBOX[1] <= lat <= SCHUL_BBOX[3]:    # 3.7: auch Haltestellen ohne Linie der Verbünde
+            SCHUL_HALTE.append((s.get('stop_name', ''), lon, lat))
         if bx[0] <= lon <= bx[2] and bx[1] <= lat <= bx[3]:
             schl = (round(lon, 4), round(lat, 4))
             if schl not in cache:
@@ -1536,6 +1538,8 @@ def ersetzt_durch(f, feats, nah=300, anteil=0.7):
 
 
 ERSETZT = {}     # slug → {alte Nummer: neue Nummer} (für den Bericht)
+SCHUL_HALTE = []    # 3.7 (Fassung 67): (Name, lon, lat) aller Haltestellen der Fahrplandaten um den Landkreis Hildesheim (Schülerverkehr)
+SCHUL_BBOX = (9.45, 51.72, 10.55, 52.45)
 ABGEGEBEN = {}   # 3.6 (Fassung 66): slug → {Nummer: Nachbarverbund} – Linien, die zu einem Nachbarverbund gehören (VSN 51 → Öffis)
 
 
@@ -2221,6 +2225,77 @@ def bericht_verbund(v, feats):
 
 
 # ---------------------------------------------------------------------------
+def osm_halte(pfad):
+    """3.7: Haltestellen aus OpenStreetMap (highway=bus_stop, public_transport=platform) mit dem nächsten Ort davor
+    („Grundschule“ in Schellerten → „Schellerten, Grundschule“). → [(Name, lon, lat)]"""
+    if not pfad or not os.path.exists(pfad):
+        return []
+    halte, orte = [], []
+    with open(pfad, encoding='utf-8') as fh:
+        for z in fh:
+            z = z.strip().lstrip('\x1e')
+            if not z:
+                continue
+            try:
+                f = json.loads(z)
+                c = f['geometry']['coordinates']
+                t = f.get('properties') or {}
+            except (ValueError, KeyError, TypeError):
+                continue
+            n = (t.get('name') or '').strip()
+            if not n:
+                continue
+            if t.get('place'):
+                orte.append((n, c[0], c[1]))
+            elif t.get('highway') == 'bus_stop' or t.get('public_transport') in ('platform', 'stop_position'):
+                halte.append((n, c[0], c[1]))
+    zellen = defaultdict(list)
+    for o in orte:
+        zellen[(int(o[1] // 0.05), int(o[2] // 0.05))].append(o)
+    out = []
+    for n, lon, lat in halte:
+        best, bd = None, 9.0
+        cx, cy = int(lon // 0.05), int(lat // 0.05)
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for o in zellen.get((cx + dx, cy + dy), []):
+                    d = _m((lon, lat), (o[1], o[2])) / 1000.0
+                    if d < bd:
+                        best, bd = o, d
+        if best and bd <= 2.5 and best[0].lower() not in n.lower():
+            n = best[0] + ', ' + n
+        out.append((n, lon, lat))
+    return out
+
+
+def schul_lauf(a):
+    """3.7 (Fassung 67): Schülerverkehr – siehe schulverkehr.py. → Zahlen für stand.json"""
+    quelle = a.schulverkehr
+    if not quelle and a.regeln and re.search(r'linien-regeln\.json$', a.regeln):
+        quelle = re.sub(r'linien-regeln\.json$', 'schulverkehr-quellen.json', re.sub(r'/_admin/+(?=_data/)', '/', a.regeln))
+    if not quelle:
+        log('Schülerverkehr: keine Liste der Fahrpläne (GOEBUS_ADRESSE fehlt)')
+        return {'plaene': 0}
+    import schulverkehr as SV
+    eintraege = SV.quellen_laden(quelle, log)
+    if not eintraege:
+        return {'plaene': 0}
+    halte = list(SCHUL_HALTE) + osm_halte(a.osm_halte)
+    log('Schülerverkehr: %d Fahrpläne, %d Haltestellen zum Verorten (davon %d aus OpenStreetMap)' % (len(eintraege), len(halte), len(halte) - len(SCHUL_HALTE)))
+    ende = time.time() + 60 * float(os.environ.get('GOEBUS_SCHUL_MINUTEN', '') or '8')
+    if SKIZZE.get('cache') is None:
+        try:
+            SKIZZE['cache'] = json.load(open(os.path.join(a.ausgabe, 'skizzen.json'), encoding='utf-8'))
+        except (ValueError, OSError):
+            SKIZZE['cache'] = {}
+    sk = (lambda pts: skizze_teil([tuple(p) for p in pts], SKIZZE['cache'], ende)) if SKIZZE.get('an') else None
+    erg = SV.schulverkehr(eintraege, halte, a.ausgabe, skizze=sk, log=log, cache_pfad=os.path.join(a.ausgabe, 'schulverkehr-cache.json'), ende=ende)
+    erg['skript'] = VERSION
+    with open(os.path.join(a.ausgabe, 'schulverkehr_hi.json'), 'w', encoding='utf-8') as fh:
+        json.dump(erg, fh, ensure_ascii=False, separators=(',', ':'))
+    return erg['zahl']
+
+
 def main():
     ap = argparse.ArgumentParser(description='GöBUS – Liniennetze aus GTFS und OpenStreetMap')
     ap.add_argument('--gtfs', help='vorhandene GTFS-Datei (ZIP); sonst Download von GTFS.DE')
@@ -2233,6 +2308,8 @@ def main():
     ap.add_argument('--gemeinden', default=os.path.join(HIER, 'osm', 'gemeinden.geojsonseq'), help='3.0: Gemeindegrenzen (osmium export, GeoJSON-Zeilen) für AST-Gebiete')
     ap.add_argument('--osm-auszug', default=os.path.join(HIER, 'osm', 'auszug.opl'), help='OpenStreetMap-Auszug (OPL), Vorgabe osm/auszug.opl; fehlt er, wird Overpass gefragt')
     ap.add_argument('--osm-json', help='vorbereitete Overpass-Antworten statt Abfrage, z. B. osm/{slug}.json (für Tests)')
+    ap.add_argument('--osm-halte', default=os.path.join(HIER, 'osm', 'halte.geojsonseq'), help='3.7: Haltestellen und Orte aus OpenStreetMap (osmium export) für den Schülerverkehr')
+    ap.add_argument('--schulverkehr', default=os.environ.get('GOEBUS_SCHULVERKEHR', ''), help='3.7: Liste der Schülerverkehr-Fahrpläne (Adresse oder Datei); Vorgabe: neben den Regeln')
     ap.add_argument('--regeln', default=os.environ.get('GOEBUS_REGELN', ''), help='Regeln der Website (ersetzte Linien), Adresse oder Datei; Vorgabe: Umgebungsvariable GOEBUS_REGELN')
     a = ap.parse_args()
 
@@ -2397,6 +2474,14 @@ def main():
                 log(v['slug'], n, 'weitere Linienverläufe im Nachlauf skizziert')
                 if v['slug'] in stand['verbuende']:
                     stand['verbuende'][v['slug']]['skizzen_nachlauf'] = n
+    # 3.7 (Fassung 67): Freigestellter Schülerverkehr im Landkreis Hildesheim – Fahrpläne aus der Verwaltung auslesen und skizzieren
+    t = time.time()
+    try:
+        stand['schulverkehr'] = schul_lauf(a)
+    except Exception as e:    # freiwillig – die Liniennetze hängen nicht davon ab
+        log('Schülerverkehr nicht ausgewertet:', type(e).__name__, e)
+        stand['schulverkehr'] = {'fehler': str(e)[:160]}
+    dauer['schulverkehr'] = round(time.time() - t)
     stand['skizzen_offen'] = {v['slug']: sum(1 for f in feats if str(f['properties'].get('verlauf', '')).endswith('haltestellen')) for v, feats, _, _ in NACHLAUF}
     stand['orte_geteilt'] = ORTE_GETEILT[-1] if ORTE_GETEILT else 0    # 3.1: Linien mit mehreren Orten (je Ort ausgewertet)
     # 3.2 (Fassung 61): Erreichbarkeit der Quellen vom GitHub-Lauf aus (Schritt „Quellen prüfen“) und Herkunft des OSM-Auszugs

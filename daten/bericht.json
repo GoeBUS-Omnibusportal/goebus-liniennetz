@@ -1,6 +1,6 @@
 {
- "erzeugt": "2026-11-23T04:50:17Z",
- "version": "3.6",
+ "erzeugt": "2026-11-23T07:24:52Z",
+ "version": "3.7",
  "hinweis": "Übersicht je Verbund: Linien, Betreiber, Verlauf (fahrplan = Linienweg aus den Fahrplandaten, osm = straßengenau aus OpenStreetMap, …+haltestellen = teilweise, haltestellen = Verbindung der Haltestellen).",
  "verbuende": {
   "vsn": {

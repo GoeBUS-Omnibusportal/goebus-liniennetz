@@ -116,8 +116,20 @@ jobs:
           echo "Quelle                       Code   Dauer     Adresse"
           # Fassung 65: Geofabrik legt die Dateien seit November 2026 in Unterordnern ab (…/germany/niedersachsen/niedersachsen-latest…);
           # der alte Pfad antwortet mit 404 – am 22.11. im Browser geprüft. Von GitHub aus antwortet Geofabrik wieder (404 statt keine Verbindung).
-          if pruefe geofabrik "https://download.geofabrik.de/europe/germany/niedersachsen/niedersachsen-latest.osm.pbf.md5"; then echo "OSM_GEOFABRIK=1" >> "$GITHUB_ENV"; fi
-          if pruefe openstreetmap.fr "https://download.openstreetmap.fr/extracts/europe/germany.state.txt" ersatz; then echo "OSM_FR=1" >> "$GITHUB_ENV"; fi
+          # Fassung 68: Geofabrik wird mitten im Umbau geprüft – am 23.11. antworteten die .md5-Dateien (darum galt Geofabrik als
+          # erreichbar), die Dateien selbst aber mit 503/502 bzw. 404 („…-latest“ leitet auf „niedersachsen-261122.osm.pbf“, die fehlt).
+          # Jetzt wird für alle vier Gebiete die Datei selbst angefragt (erste Bytes, Weiterleitungen folgen); nur wenn alle antworten,
+          # versucht der Lauf Geofabrik. Sonst gleich openstreetmap.fr – ohne viermal vier Minuten Wartezeit.
+          geo_code=206; geo_url=""
+          for land in niedersachsen hessen thueringen nordrhein-westfalen/detmold-regbez; do
+            n=$(basename "$land"); u="https://download.geofabrik.de/europe/germany/$land/$n-latest.osm.pbf"
+            c=$(curl -4 -s -o /dev/null -L -r 0-200 --connect-timeout 8 --max-time 20 -A "GoeBUS-Liniennetz (+https://goebus.de)" -w "%{http_code}" "$u" 2>/dev/null || true)
+            case "$c" in 200|206) ;; *) geo_code="${c:-000}"; geo_url="$u"; break;; esac
+          done
+          if pruefe geofabrik "${geo_url:-https://download.geofabrik.de/europe/germany/niedersachsen/niedersachsen-latest.osm.pbf}" && [ -z "$geo_url" ]; then echo "OSM_GEOFABRIK=1" >> "$GITHUB_ENV"; \
+          elif [ -n "$geo_url" ]; then echo "Geofabrik: $geo_url antwortet mit $geo_code – Geofabrik wird in diesem Lauf nicht versucht"; fi
+          # openstreetmap.fr: die Datei selbst (Deutschland, rund 6 GB, Prüfsumme .md5, Stand .state.txt) – am 23.11. geladen in 3 Minuten
+          if pruefe openstreetmap.fr "https://download.openstreetmap.fr/extracts/europe/germany-latest.osm.pbf" ersatz; then echo "OSM_FR=1" >> "$GITHUB_ENV"; fi
           pruefe overpass-api.de "https://overpass-api.de/api/status" reserve || true
           pruefe overpass.kumi.systems "https://overpass.kumi.systems/api/status" reserve || true
           pruefe overpass.private.coffee "https://overpass.private.coffee/api/status" reserve || true
@@ -169,26 +181,44 @@ jobs:
                 || echo "::warning::Straßen $2 nicht gefiltert – Routenplaner ohne dieses Gebiet"
             fi
           }
+          # Fassung 68: Vorrat von heute und vollständig (auch Haltestellen und Gemeinden) → nichts neu laden (z. B. Lauf nach dem
+          # Hochladen neuer Dateien wenige Stunden nach dem nächtlichen Lauf). Fehlt etwas im Vorrat, wird einmal neu geladen.
+          VORRAT_VOLL=0
+          if [ -s osm-vorrat/auszug.opl ] && [ -s osm-vorrat/halte.geojsonseq ] && [ -s osm-vorrat/gemeinden.geojsonseq ]; then VORRAT_VOLL=1; fi
+          if [ "$VORRAT_VOLL" = 1 ] && [ -n "${OSM_VORRAT_TAGE:-}" ] && [ "${OSM_VORRAT_TAGE}" -lt 1 ] && [ "${OSRM_BAUEN:-}" != 1 ]; then
+            echo "$(date +%T) Auszug von heute im Vorrat ($(cat osm-vorrat/stand.txt)) – kein neuer Download nötig"
+            OSM_GEOFABRIK=""; OSM_FR=""; VORRAT_HEUTE=1
+          fi
           if [ "${OSM_GEOFABRIK:-}" = 1 ]; then
+            # Fassung 68: alle vier Gebiete oder keines – fehlt eines (am 23.11. 503/404), fehlten der Region sonst z. B. die Linien in Hessen
+            geo_alle=1
             for land in niedersachsen hessen thueringen nordrhein-westfalen/detmold-regbez; do
               n=$(basename "$land")
               echo "$(date +%T) Lade $land (Geofabrik)"
               url="https://download.geofabrik.de/europe/germany/$land/$n-latest.osm.pbf"    # Fassung 65: neuer Pfad mit Unterordner
-              if curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 -A "$AGENT" -o "osm/$n.osm.pbf" "$url"; then
+              if curl -fsSL --retry 2 --retry-all-errors --retry-delay 15 --connect-timeout 30 --max-time 900 -A "$AGENT" -o "osm/$n.osm.pbf" "$url"; then
                 soll=$(curl -fsSL -A "$AGENT" "$url.md5" | cut -d' ' -f1 || true); ist=$(md5sum "osm/$n.osm.pbf" | cut -d' ' -f1)
-                if [ -n "$soll" ] && [ "$soll" != "$ist" ]; then echo "::warning::Prüfsumme $land passt nicht – Datei verworfen"; rm -f "osm/$n.osm.pbf"; fi
+                if [ -z "$soll" ] || [ "$soll" != "$ist" ]; then echo "::warning::Prüfsumme $land fehlt oder passt nicht – Datei verworfen"; rm -f "osm/$n.osm.pbf"; fi
               fi
-              if [ -s "osm/$n.osm.pbf" ] && teile "osm/$n.osm.pbf" "$n"; then echo "$(date +%T) $land fertig"; echo "OSM_QUELLE_DATEI=geofabrik" >> "$GITHUB_ENV"; else echo "::warning::$land nicht geladen"; fi
-              rm -f "osm/$n.osm.pbf"
+              if [ ! -s "osm/$n.osm.pbf" ]; then geo_alle=0; echo "::warning::Geofabrik: $land nicht geladen – weiter mit openstreetmap.fr"; break; fi
             done
+            if [ "$geo_alle" = 1 ]; then
+              for land in niedersachsen hessen thueringen detmold-regbez; do
+                teile "osm/$land.osm.pbf" "$land" || { geo_alle=0; echo "::warning::$land nicht lesbar"; break; }
+              done
+            fi
+            if [ "$geo_alle" = 1 ]; then echo "$(date +%T) Geofabrik fertig (vier Gebiete)"; echo "OSM_QUELLE_DATEI=geofabrik" >> "$GITHUB_ENV"; else rm -f osm/*-teil.osm.pbf osm/*-strassen.osm.pbf; fi
+            rm -f osm/niedersachsen.osm.pbf osm/hessen.osm.pbf osm/thueringen.osm.pbf osm/detmold-regbez.osm.pbf
           fi
-          if ! ls osm/*-teil.osm.pbf >/dev/null 2>&1 && [ "${OSM_FR:-}" = 1 ] && { [ -z "${OSM_VORRAT_TAGE:-}" ] || [ "${OSM_VORRAT_TAGE}" -ge 2 ] || [ "${OSRM_BAUEN:-}" = 1 ]; }; then
+          if ! ls osm/*-teil.osm.pbf >/dev/null 2>&1 && [ "${OSM_FR:-}" = 1 ] && { [ -z "${OSM_VORRAT_TAGE:-}" ] || [ "${OSM_VORRAT_TAGE}" -ge 2 ] || [ "${OSRM_BAUEN:-}" = 1 ] || [ "$VORRAT_VOLL" != 1 ]; }; then
             # Fassung 61: Ersatz für die gesperrte Geofabrik – Deutschland von openstreetmap.fr, Prüfsumme, Ausschnitt der Region
             echo "$(date +%T) Lade Deutschland (openstreetmap.fr, rund 6 GB)"
-            if curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 -A "$AGENT" -o osm/germany.osm.pbf "https://download.openstreetmap.fr/extracts/europe/germany-latest.osm.pbf"; then
+            if curl -fsSL --retry 4 --retry-all-errors --retry-delay 30 --connect-timeout 30 --max-time 1800 -A "$AGENT" -o osm/germany.osm.pbf "https://download.openstreetmap.fr/extracts/europe/germany-latest.osm.pbf"; then
               soll=$(curl -fsSL -A "$AGENT" "https://download.openstreetmap.fr/extracts/europe/germany.osm.pbf.md5" | cut -d' ' -f1 || true)
               ist=$(md5sum osm/germany.osm.pbf | cut -d' ' -f1)
               if [ -n "$soll" ] && [ "$soll" != "$ist" ]; then echo "::warning::Prüfsumme von openstreetmap.fr passt nicht ($ist statt $soll) – Datei verworfen"; rm -f osm/germany.osm.pbf; fi
+              [ -z "$soll" ] && echo "::notice::openstreetmap.fr ohne Prüfsumme – Datei wird über osmium geprüft"
+              osmium fileinfo osm/germany.osm.pbf >/dev/null 2>&1 || { echo "::warning::openstreetmap.fr: Datei nicht lesbar – verworfen"; rm -f osm/germany.osm.pbf; }
             fi
             if [ -s osm/germany.osm.pbf ]; then
               echo "$(date +%T) Ausschnitt der Region"
@@ -206,7 +236,7 @@ jobs:
               cp osm-vorrat/*.opl osm-vorrat/*.geojsonseq osm/ 2>/dev/null || true
               echo "GOEBUS_OSM_VORRAT=$(cat osm-vorrat/stand.txt 2>/dev/null || echo unbekannt)" >> "$GITHUB_ENV"
               # Fassung 65: Planmäßig (Vorrat jünger als 2 Tage, openstreetmap.fr wird nur alle 2 Tage geladen) nur ein Hinweis, keine Warnung
-              if [ "${OSM_FR:-}" = 1 ] && [ -n "${OSM_VORRAT_TAGE:-}" ] && [ "${OSM_VORRAT_TAGE}" -lt 2 ]; then
+              if { [ "${OSM_FR:-}" = 1 ] || [ "${VORRAT_HEUTE:-}" = 1 ]; } && [ -n "${OSM_VORRAT_TAGE:-}" ] && [ "${OSM_VORRAT_TAGE}" -lt 2 ]; then
                 echo "::notice::Planmäßig der OpenStreetMap-Auszug vom $(cat osm-vorrat/stand.txt) (openstreetmap.fr wird nur alle 2 Tage geladen)"
                 echo "GOEBUS_OSM_PLANMAESSIG=1" >> "$GITHUB_ENV"
               else
@@ -220,6 +250,21 @@ jobs:
           osmium merge osm/*-teil.osm.pbf -o osm/alles.osm.pbf --overwrite
           osmium tags-filter osm/alles.osm.pbf r/route=bus,trolleybus,minibus,share_taxi,tram -o osm/routen.osm.pbf --overwrite
           osmium cat osm/routen.osm.pbf -f opl,add_metadata=false -o osm/auszug.opl --overwrite
+          # Fassung 68: Plausibilität – ein unvollständiger Auszug (abgebrochener Download, fehlendes Gebiet) darf den guten Vorrat nicht
+          # ersetzen. Maßstab: Zahl der Linien-Relationen, mindestens 1500 und mindestens 70 % des Vorrats.
+          # Verglichen wird nur mit einem Vorrat derselben Quelle (Geofabrik: ganze Länder, openstreetmap.fr: Ausschnitt) und höchstens 7 Tage alt.
+          n_neu=$(grep -c '^r' osm/auszug.opl || true); n_alt=0
+          q_neu="${OSM_QUELLE_DATEI:-}"; [ -z "$q_neu" ] && { ls osm/region-teil.osm.pbf >/dev/null 2>&1 && q_neu=openstreetmap.fr || q_neu=geofabrik; }
+          if [ -s osm-vorrat/auszug.opl ] && [ "$(cat osm-vorrat/quelle.txt 2>/dev/null)" = "$q_neu" ] && [ "${OSM_VORRAT_TAGE:-99}" -le 7 ]; then n_alt=$(grep -c '^r' osm-vorrat/auszug.opl || true); fi
+          echo "$(date +%T) Linien-Relationen: neu $n_neu ($q_neu), Vergleich mit dem Vorrat: $n_alt"
+          if [ "${n_neu:-0}" -lt 1500 ] || [ $(( ${n_neu:-0} * 10 )) -lt $(( ${n_alt:-0} * 7 )) ]; then
+            echo "::warning::Neuer OpenStreetMap-Auszug unplausibel ($n_neu Linien-Relationen, Vorrat $n_alt) – nutze den Vorrat"
+            if [ -s osm-vorrat/auszug.opl ]; then
+              cp osm-vorrat/*.opl osm-vorrat/*.geojsonseq osm/ 2>/dev/null || true
+              echo "GOEBUS_OSM_VORRAT=$(cat osm-vorrat/stand.txt 2>/dev/null || echo unbekannt)" >> "$GITHUB_ENV"
+            fi
+            exit 0
+          fi
           osmium tags-filter osm/alles.osm.pbf nwr/amenity=driving_school -o osm/fahrschulen.osm.pbf --overwrite
           osmium cat osm/fahrschulen.osm.pbf -f opl,add_metadata=false -o osm/fahrschulen.opl --overwrite
           echo "$(date +%T) Linien und Fahrschulen fertig"
@@ -233,7 +278,7 @@ jobs:
             && timeout 300 osmium export osm/gemeinden.osm.pbf -f geojsonseq --geometry-types=polygon -o osm/gemeinden.geojsonseq --overwrite ) \
             || echo "::warning::Gemeindegrenzen nicht erstellt – AST-Gebiete aus den Haltestellen"
           # Fassung 60: guten Auszug für spätere Läufe aufheben
-          mkdir -p osm-vorrat && cp osm/auszug.opl osm/fahrschulen.opl osm-vorrat/ && { cp osm/gemeinden.geojsonseq osm/halte.geojsonseq osm-vorrat/ 2>/dev/null || true; } && date -u +%F > osm-vorrat/stand.txt \
+          mkdir -p osm-vorrat && cp osm/auszug.opl osm/fahrschulen.opl osm-vorrat/ && { cp osm/gemeinden.geojsonseq osm/halte.geojsonseq osm-vorrat/ 2>/dev/null || true; } && date -u +%F > osm-vorrat/stand.txt && echo "$q_neu" > osm-vorrat/quelle.txt \
             && echo "OSM_NEU=1" >> "$GITHUB_ENV"
           ls -la osm
 
@@ -303,8 +348,14 @@ jobs:
       - name: Schülerverkehr – PDF-Leser installieren
         # Fassung 67: pdfplumber liest die Fahrpläne des Schülerverkehrs (Landkreis Hildesheim). Schlägt das fehl, bleibt nur dieser Teil aus.
         continue-on-error: true
-        timeout-minutes: 5
-        run: python -m pip install --quiet --disable-pip-version-check pdfplumber==0.11.4 || python -m pip install --quiet --user pdfplumber
+        # Fassung 68: dazu tesseract (deutsch) für Fahrpläne, die nur als Bild oder Scan vorliegen (Webseite der Grundschule Sibbesse)
+        timeout-minutes: 8
+        run: |
+          python -m pip install --quiet --disable-pip-version-check pdfplumber==0.11.4 || python -m pip install --quiet --user pdfplumber
+          sudo apt-get install -y -qq --no-install-recommends tesseract-ocr tesseract-ocr-deu >/dev/null 2>&1 \
+            || { sudo apt-get update -qq >/dev/null 2>&1 && sudo apt-get install -y -qq --no-install-recommends tesseract-ocr tesseract-ocr-deu >/dev/null 2>&1; } \
+            || echo "::notice::Texterkennung (tesseract) nicht installiert – Fahrpläne als Bild bleiben ohne Fahrten"
+          tesseract --version 2>/dev/null | head -1 || true
 
       - name: Fahrplandaten und OpenStreetMap verarbeiten
         # Version 2.2: Regeln der Website (ersetzte Linien wie 265 → 260). Adresse der Website als Variable GOEBUS_ADRESSE

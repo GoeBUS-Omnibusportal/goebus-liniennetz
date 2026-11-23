@@ -43,7 +43,7 @@ import urllib.request
 import zipfile
 from collections import Counter, defaultdict
 
-VERSION = '3.7'
+VERSION = '3.8'
 
 # 3.1 (Fassung 60): IPv4 zuerst – auf den GitHub-Rechnern scheiterten Verbindungen über IPv6 („Network is unreachable“ bei Overpass)
 import socket as _socket
@@ -803,6 +803,8 @@ def gtfs_auswerten(pfad, kreise, verbuende):
             continue
         if SCHUL_BBOX[0] <= lon <= SCHUL_BBOX[2] and SCHUL_BBOX[1] <= lat <= SCHUL_BBOX[3]:    # 3.7: auch Haltestellen ohne Linie der Verbünde
             SCHUL_HALTE.append((s.get('stop_name', ''), lon, lat))
+        elif EF_BBOX[0] <= lon <= EF_BBOX[2] and EF_BBOX[1] <= lat <= EF_BBOX[3]:    # 3.8: Göttingen (E-Wagen der GöVB)
+            EF_HALTE.append((s.get('stop_name', ''), lon, lat))
         if bx[0] <= lon <= bx[2] and bx[1] <= lat <= bx[3]:
             schl = (round(lon, 4), round(lat, 4))
             if schl not in cache:
@@ -1540,6 +1542,8 @@ def ersetzt_durch(f, feats, nah=300, anteil=0.7):
 ERSETZT = {}     # slug → {alte Nummer: neue Nummer} (für den Bericht)
 SCHUL_HALTE = []    # 3.7 (Fassung 67): (Name, lon, lat) aller Haltestellen der Fahrplandaten um den Landkreis Hildesheim (Schülerverkehr)
 SCHUL_BBOX = (9.45, 51.72, 10.55, 52.45)
+EF_HALTE = []      # 3.8 (Fassung 69): Haltestellen um Göttingen, nur für die E-Fahrten (dazu SCHUL_HALTE)
+EF_BBOX = (9.65, 51.40, 10.25, 51.72)
 ABGEGEBEN = {}   # 3.6 (Fassung 66): slug → {Nummer: Nachbarverbund} – Linien, die zu einem Nachbarverbund gehören (VSN 51 → Öffis)
 
 
@@ -2296,6 +2300,47 @@ def schul_lauf(a):
     return erg['zahl']
 
 
+def ef_lauf(a):
+    """3.8 (Fassung 69): E-Fahrten und Frühwagen – siehe efahrten.py. → Zahlen für stand.json"""
+    quelle = a.efahrten
+    if not quelle and a.regeln and re.search(r'linien-regeln\.json$', a.regeln):
+        quelle = re.sub(r'linien-regeln\.json$', 'efahrten-quellen.json', re.sub(r'/_admin/+(?=_data/)', '/', a.regeln))
+    import efahrten as EF
+    quellen = EF.quellen_laden(quelle, log) if quelle else []
+    if not quellen:
+        quellen = EF_VORGABE
+        log('E-Fahrten: keine Liste aus der Verwaltung – Vorgabe (SVHI, RVHI, GöVB)')
+    halte = list(SCHUL_HALTE) + list(EF_HALTE)
+    ende = time.time() + 60 * float(os.environ.get('GOEBUS_EF_MINUTEN', '') or '8')
+    if SKIZZE.get('cache') is None:
+        try:
+            SKIZZE['cache'] = json.load(open(os.path.join(a.ausgabe, 'skizzen.json'), encoding='utf-8'))
+        except (ValueError, OSError):
+            SKIZZE['cache'] = {}
+    sk = (lambda pts: skizze_teil([tuple(p) for p in pts], SKIZZE['cache'], ende)) if SKIZZE.get('an') else None
+    erg = EF.efahrten(quellen, halte, a.ausgabe, skizze=sk, log=log, cache_pfad=os.path.join(a.ausgabe, 'efahrten-cache.json'), ende=ende)
+    erg['skript'] = VERSION
+    with open(os.path.join(a.ausgabe, 'efahrten.json'), 'w', encoding='utf-8') as fh:
+        json.dump(erg, fh, ensure_ascii=False, separators=(',', ':'))
+    return erg['zahl']
+
+
+# 3.8: Vorgabe, falls die Verwaltung (noch) keine Liste veröffentlicht – dieselben Einträge wie dort vorbelegt
+EF_VORGABE = [
+    {'id': 'svhi', 'titel': 'SVHI – Liste der E-Fahrten', 'verbund': 'rosa', 'betreiber': 'SVHI', 'art': 'svhi', 'ort': 'Hildesheim',
+     'url': 'https://www.svhi-hildesheim.de/de/Fahrplan/E-Fahrten/E-Fahrten/20260105-Liste-E-Fahrten-gueltig-ab-06.01.2026.pdf',
+     'seite': 'https://www.svhi-hildesheim.de/de/Fahrplan/E-Fahrten/'},
+    {'id': 'rvhi', 'titel': 'RVHI – E-Wagenplan', 'verbund': 'rvhi', 'betreiber': 'RVHI', 'art': 'wagenplan', 'ort': '',
+     'url': 'https://www.rvhi-hildesheim.de/de/Fahrplan/Zusatzfahrplaene/Zusatzfahrplaene/E-Fahrten-ab-08.09.2022.pdf',
+     'seite': 'https://www.rvhi-hildesheim.de/de/Fahrplan/Zusatzfahrplaene/'},
+    {'id': 'goevb-fw', 'titel': 'GöVB – Frühwagen', 'verbund': 'vsn', 'betreiber': 'GöVB', 'art': 'fruehwagen', 'ort': 'Göttingen',
+     'url': 'https://www.goevb.de/fileadmin/user_upload/Fahrplaene/downloads/Fahrplaene/2024/Fruehwagen_2025_Basis.pdf',
+     'seite': 'https://www.goevb.de/fahrplaene/fruehwagen'},
+    {'id': 'goevb', 'titel': 'GöVB – E-Wagen in den Linienfahrplänen', 'verbund': 'vsn', 'betreiber': 'GöVB', 'art': 'linienseite', 'ort': 'Göttingen',
+     'url': 'https://www.goevb.de/fahrplaene/linien', 'seite': 'https://www.goevb.de/fahrplaene/linien'},
+]
+
+
 def main():
     ap = argparse.ArgumentParser(description='GöBUS – Liniennetze aus GTFS und OpenStreetMap')
     ap.add_argument('--gtfs', help='vorhandene GTFS-Datei (ZIP); sonst Download von GTFS.DE')
@@ -2309,6 +2354,7 @@ def main():
     ap.add_argument('--osm-auszug', default=os.path.join(HIER, 'osm', 'auszug.opl'), help='OpenStreetMap-Auszug (OPL), Vorgabe osm/auszug.opl; fehlt er, wird Overpass gefragt')
     ap.add_argument('--osm-json', help='vorbereitete Overpass-Antworten statt Abfrage, z. B. osm/{slug}.json (für Tests)')
     ap.add_argument('--osm-halte', default=os.path.join(HIER, 'osm', 'halte.geojsonseq'), help='3.7: Haltestellen und Orte aus OpenStreetMap (osmium export) für den Schülerverkehr')
+    ap.add_argument('--efahrten', default=os.environ.get('GOEBUS_EFAHRTEN', ''), help='3.8: Liste der Zusatzfahrpläne (E-Fahrten); Vorgabe: neben den Regeln')
     ap.add_argument('--schulverkehr', default=os.environ.get('GOEBUS_SCHULVERKEHR', ''), help='3.7: Liste der Schülerverkehr-Fahrpläne (Adresse oder Datei); Vorgabe: neben den Regeln')
     ap.add_argument('--regeln', default=os.environ.get('GOEBUS_REGELN', ''), help='Regeln der Website (ersetzte Linien), Adresse oder Datei; Vorgabe: Umgebungsvariable GOEBUS_REGELN')
     a = ap.parse_args()
@@ -2482,6 +2528,14 @@ def main():
         log('Schülerverkehr nicht ausgewertet:', type(e).__name__, e)
         stand['schulverkehr'] = {'fehler': str(e)[:160]}
     dauer['schulverkehr'] = round(time.time() - t)
+    # 3.8 (Fassung 69): E-Fahrten (SVHI, RVHI, GöVB) und Frühwagen
+    t = time.time()
+    try:
+        stand['efahrten'] = ef_lauf(a)
+    except Exception as e:    # freiwillig
+        log('E-Fahrten nicht ausgewertet:', type(e).__name__, e)
+        stand['efahrten'] = {'fehler': str(e)[:160]}
+    dauer['efahrten'] = round(time.time() - t)
     stand['skizzen_offen'] = {v['slug']: sum(1 for f in feats if str(f['properties'].get('verlauf', '')).endswith('haltestellen')) for v, feats, _, _ in NACHLAUF}
     stand['orte_geteilt'] = ORTE_GETEILT[-1] if ORTE_GETEILT else 0    # 3.1: Linien mit mehreren Orten (je Ort ausgewertet)
     # 3.2 (Fassung 61): Erreichbarkeit der Quellen vom GitHub-Lauf aus (Schritt „Quellen prüfen“) und Herkunft des OSM-Auszugs

@@ -29,6 +29,20 @@ Von da an läuft alles automatisch:
 
 **Optional:** Wer das Abholen unabhängig von Besuchern möchte, lässt einen kostenlosen Dienst wie cron-job.org einmal pro Woche diese Adresse aufrufen: `https://www.goebus.de/verbund-tarife/abgleich.php`.
 
+## Neu in Fassung 69 (liniennetz.py 3.8, efahrten.py 1.0)
+
+- **Hochladen:** `liniennetz.py`, `efahrten.py` (neu), `schulverkehr.py` (1.2), `.github/workflows/liniennetz.yml` und `README.md`.
+- **E-Fahrten und Frühwagen:** Zusatzfahrpläne der Verkehrsunternehmen → `daten/efahrten.json` (Website: Registerkarte „E-Fahrten“).
+  - **Quellen** aus der Verwaltung (`_data/verbund-tarife/efahrten-quellen.json` neben den Regeln, Variable `GOEBUS_ADRESSE`); ohne Liste die Vorgabe `EF_VORGABE`.
+  - **Neuester Stand:** Hat eine Quelle eine `seite`, sucht der Lauf dort den Fahrplan mit dem jüngsten, schon gültigen Datum im Dateinamen. Bei `art: linienseite` (goevb.de/fahrplaene/linien) je Linie den heute gültigen Plan („…_ab_23.11.26.PDF“).
+  - **Formen:** `svhi` (Liste, Zeile = Fahrt, Hinweise wie „ohne Halt bis“, „Angebot des RVHI“), `wagenplan` (RVHI: „7,30/34“ = zwei Fahrten, „(über A - B)“ als Halte), `matrix` (GöVB-Linienfahrplan, nur Spalten „E…“; „S“ = Schultage; Umlaute „u¨“ und getrennte Zeiten „7“ „.15“ werden repariert), `fruehwagen` (Kästen nebeneinander).
+  - **Verbund:** SVHI + RVHI (Liste der SVHI) = ROSA, nur RVHI = RVHI, GöVB = VSN; Frühwagen als eigene Gruppe.
+  - **Verorten** wie beim Schülerverkehr, mit Suchnamen („Gr. Saatner“ → „Großer Saatner“, „Himmelsthür Pauluskirche“ → „Pauluskirche“, „Steig F3“ weg) und den Haltestellen um Göttingen (`EF_HALTE`). Wege über die Straßen wie beim Schülerverkehr, `properties.fahrten` je Weg.
+  - **Zwischenspeicher** `daten/efahrten-cache.json`; ist ein Plan nicht erreichbar, bleibt der zuletzt gelesene Stand (Status `vorrat`).
+  - Geprüft an den echten Dateien vom 23.11.2026: SVHI 39 Fahrten, RVHI 50, GöVB 11/12 14 und 21/22 9 E-Wagen; 573 von 575 Halten verortet. Die Frühwagen nur am Nachbau.
+- **Workflow:** `GOEBUS_EF_MINUTEN` (Vorgabe 8), Schritt „verarbeiten“ bis 80 Minuten, Job bis 175 Minuten.
+- **Schülerverkehr (schulverkehr.py 1.2):** Ist der Link ein Linienfahrplan der RVHI bei gipsprojekt (`…/tfp_642_1.pdf`), wird die Rückrichtung `…_2.pdf` mitgelesen. Ist der Eintrag selbst eine Linie („Linie 642“ in Beschreibung oder Titel), gehören deren Fahrten zum Schülerverkehr (sonst gelten Spalten „Linie n“ als öffentlich und fallen heraus). Version 1.2: einmal neu auslesen.
+
 ## Neu in Fassung 68 (Workflow, schulverkehr.py 1.1)
 
 - **Hochladen:** `.github/workflows/liniennetz.yml`, `schulverkehr.py` und `README.md`; `liniennetz.py` bleibt 3.7.

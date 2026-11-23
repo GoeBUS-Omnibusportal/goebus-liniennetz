@@ -24,7 +24,7 @@ import unicodedata
 import urllib.parse
 import urllib.request
 
-VERSION = '1.1'   # Fassung 68: Uhrzeiten mit Komma (RVHI), Halte ohne eigene Zeit, Webseiten und Bilder (Texterkennung)
+VERSION = '1.2'   # Fassung 68: Uhrzeiten mit Komma (RVHI), Halte ohne eigene Zeit, Webseiten und Bilder (Texterkennung); 69: Linienfahrpläne der RVHI (beide Richtungen)
 UA = 'GoeBUS-Schulverkehr/' + VERSION + ' (+https://www.goebus.de)'
 
 ZEIT_RX = re.compile(r'^(\d{1,2})[:.,](\d{2})(?:[*¹²³)]+|\s*Uhr)?$')
@@ -766,12 +766,24 @@ def schulverkehr(eintraege, halte, ausgabe, skizze=None, log=print, cache_pfad=N
             erg, p['abruf'] = alt['erg'], 'vorrat'     # letzter gelesener Stand derselben Adresse
             neu_cache[str(e.get('id'))] = alt
         else:
-            h = hashlib.sha1(open(pdf, 'rb').read()).hexdigest()
+            # 1.2 (Fassung 69): Linienfahrplan der RVHI bei gipsprojekt („…/tfp_642_1.pdf“) – die Rückrichtung „_2“ gehört dazu
+            pdf2 = ''
+            m2 = re.search(r'/tfp_(\w+)_1\.pdf$', quelle, re.I)
+            if m2:
+                pdf2 = pdf + '.2.pdf'
+                try:
+                    if not holen_fn(quelle[:m2.start()] + '/tfp_%s_2.pdf' % m2.group(1), pdf2):
+                        pdf2 = ''
+                except Exception:
+                    pdf2 = ''
+            h = hashlib.sha1(open(pdf, 'rb').read() + (open(pdf2, 'rb').read() if pdf2 else b'')).hexdigest()
             if alt and alt.get('hash') == h and alt.get('version') == VERSION and alt.get('erg'):
                 erg = alt['erg']
             else:
                 try:
                     seiten, herkunft = woerter_lesen(pdf, quelle, holen_fn, tmp, woerter_fn)
+                    if pdf2:
+                        seiten = seiten + woerter_lesen(pdf2, quelle, holen_fn, tmp, woerter_fn)[0]
                     erg = auslesen(seiten)
                     erg['herkunft'] = herkunft
                 except Exception as ex:
@@ -785,6 +797,15 @@ def schulverkehr(eintraege, halte, ausgabe, skizze=None, log=print, cache_pfad=N
             p['gueltig_ab'] = erg['gueltig_ab']
         fahrten = [dict(f) for f in erg.get('fahrten', [])]
         oeff = sorted({f['oeffentlich'] for f in fahrten if f.get('oeffentlich')})
+        # 1.2: Ist der Eintrag selbst eine Linie („Linie 642“ – Grundschule Delligsen, Oberschule Duingen), gehören ihre Fahrten dazu
+        ml = re.search(r'\bLinie\s*(\d{2,4})\b', '%s %s' % (e.get('beschreibung', ''), e.get('schule', '')))
+        if ml:
+            p['linie'] = ml.group(1)
+            for f in fahrten:
+                if f.get('oeffentlich') and re.sub(r'\D', '', f['oeffentlich']) in ('', ml.group(1)):
+                    f.pop('oeffentlich')
+                    f['linie'] = ml.group(1)
+            oeff = [x for x in oeff if re.sub(r'\D', '', x) != ml.group(1)]
         fahrten = [f for f in fahrten if not f.get('oeffentlich')]
         for f in fahrten:     # 1.1: auch für den Vorrat älterer Läufe
             f['halte'] = [h for h in f['halte'] if ist_name(h[0])]

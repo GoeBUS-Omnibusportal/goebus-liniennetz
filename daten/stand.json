@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-23T12:02:01Z",
+ "erzeugt": "2026-11-24T04:43:01Z",
  "version": "3.8",
  "linienwege": false,
  "verbuende": {
@@ -22,7 +22,7 @@
    "linien": 425,
    "liste_wege": 410,
    "liste_neu": 2,
-   "osm_verlauf": 172,
+   "osm_verlauf": 170,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
    "aus_vorwoche": 3,
@@ -36,7 +36,7 @@
    "linien": 298,
    "liste_wege": 289,
    "liste_neu": 4,
-   "osm_verlauf": 237,
+   "osm_verlauf": 232,
    "fahrplan_verlauf": 0,
    "verlauf_vorwoche": 0,
    "aus_vorwoche": 1,
@@ -122,64 +122,64 @@
   {
    "name": "geofabrik",
    "url": "https://download.geofabrik.de/europe/germany/niedersachsen/niedersachsen-latest.osm.pbf",
-   "code": "000",
-   "ms": 451,
+   "code": "206",
+   "ms": 738,
    "rolle": "haupt"
   },
   {
    "name": "openstreetmap.fr",
    "url": "https://download.openstreetmap.fr/extracts/europe/germany-latest.osm.pbf",
    "code": "206",
-   "ms": 295,
+   "ms": 381,
    "rolle": "ersatz"
   },
   {
    "name": "overpass-api.de",
    "url": "https://overpass-api.de/api/status",
-   "code": "502",
-   "ms": 437,
+   "code": "000",
+   "ms": 10010,
    "rolle": "reserve"
   },
   {
    "name": "overpass.kumi.systems",
    "url": "https://overpass.kumi.systems/api/status",
    "code": "000",
-   "ms": 10010,
+   "ms": 10013,
    "rolle": "reserve"
   },
   {
    "name": "overpass.private.coffee",
    "url": "https://overpass.private.coffee/api/status",
    "code": "000",
-   "ms": 10010,
+   "ms": 10011,
    "rolle": "reserve"
   },
   {
    "name": "osrm-oeffentlich",
    "url": "https://router.project-osrm.org/route/v1/driving/9.926800,51.536500;9.935900,51.533200?overview=false",
    "code": "200",
-   "ms": 335,
+   "ms": 645,
    "rolle": "haupt"
   },
   {
    "name": "gtfs.de",
    "url": "https://download.gtfs.de/germany/free/latest.zip",
    "code": "206",
-   "ms": 384,
+   "ms": 451,
    "rolle": "haupt"
   },
   {
    "name": "ghcr.io",
    "url": "https://ghcr.io/v2/",
    "code": "401",
-   "ms": 35,
+   "ms": 109,
    "rolle": "haupt"
   },
   {
    "name": "goebus.de",
    "url": "https://www.goebus.de/_data/verbund-tarife/linien-regeln.json",
    "code": "200",
-   "ms": 2148
+   "ms": 1384
   }
  ],
  "schultage": {
@@ -190,7 +190,7 @@
   "eigen": true,
   "profil": "Bus (Straßen vom 2026-11-23)",
   "anfragen": {
-   "lokal": 3832,
+   "lokal": 3848,
    "verworfen": 8,
    "abschnitt_lokal": 68,
    "oeffentlich": 7,
@@ -201,24 +201,22 @@
  },
  "regeln": true,
  "dauer": {
-  "fahrplandaten_laden": 9,
-  "fahrplandaten_auswerten": 174,
-  "osm_auszug_lesen": 3,
+  "fahrplandaten_laden": 12,
+  "fahrplandaten_auswerten": 162,
+  "osm_auszug_lesen": 4,
   "verbuende": {
-   "vsn": 21,
-   "nvv": 36,
-   "vrb": 34,
-   "rosa": 11,
-   "rvhi": 9,
-   "oeffis": 10
+   "vsn": 24,
+   "nvv": 38,
+   "vrb": 36,
+   "rosa": 15,
+   "rvhi": 13,
+   "oeffis": 15
   },
-  "schulverkehr": 47,
-  "efahrten": 41,
-  "gesamt": 395
+  "schulverkehr": 53,
+  "efahrten": 26,
+  "gesamt": 400
  },
- "osm_quelle": "vorrat",
- "osm_stand": "2026-11-23",
- "osm_planmaessig": true,
+ "osm_quelle": "geofabrik",
  "overpass": [
   "Geofabrik-Auszug (ohne Overpass)"
  ],

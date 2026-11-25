@@ -1,6 +1,6 @@
 {
  "version": "1.1",
- "stand": "2026-11-24T04:49:15Z",
+ "stand": "2026-11-25T04:46:14Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "Geofabrik-Auszug",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
@@ -1093,7 +1093,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
+   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
   },
   {
    "id": "n8993663668",
@@ -3617,7 +3617,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
+   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
   },
   {
    "id": "n10285592598",
@@ -5123,8 +5123,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "",
-   "pschein": false
+   "grund": "Website nicht erreichbar (The read operation timed out)"
   },
   {
    "id": "n608963920",
@@ -6649,7 +6648,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
+   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
   },
   {
    "id": "n6428415044",
@@ -7256,7 +7255,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
+   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
   },
   {
    "id": "n9384139160",
@@ -7603,7 +7602,7 @@
    "plz": "33102",
    "strasse": "Dr.-Rörig-Damm 54",
    "lage": "51.73731,8.75745",
-   "klassen": "C1E",
+   "klassen": "C1, C, C1E",
    "bus": false,
    "beleg": "",
    "azav": false,
@@ -7739,7 +7738,7 @@
    "plz": "33102",
    "strasse": "Bahnhofstraße 23",
    "lage": "51.71402,8.74267",
-   "klassen": "C1E",
+   "klassen": "C1, C, C1E",
    "bus": false,
    "beleg": "",
    "azav": false,

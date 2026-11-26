@@ -1,11 +1,11 @@
 {
  "version": "1.1",
- "stand": "2026-11-25T04:46:14Z",
+ "stand": "2026-11-26T04:47:06Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "Geofabrik-Auszug",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
  "anzahl": 516,
- "mit_bus": 47,
+ "mit_bus": 48,
  "schulen": [
   {
    "id": "n1571201710",
@@ -185,12 +185,11 @@
    "plz": "",
    "strasse": "",
    "lage": "52.23945,10.58180",
-   "klassen": "C, CE, C1, C1E",
+   "klassen": "",
    "bus": true,
    "beleg": "OpenStreetMap: Klassen A, A1, B, B1, C, C1, D, D1, BE, CE, C1E, DE, D1E",
    "azav": false,
-   "grund": "",
-   "pschein": false
+   "grund": "Website nicht erreichbar (HTTP Error 404: Not Found)"
   },
   {
    "id": "n5620449488",
@@ -358,6 +357,23 @@
    "bus": true,
    "beleg": "Bus – Führerscheinklassen D1, D1E, D und DE Führerscheink",
    "azav": true,
+   "grund": "",
+   "pschein": false
+  },
+  {
+   "id": "n1783981994",
+   "name": "Fahrschule Jendritzki – Hauptstelle Süd",
+   "web": "https://www.fs-jendritzki.de/",
+   "tel": "+49 172 5422834",
+   "mail": "",
+   "ort": "Braunschweig",
+   "plz": "38126",
+   "strasse": "Retemeyerstraße 1e",
+   "lage": "52.23273,10.55875",
+   "klassen": "C1E, C1, CE, C, D",
+   "bus": true,
+   "beleg": "sen. Anhänger bis 5 t für Inhaber der Klasse B, eine modulare Theorie für C, CE und D, weitere Prüforganisationen und Begleit",
+   "azav": false,
    "grund": "",
    "pschein": false
   },
@@ -1093,7 +1109,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
+   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
   },
   {
    "id": "n8993663668",
@@ -3617,7 +3633,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
+   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
   },
   {
    "id": "n10285592598",
@@ -4830,23 +4846,6 @@
    "grund": ""
   },
   {
-   "id": "n1783981994",
-   "name": "Fahrschule Jendritzki – Hauptstelle Süd",
-   "web": "https://www.fs-jendritzki.de/",
-   "tel": "+49 172 5422834",
-   "mail": "",
-   "ort": "Braunschweig",
-   "plz": "38126",
-   "strasse": "Retemeyerstraße 1e",
-   "lage": "52.23273,10.55875",
-   "klassen": "C, CE, C1, C1E",
-   "bus": false,
-   "beleg": "",
-   "azav": false,
-   "grund": "",
-   "pschein": false
-  },
-  {
    "id": "n3332974076",
    "name": "Fahrschule Link",
    "web": "",
@@ -5123,7 +5122,8 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (The read operation timed out)"
+   "grund": "",
+   "pschein": false
   },
   {
    "id": "n608963920",
@@ -6648,7 +6648,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
+   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
   },
   {
    "id": "n6428415044",
@@ -7222,8 +7222,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "",
-   "pschein": false
+   "grund": "Website nicht erreichbar (<urlopen error [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ss)"
   },
   {
    "id": "w337345819",
@@ -7255,7 +7254,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
+   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
   },
   {
    "id": "n9384139160",
@@ -7552,7 +7551,7 @@
    "plz": "33104",
    "strasse": "Bielefelder Straße 13",
    "lage": "51.74818,8.71474",
-   "klassen": "C1E",
+   "klassen": "C1, C, C1E",
    "bus": false,
    "beleg": "",
    "azav": false,

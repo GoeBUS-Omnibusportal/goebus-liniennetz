@@ -1,6 +1,6 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-26T04:39:47Z · Skript 3.8 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-27T04:47:02Z · Skript 3.8 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
 Overpass: Geofabrik-Auszug (ohne Overpass)
 

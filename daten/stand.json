@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-26T04:39:47Z",
+ "erzeugt": "2026-11-27T04:47:02Z",
  "version": "3.8",
  "linienwege": false,
  "verbuende": {
@@ -123,28 +123,28 @@
    "name": "geofabrik",
    "url": "https://download.geofabrik.de/europe/germany/niedersachsen/niedersachsen-latest.osm.pbf",
    "code": "206",
-   "ms": 472,
+   "ms": 632,
    "rolle": "haupt"
   },
   {
    "name": "openstreetmap.fr",
    "url": "https://download.openstreetmap.fr/extracts/europe/germany-latest.osm.pbf",
    "code": "206",
-   "ms": 486,
+   "ms": 504,
    "rolle": "ersatz"
   },
   {
    "name": "overpass-api.de",
    "url": "https://overpass-api.de/api/status",
    "code": "000",
-   "ms": 10013,
+   "ms": 10012,
    "rolle": "reserve"
   },
   {
    "name": "overpass.kumi.systems",
    "url": "https://overpass.kumi.systems/api/status",
    "code": "000",
-   "ms": 10012,
+   "ms": 10013,
    "rolle": "reserve"
   },
   {
@@ -158,28 +158,28 @@
    "name": "osrm-oeffentlich",
    "url": "https://router.project-osrm.org/route/v1/driving/9.926800,51.536500;9.935900,51.533200?overview=false",
    "code": "200",
-   "ms": 888,
+   "ms": 662,
    "rolle": "haupt"
   },
   {
    "name": "gtfs.de",
    "url": "https://download.gtfs.de/germany/free/latest.zip",
    "code": "206",
-   "ms": 420,
+   "ms": 538,
    "rolle": "haupt"
   },
   {
    "name": "ghcr.io",
    "url": "https://ghcr.io/v2/",
    "code": "401",
-   "ms": 43,
+   "ms": 92,
    "rolle": "haupt"
   },
   {
    "name": "goebus.de",
    "url": "https://www.goebus.de/_data/verbund-tarife/linien-regeln.json",
    "code": "200",
-   "ms": 1187
+   "ms": 575
   }
  ],
  "schultage": {
@@ -201,20 +201,20 @@
  },
  "regeln": true,
  "dauer": {
-  "fahrplandaten_laden": 9,
-  "fahrplandaten_auswerten": 271,
+  "fahrplandaten_laden": 26,
+  "fahrplandaten_auswerten": 274,
   "osm_auszug_lesen": 7,
   "verbuende": {
-   "vsn": 39,
-   "nvv": 63,
-   "vrb": 63,
-   "rosa": 26,
-   "rvhi": 22,
-   "oeffis": 25
+   "vsn": 38,
+   "nvv": 61,
+   "vrb": 59,
+   "rosa": 25,
+   "rvhi": 20,
+   "oeffis": 22
   },
-  "schulverkehr": 44,
-  "efahrten": 21,
-  "gesamt": 591
+  "schulverkehr": 55,
+  "efahrten": 25,
+  "gesamt": 613
  },
  "osm_quelle": "geofabrik",
  "overpass": [

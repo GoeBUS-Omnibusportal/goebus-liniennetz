@@ -1,6 +1,6 @@
 # Abgleich der Liniennetze
 
-Erzeugt: 2026-11-27T04:47:02Z · Skript 3.8 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
+Erzeugt: 2026-11-28T04:31:01Z · Skript 3.8 · Quelle: DELFI über GTFS.DE (CC BY 4.0), OpenStreetMap (ODbL)
 
 Overpass: Geofabrik-Auszug (ohne Overpass)
 
@@ -10,31 +10,31 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 - **Ohne Betreiber in den Fahrplandaten:** 800
 - **Weniger als drei Halte:** 800
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** keine
+- **Neu in den Fahrplandaten:** 110
 - **Nur in OpenStreetMap (network passt zum Verbund):** 837
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## NVV – 425 Linien
+## NVV – 433 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 64 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 62 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 170, 23, 300, 882
 - **Weniger als drei Halte:** 170, 519, 74
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** keine
+- **Neu in den Fahrplandaten:** 150, 403, 406, 430, 437, 438, 439
 - **Nur in OpenStreetMap (network passt zum Verbund):** keine
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
 - **Linienübersicht nicht abrufbar:** keine
 
-## VRB – 298 Linien
+## VRB – 300 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 121 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 122 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 300, 440, 460, 470
 - **Weniger als drei Halte:** 300, 440, 460, 470
 - **Diese Woche nicht in den Fahrplandaten (aus der Vorwoche behalten):** keine
-- **Neu in den Fahrplandaten:** keine
+- **Neu in den Fahrplandaten:** 879, HBX
 - **Nur in OpenStreetMap (network passt zum Verbund):** 166, 837, 166 - 1040
 - **Nur in der Linienübersicht des Verbunds:** keine
 - **Laut Soll-Liste fehlend:** keine
@@ -66,7 +66,7 @@ Overpass: Geofabrik-Auszug (ohne Overpass)
 
 ## OEFFIS – 73 Linien
 
-- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 15 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
+- **Verlauf:** 0 Linienweg aus den Fahrplandaten, 16 OpenStreetMap, 0 teilweise, 0 nur Haltestellen · OpenStreetMap: ok (Auszug)
 - **Ohne Betreiber in den Fahrplandaten:** 39, 521, 522, 524, 525, 59, 79
 - **Weniger als drei Halte:** 39, 79
 - **Gleiche Nummer, mehrere Betreiber:** 812 (LK Schaumburg, Ostwestfalen-Lippe)

@@ -1,6 +1,6 @@
 {
  "version": "1.1",
- "stand": "2026-11-27T04:54:42Z",
+ "stand": "2026-11-28T04:36:45Z",
  "gebiet": "50.75,8.70,52.25,10.80",
  "server": "Geofabrik-Auszug",
  "quelle": "OpenStreetMap-Mitwirkende (ODbL), Angaben der Fahrschulen auf ihren Websites",
@@ -1109,7 +1109,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
+   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
   },
   {
    "id": "n8993663668",
@@ -7240,7 +7240,7 @@
    "bus": false,
    "beleg": "",
    "azav": false,
-   "grund": "Website nicht erreichbar (<urlopen error timed out>)"
+   "grund": "Website nicht erreichbar (<urlopen error [Errno 113] No route to host>)"
   },
   {
    "id": "n9384139160",
